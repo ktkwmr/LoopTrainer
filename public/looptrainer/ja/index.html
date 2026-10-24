@@ -278,7 +278,7 @@
       </div>
       <p class="notice" id="notice" role="status" aria-live="polite"></p>
       <div class="wave-wrap" id="waveWrap">
-        <canvas id="wave" role="img" aria-label="波形。ドラッグでループ範囲を選び、タップでその位置に移動します。A・B の旗をタップしてから移動先をタップするか、旗を長押ししてドラッグすると動かせます。" data-i18n-attr="aria-label:wave.aria"></canvas>
+        <canvas id="wave" role="img" aria-label="波形。ドラッグでループ範囲を選び、タップでその位置に移動します。A・B の旗をタップしてから移動先をタップするか、旗を長押ししてドラッグすると動かせます。ピンチで拡大・縮小、2本指を左右に動かすとスクロールします。" data-i18n-attr="aria-label:wave.aria"></canvas>
         <div class="drop" id="drop">
           <button type="button" class="chip open-big" id="openBig" data-i18n="open.big">音源ファイルを開く</button>
           <p data-i18n="drop">MP3・AAC（m4a）・WAV など。ここにドロップしても開けます。ファイルはどこにもアップロードされません。</p>
@@ -385,7 +385,7 @@
           <input type="range" id="clickVol" min="0" max="100" step="1">
         </div>
       </div>
-      <p class="keys" data-i18n-html="keys"><kbd>Space</kbd> 再生/一時停止　<kbd>↑</kbd><kbd>↓</kbd> 速度 ±1%（<kbd>Shift</kbd>で±5%）　<kbd>←</kbd><kbd>→</kbd> A 点を 1 拍ずつ移動（<kbd>Shift</kbd>で B 点）　<kbd>Esc</kbd> 旗の移動を取り消し　<kbd>A</kbd> <kbd>B</kbd> 今の位置を A/B に　<kbd>L</kbd> ループのオン/オフ　<kbd>Enter</kbd> A 点に戻る　<kbd>-</kbd> <kbd>+</kbd> キー　<kbd>Z</kbd> 拡大　<kbd>O</kbd> ファイルを開く</p>
+      <p class="keys" data-i18n-html="keys"><kbd>Space</kbd> 再生/一時停止　<kbd>↑</kbd><kbd>↓</kbd> 速度 ±1%（<kbd>Shift</kbd>で±5%）　<kbd>←</kbd><kbd>→</kbd> A 点を 1 拍ずつ移動（<kbd>Shift</kbd>で B 点）　<kbd>Esc</kbd> 旗の移動を取り消し　<kbd>A</kbd> <kbd>B</kbd> 今の位置を A/B に　<kbd>L</kbd> ループのオン/オフ　<kbd>Enter</kbd> A 点に戻る　<kbd>-</kbd> <kbd>+</kbd> キー　<kbd>Z</kbd> ループを拡大/曲全体　<kbd>Ctrl</kbd>+ホイール 拡大・縮小　<kbd>Shift</kbd>+ホイール スクロール　<kbd>O</kbd> ファイルを開く</p>
     </section>
     <footer class="foot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg><span id="saveState" data-i18n="foot">音源はブラウザの中だけで処理され、アップロードされません。ループと設定は曲ごとにこのブラウザに保存されます。</span></footer>
   </main>
@@ -406,7 +406,8 @@
     <h2 id="helpTitle" data-i18n="menu.help">使い方</h2>
     <div class="help-body">
       <ol class="help-list" data-i18n-html="help.body"><li><b>曲を開く</b> – 「ファイルを開く」を押すか、波形の場所に音源ファイルをドロップします。MP3・AAC（m4a）・WAV はどのブラウザでも開けます。配信サービスの曲は開けません。</li>
-        <li><b>ループ範囲を選ぶ</b> – 波形の上をドラッグします。旗を動かすときは、A か B をタップして（青くなります）移動先をタップするか、長押しして掴んだままドラッグします。再生中に「A」「B」を押すと今の位置に設定されます。◀ ▶ で前後の拍に動かせます。「ループを拡大」でループ部分だけを大きく表示できます。</li>
+        <li><b>ループ範囲を選ぶ</b> – 波形の上をドラッグします。旗を動かすときは、A か B をタップして（青くなります）移動先をタップするか、長押しして掴んだままドラッグします。再生中に「A」「B」を押すと今の位置に設定されます。◀ ▶ で前後の拍に動かせます。</li>
+        <li><b>波形の拡大・縮小</b> – 2本指でピンチすると波形が横に伸び縮みし、2本指を左右に動かすとスクロールします。パソコンでは Ctrl＋ホイール（トラックパッドのピンチ）と Shift＋ホイールで同じことができます。「ループを拡大」でループを画面いっぱいに表示し、もう一度押すと曲全体に戻ります。</li>
         <li><b>拍に合わせる</b> – 曲のテンポと拍の位置を自動で検出し（♩ ≈ 120 は約 120 BPM）、A・B が一番近い拍に吸い付きます。テンポが倍や半分に見えるときは ½ か ×2 で直せます。「拍に合わせる」をオフにすると自由な位置に置けます（◀ ▶ は 0.05 秒ずつ）。</li>
         <li><b>速度を落とす</b> – ボタンやスライダーで 50%〜150% に設定します。音程は変わりません。</li>
         <li><b>キーを変える</b> – 半音単位で上下に動かします（±6 まで）。テンポは変わりません。</li>
@@ -463,7 +464,7 @@
           "open": "Open file",
           "open.big": "Open an audio file",
           "drop": "MP3, AAC (m4a), WAV, and more. You can also drop a file here. Files are never uploaded.",
-          "wave.aria": "Waveform. Drag to choose the loop, tap to jump. Tap the A or B flag, then tap where it should go, or long-press a flag and drag it.",
+          "wave.aria": "Waveform. Drag to choose the loop, tap to jump. Tap the A or B flag, then tap where it should go, or long-press a flag and drag it. Pinch to zoom in or out, and move two fingers sideways to scroll.",
           "snap": "Snap to beats",
           "beats.analyzing": "Finding the beats…",
           "beats.tempo": "♩ ≈ {bpm}",
@@ -535,7 +536,7 @@
           "sec.del": "Delete loop {name}",
           "vol": "Volume",
           "clickVol": "Count-in volume",
-          "keys": "<kbd>Space</kbd> play / pause　<kbd>↑</kbd><kbd>↓</kbd> speed ±1% (<kbd>Shift</kbd> ±5%)　<kbd>←</kbd><kbd>→</kbd> move A by a beat (<kbd>Shift</kbd> move B)　<kbd>Esc</kbd> cancel moving a flag　<kbd>A</kbd> <kbd>B</kbd> set A / B here　<kbd>L</kbd> loop on / off　<kbd>Enter</kbd> back to A　<kbd>-</kbd> <kbd>+</kbd> key　<kbd>Z</kbd> zoom　<kbd>O</kbd> open file",
+          "keys": "<kbd>Space</kbd> play / pause　<kbd>↑</kbd><kbd>↓</kbd> speed ±1% (<kbd>Shift</kbd> ±5%)　<kbd>←</kbd><kbd>→</kbd> move A by a beat (<kbd>Shift</kbd> move B)　<kbd>Esc</kbd> cancel moving a flag　<kbd>A</kbd> <kbd>B</kbd> set A / B here　<kbd>L</kbd> loop on / off　<kbd>Enter</kbd> back to A　<kbd>-</kbd> <kbd>+</kbd> key　<kbd>Z</kbd> zoom to loop / whole song　<kbd>Ctrl</kbd>+wheel zoom　<kbd>Shift</kbd>+wheel scroll　<kbd>O</kbd> open file",
           "foot": "The audio is processed only in your browser and never uploaded. Loops and settings are saved in this browser for each song.",
           "foot.fail": "This browser cannot save your loops (check private browsing or blocked site data). Everything else works.",
           "msg.decoding": "Reading “{name}”…",
@@ -549,7 +550,7 @@
           "menu.about": "About",
           "intro.title": "Slow down a song and loop any section, without changing the pitch",
           "intro.body": "<p>Loop Trainer is a free practice player for learning songs by ear. Open an audio file you have, drag over the waveform to choose the part you want to learn, and it repeats that part as many times as you like. The app finds the beats of the song, so the loop points snap right onto the beat. Slow it down to 70% or even 50% and the pitch stays the same, so you can hear every note of a fast guitar solo and play along in the original key.</p>\n      <h2>Speed up a little on every loop</h2>\n      <p>Turn on “Speed up on every loop” and the loop starts slow, then gets a little faster each time it comes around: for example 70%, 72%, 74% … up to 100%. You practise the phrase slowly first and reach the real tempo without stopping to change anything. A count-in can click before each loop so you have time to get ready.</p>\n      <h2>Change the key, save your loops</h2>\n      <p>Shift the key up or down by up to six semitones, together with the speed. Tune to a song recorded a half step down, or move it to fit your voice. The loops, speed, and key are saved for each song in your browser, and you can keep several named loops per song, such as “Intro” and “Solo, first half”. Open the same file next time and you pick up where you left off.</p>\n      <h2>Files stay on your device</h2>\n      <p>The audio is decoded and processed only in your browser and is never uploaded. It works with MP3, AAC (m4a), WAV, and other formats your browser can play, on a computer, tablet, or phone. Music from streaming services (Apple Music, Spotify, YouTube) cannot be opened. No sign-up is needed.</p>",
-          "help.body": "<li><b>Open a song</b> – Tap “Open file” or drop an audio file on the waveform. MP3, AAC (m4a), and WAV work in every browser. Music from streaming services cannot be opened.</li>\n        <li><b>Choose the loop</b> – Drag across the waveform. To move a flag, tap A or B (it turns blue) and then tap where it should go, or long-press it and drag. While it plays, “A” and “B” set them at the current position. ◀ and ▶ move them to the previous or next beat. “Zoom to loop” shows just the loop for fine changes.</li>\n        <li><b>Snap to beats</b> – The app finds the tempo and the beats of the song (♩ ≈ 120 means about 120 BPM), and the loop points snap to the nearest beat. If the tempo looks twice too fast or too slow, use ½ or ×2. Turn off “Snap to beats” to place the points freely (◀ ▶ then move by 0.05 seconds).</li>\n        <li><b>Slow down</b> – Set the speed between 50% and 150% with the buttons or the slider. The pitch does not change.</li>\n        <li><b>Change the key</b> – Move it up or down in semitones (up to ±6). The tempo does not change.</li>\n        <li><b>Speed up on every loop</b> – Turn it on and set where to start, how much to add each loop, and where to stop. It goes back to the first speed when you play from the start of the loop.</li>\n        <li><b>Count-in</b> – Clicks play before each loop. Enter the song's BPM (at 100%) or tap it in; the clicks follow the current speed.</li>\n        <li><b>Saved loops</b> – “+ Save this loop” adds the current loop to the list. Give it a name, and tap its time to go back to it. Everything is saved for each song and comes back when you open the same file.</li>",
+          "help.body": "<li><b>Open a song</b> – Tap “Open file” or drop an audio file on the waveform. MP3, AAC (m4a), and WAV work in every browser. Music from streaming services cannot be opened.</li>\n        <li><b>Choose the loop</b> – Drag across the waveform. To move a flag, tap A or B (it turns blue) and then tap where it should go, or long-press it and drag. While it plays, “A” and “B” set them at the current position. ◀ and ▶ move them to the previous or next beat. </li>\n        <li><b>Zoom the waveform</b> – Pinch with two fingers to stretch or shrink the waveform, and move two fingers sideways to scroll. On a computer, use Ctrl + wheel (or pinch on the trackpad) and Shift + wheel. “Zoom to loop” fits the loop to the screen; press it again to see the whole song.</li>\n        <li><b>Snap to beats</b> – The app finds the tempo and the beats of the song (♩ ≈ 120 means about 120 BPM), and the loop points snap to the nearest beat. If the tempo looks twice too fast or too slow, use ½ or ×2. Turn off “Snap to beats” to place the points freely (◀ ▶ then move by 0.05 seconds).</li>\n        <li><b>Slow down</b> – Set the speed between 50% and 150% with the buttons or the slider. The pitch does not change.</li>\n        <li><b>Change the key</b> – Move it up or down in semitones (up to ±6). The tempo does not change.</li>\n        <li><b>Speed up on every loop</b> – Turn it on and set where to start, how much to add each loop, and where to stop. It goes back to the first speed when you play from the start of the loop.</li>\n        <li><b>Count-in</b> – Clicks play before each loop. Enter the song's BPM (at 100%) or tap it in; the clicks follow the current speed.</li>\n        <li><b>Saved loops</b> – “+ Save this loop” adds the current loop to the list. Give it a name, and tap its time to go back to it. Everything is saved for each song and comes back when you open the same file.</li>",
           "privacy.body": "<li><b>Your audio stays on your device</b> – Audio files are decoded and played only in your browser. They are never uploaded to a server. This app has no accounts, cookies, or ads.</li>\n        <li><b>Data saved in your browser</b> – For each song you open, the file name and size, the loops, speed, key, and count-in tempo are saved in your browser's storage so they are there next time. The audio itself is not saved. To work offline, the app is saved there too. You can delete them by clearing this site's data in your browser settings.</li>\n        <li><b>Audio library</b> – When you open the first file, the app loads the SoundTouchJS library from the jsDelivr CDN. Like any web request, this sends your IP address and browser information to jsDelivr. Nothing about your audio is sent.</li>\n        <li><b>Server logs and page views</b> – This site is hosted on Cloudflare. Standard access logs (such as IP address, time, and the requested page) are kept for operation and security. Cloudflare Web Analytics counts page views without cookies (the page URL, referrer, browser information, and page load time).</li>\n        <li><b>Contact</b> – Questions and feedback: <a href=\"https://github.com/ktkwmr/LoopTrainer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a>.</li>\n        <li><b>Full policy</b> – See the <a href=\"/looptrainer/privacy/\">privacy policy</a> and <a href=\"/looptrainer/about/\">about this site</a>.</li>",
           "about.license": "© 2026 ktkwmr · Licensed under the <a href=\"https://github.com/ktkwmr/LoopTrainer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT License</a> · <a href=\"/looptrainer/about/\">About this site</a> · Audio processing: <a href=\"https://github.com/cutterbl/SoundTouchJS\" target=\"_blank\" rel=\"noopener\">SoundTouchJS</a> (LGPL-2.1, loaded unmodified from jsDelivr)",
           "close": "Close",
@@ -564,7 +565,7 @@
           "open": "ファイルを開く",
           "open.big": "音源ファイルを開く",
           "drop": "MP3・AAC（m4a）・WAV など。ここにドロップしても開けます。ファイルはどこにもアップロードされません。",
-          "wave.aria": "波形。ドラッグでループ範囲を選び、タップでその位置に移動します。A・B の旗をタップしてから移動先をタップするか、旗を長押ししてドラッグすると動かせます。",
+          "wave.aria": "波形。ドラッグでループ範囲を選び、タップでその位置に移動します。A・B の旗をタップしてから移動先をタップするか、旗を長押ししてドラッグすると動かせます。ピンチで拡大・縮小、2本指を左右に動かすとスクロールします。",
           "snap": "拍に合わせる",
           "beats.analyzing": "拍を解析中…",
           "beats.tempo": "♩ ≈ {bpm}",
@@ -636,7 +637,7 @@
           "sec.del": "ループ「{name}」を削除",
           "vol": "音量",
           "clickVol": "カウントインの音量",
-          "keys": "<kbd>Space</kbd> 再生/一時停止　<kbd>↑</kbd><kbd>↓</kbd> 速度 ±1%（<kbd>Shift</kbd>で±5%）　<kbd>←</kbd><kbd>→</kbd> A 点を 1 拍ずつ移動（<kbd>Shift</kbd>で B 点）　<kbd>Esc</kbd> 旗の移動を取り消し　<kbd>A</kbd> <kbd>B</kbd> 今の位置を A/B に　<kbd>L</kbd> ループのオン/オフ　<kbd>Enter</kbd> A 点に戻る　<kbd>-</kbd> <kbd>+</kbd> キー　<kbd>Z</kbd> 拡大　<kbd>O</kbd> ファイルを開く",
+          "keys": "<kbd>Space</kbd> 再生/一時停止　<kbd>↑</kbd><kbd>↓</kbd> 速度 ±1%（<kbd>Shift</kbd>で±5%）　<kbd>←</kbd><kbd>→</kbd> A 点を 1 拍ずつ移動（<kbd>Shift</kbd>で B 点）　<kbd>Esc</kbd> 旗の移動を取り消し　<kbd>A</kbd> <kbd>B</kbd> 今の位置を A/B に　<kbd>L</kbd> ループのオン/オフ　<kbd>Enter</kbd> A 点に戻る　<kbd>-</kbd> <kbd>+</kbd> キー　<kbd>Z</kbd> ループを拡大/曲全体　<kbd>Ctrl</kbd>+ホイール 拡大・縮小　<kbd>Shift</kbd>+ホイール スクロール　<kbd>O</kbd> ファイルを開く",
           "foot": "音源はブラウザの中だけで処理され、アップロードされません。ループと設定は曲ごとにこのブラウザに保存されます。",
           "foot.fail": "このブラウザではループを保存できません（プライベートモードやサイトデータのブロックを確認してください）。保存以外の機能はそのまま使えます。",
           "msg.decoding": "「{name}」を読み込んでいます…",
@@ -650,7 +651,7 @@
           "menu.about": "このアプリについて",
           "intro.title": "音程を変えずにスロー再生・区間ループできる耳コピ練習プレイヤー",
           "intro.body": "<p>Loop Trainer は、耳コピやフレーズ練習のための無料の練習用プレイヤーです。手持ちの音源ファイルを開き、波形の上をドラッグして練習したい部分を選ぶと、その区間を何度でも繰り返し再生（A-B リピート）します。曲の拍を自動で検出するので、ループの始まりと終わりがぴったり拍に乗ります。速度を 70% や 50% まで落としても音程（ピッチ）は変わらないので、速いギターソロの一音一音を聞き取りながら、原曲のキーのまま一緒に弾けます。</p>\n      <h2>1周ごとに少しずつ速くする</h2>\n      <p>「1周ごとに速くする」をオンにすると、最初はゆっくり、ループが一周するたびに少しずつ速くなります（例：70% → 72% → 74% … → 100%）。手を止めて設定を変えなくても、ゆっくり確実に弾くところから原曲のテンポまで続けて練習できます。ループの頭にカウントインのクリックを入れて、構えてから弾き始めることもできます。</p>\n      <h2>キー変更とループの保存</h2>\n      <p>キーは速度と同時に、半音単位で上下 6 つまで変えられます。半音下げチューニングの曲に合わせたり、歌いやすいキーに移したりするときに使えます。ループ範囲・速度・キーは曲ごとにブラウザに保存され、「イントロ」「ソロ前半」のように名前を付けたループを 1 曲にいくつでも残せます。次に同じファイルを開けば、前回の続きから練習できます。</p>\n      <h2>ファイルは端末の外に出ません</h2>\n      <p>音源の読み込みと処理はブラウザの中だけで行い、どこにもアップロードしません。MP3・AAC（m4a）・WAV など、ブラウザが再生できる形式に対応し、パソコン・タブレット・スマホで使えます。Apple Music・Spotify・YouTube など配信サービスの曲は開けません。登録は不要です。</p>",
-          "help.body": "<li><b>曲を開く</b> – 「ファイルを開く」を押すか、波形の場所に音源ファイルをドロップします。MP3・AAC（m4a）・WAV はどのブラウザでも開けます。配信サービスの曲は開けません。</li>\n        <li><b>ループ範囲を選ぶ</b> – 波形の上をドラッグします。旗を動かすときは、A か B をタップして（青くなります）移動先をタップするか、長押しして掴んだままドラッグします。再生中に「A」「B」を押すと今の位置に設定されます。◀ ▶ で前後の拍に動かせます。「ループを拡大」でループ部分だけを大きく表示できます。</li>\n        <li><b>拍に合わせる</b> – 曲のテンポと拍の位置を自動で検出し（♩ ≈ 120 は約 120 BPM）、A・B が一番近い拍に吸い付きます。テンポが倍や半分に見えるときは ½ か ×2 で直せます。「拍に合わせる」をオフにすると自由な位置に置けます（◀ ▶ は 0.05 秒ずつ）。</li>\n        <li><b>速度を落とす</b> – ボタンやスライダーで 50%〜150% に設定します。音程は変わりません。</li>\n        <li><b>キーを変える</b> – 半音単位で上下に動かします（±6 まで）。テンポは変わりません。</li>\n        <li><b>1周ごとに速くする</b> – オンにして、開始の速度・1周ごとの上げ幅・上限を決めます。ループの先頭から再生すると、開始の速度に戻ります。</li>\n        <li><b>カウントイン</b> – ループの前にクリックが鳴ります。曲の BPM（100% のとき）を入力するか、タップで合わせます。クリックは今の速度に合わせて鳴ります。</li>\n        <li><b>ループの保存</b> – 「＋ このループを保存」で今のループを一覧に追加します。名前を付けておき、時間のボタンを押すと呼び出せます。設定は曲ごとに保存され、同じファイルを開くと元に戻ります。</li>",
+          "help.body": "<li><b>曲を開く</b> – 「ファイルを開く」を押すか、波形の場所に音源ファイルをドロップします。MP3・AAC（m4a）・WAV はどのブラウザでも開けます。配信サービスの曲は開けません。</li>\n        <li><b>ループ範囲を選ぶ</b> – 波形の上をドラッグします。旗を動かすときは、A か B をタップして（青くなります）移動先をタップするか、長押しして掴んだままドラッグします。再生中に「A」「B」を押すと今の位置に設定されます。◀ ▶ で前後の拍に動かせます。</li>\n        <li><b>波形の拡大・縮小</b> – 2本指でピンチすると波形が横に伸び縮みし、2本指を左右に動かすとスクロールします。パソコンでは Ctrl＋ホイール（トラックパッドのピンチ）と Shift＋ホイールで同じことができます。「ループを拡大」でループを画面いっぱいに表示し、もう一度押すと曲全体に戻ります。</li>\n        <li><b>拍に合わせる</b> – 曲のテンポと拍の位置を自動で検出し（♩ ≈ 120 は約 120 BPM）、A・B が一番近い拍に吸い付きます。テンポが倍や半分に見えるときは ½ か ×2 で直せます。「拍に合わせる」をオフにすると自由な位置に置けます（◀ ▶ は 0.05 秒ずつ）。</li>\n        <li><b>速度を落とす</b> – ボタンやスライダーで 50%〜150% に設定します。音程は変わりません。</li>\n        <li><b>キーを変える</b> – 半音単位で上下に動かします（±6 まで）。テンポは変わりません。</li>\n        <li><b>1周ごとに速くする</b> – オンにして、開始の速度・1周ごとの上げ幅・上限を決めます。ループの先頭から再生すると、開始の速度に戻ります。</li>\n        <li><b>カウントイン</b> – ループの前にクリックが鳴ります。曲の BPM（100% のとき）を入力するか、タップで合わせます。クリックは今の速度に合わせて鳴ります。</li>\n        <li><b>ループの保存</b> – 「＋ このループを保存」で今のループを一覧に追加します。名前を付けておき、時間のボタンを押すと呼び出せます。設定は曲ごとに保存され、同じファイルを開くと元に戻ります。</li>",
           "privacy.body": "<li><b>音源は端末の外に出ません</b> – 音源ファイルの読み込みと再生はブラウザの中だけで行い、サーバーにアップロードすることはありません。アカウント登録・Cookie・広告はありません。</li>\n        <li><b>ブラウザに保存するデータ</b> – 次に開いたときにも使えるよう、開いた曲ごとにファイル名とサイズ、ループ範囲・速度・キー・カウントインのテンポをブラウザ内に保存します。音源そのものは保存しません。オフラインで使えるよう、アプリ本体も保存します。ブラウザの設定でこのサイトのデータを削除すると消えます。</li>\n        <li><b>音声処理のライブラリ</b> – 最初にファイルを開いたとき、jsDelivr（CDN）から SoundTouchJS というライブラリを読み込みます。通常の Web の通信と同じく、IP アドレスやブラウザの情報が jsDelivr に送られます。音源に関する情報は送られません。</li>\n        <li><b>サーバーのログと閲覧数</b> – 本サイトは Cloudflare で配信しています。運用とセキュリティのため、一般的なアクセスログ（IP アドレス・日時・アクセスしたページなど）が記録されます。Cloudflare Web Analytics で、Cookie を使わずにページの閲覧数（ページの URL・参照元・ブラウザの情報・表示速度）を集計しています。</li>\n        <li><b>お問い合わせ</b> – ご質問・ご意見は <a href=\"https://github.com/ktkwmr/LoopTrainer/issues\" target=\"_blank\" rel=\"noopener\">GitHub の Issues</a> へ。</li>\n        <li><b>詳しくは</b> – <a href=\"/looptrainer/ja/privacy/\">プライバシーポリシー</a>と<a href=\"/looptrainer/ja/about/\">運営者情報</a>をご覧ください。</li>",
           "about.license": "© 2026 ktkwmr · <a href=\"https://github.com/ktkwmr/LoopTrainer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT ライセンス</a> · <a href=\"/looptrainer/ja/about/\">運営者情報</a> · 音声処理：<a href=\"https://github.com/cutterbl/SoundTouchJS\" target=\"_blank\" rel=\"noopener\">SoundTouchJS</a>（LGPL-2.1。jsDelivr から改変せずに読み込み）",
           "close": "閉じる",
@@ -1028,7 +1029,7 @@
         song.name = file.name;
         if (!known) { song.a = 0; song.b = buffer.duration; song.pos = 0; }
         position = song.pos >= buffer.duration - 0.05 ? 0 : song.pos;
-        view = null; zoom = false; peaksCache = null; freePos = false; armed = null; beatInfo = null;
+        view = null; peaksCache = null; freePos = false; armed = null; beatInfo = null;
         const bytes = buffer.length * buffer.numberOfChannels * 4;
         const msgs = [];
         if (known && (song.loop || song.speed !== 100 || song.semi)) msgs.push(t("msg.restored", { a: fmt(song.a), b: fmt(song.b), speed: song.speed }));
@@ -1270,19 +1271,29 @@
 
       // ---------- Waveform ----------
       const canvas = $("wave");
-      let view = null, zoom = false, peaksCache = null, drag = null, uiDirty = true;
+      let view = null, peaksCache = null, drag = null, uiDirty = true;   // view: [start, end] in seconds when zoomed in, null for the whole song
       let armed = null;           // "a" / "b": the flag that was tapped; the next tap on the waveform moves it there
       const LONG_PRESS = 350;     // ms on a flag before it can be dragged with a finger
+      const MIN_VIEW = 0.2;       // seconds across the waveform at the most zoomed in
       function viewRange() {
         if (!buffer) return [0, 1];
-        if (zoom && song.b - song.a >= MIN_LOOP) {
-          if (!view || !drag) {
-            const pad = Math.max(0.25, (song.b - song.a) * 0.12);
-            view = [Math.max(0, song.a - pad), Math.min(buffer.duration, song.b + pad)];
-          }
-          return view;
-        }
-        return [0, buffer.duration];
+        return view || [0, buffer.duration];
+      }
+      // Show `span` seconds starting at `start` (kept inside the song; the whole song again when zoomed out that far)
+      function setView(start, span) {
+        if (!buffer) return;
+        const dur = buffer.duration;
+        span = clamp(span, Math.min(MIN_VIEW, dur), dur);
+        const v0 = clamp(start, 0, dur - span);
+        view = span >= dur * 0.999 ? null : [v0, v0 + span];
+        uiDirty = true; redraw();
+      }
+      // The loop with a little room on both sides (or a quarter of the song around the cursor when the loop is the whole song)
+      function fitLoop() {
+        const len = song.b - song.a;
+        if (len >= buffer.duration * 0.98) { const span = buffer.duration / 4; setView(cur() - span / 2, span); return; }
+        const pad = Math.max(0.25, len * 0.12);
+        setView(song.a - pad, len + pad * 2);
       }
       // Min / max per pixel column for the visible range (cached until the range or size changes)
       function peaks(w, v0, v1) {
@@ -1293,7 +1304,7 @@
         const step = Math.max(1, Math.floor(per / 400));
         for (let x = 0; x < w; x++) {
           let lo = 0, hi = 0;
-          const s = Math.floor(f0 + x * per), e = Math.min(buffer.length, Math.floor(f0 + (x + 1) * per) + 1);
+          const s = Math.floor(f0 + x * per), e = Math.min(buffer.length, Math.max(s + 1, Math.floor(f0 + (x + 1) * per) + 1));
           for (let i = s; i < e; i += step) {
             const v = R ? (L[i] + R[i]) * 0.5 : L[i];
             if (v < lo) lo = v; else if (v > hi) hi = v;
@@ -1328,6 +1339,12 @@
           const y0 = mid - hi * amp, y1 = mid - lo * amp;
           g.fillRect(x, y0, 1, Math.max(dpr, y1 - y0));
         }
+        // Zoomed in: a bar at the bottom shows which part of the song is on screen
+        const barH = view ? 4 * dpr : 0;
+        if (view) {
+          g.fillStyle = col("--line"); g.fillRect(0, h - barH, w, barH);
+          g.fillStyle = col("--subtle"); g.fillRect(v0 / buffer.duration * w, h - barH, Math.max(4 * dpr, (v1 - v0) / buffer.duration * w), barH);
+        }
         // Beats: a tick at the bottom, and a faint line when they are far enough apart
         if (beatInfo) {
           const b = beatInfo.beats, gap = (60 / beatInfo.tempo) / (v1 - v0) * w;
@@ -1335,8 +1352,8 @@
             g.fillStyle = col("--beat");
             for (let i = beatIndex(v0); i < b.length && b[i] <= v1; i++) {
               const bx2 = Math.round(X(b[i] - LEAD));
-              g.fillRect(bx2, h - 7 * dpr, Math.max(1, dpr), 7 * dpr);
-              if (gap >= 24 * dpr) { g.globalAlpha = 0.35; g.fillRect(bx2, 0, Math.max(1, dpr), h - 7 * dpr); g.globalAlpha = 1; }
+              g.fillRect(bx2, h - 7 * dpr - barH, Math.max(1, dpr), 7 * dpr);
+              if (gap >= 24 * dpr) { g.globalAlpha = 0.35; g.fillRect(bx2, 0, Math.max(1, dpr), h - 7 * dpr - barH); g.globalAlpha = 1; }
             }
           }
         }
@@ -1396,10 +1413,36 @@
       }
       // Tap a flag: select it, then tap where it should go. Long-press a flag (or press it with a mouse) and drag: move it.
       // Drag anywhere else: a new loop. Tap anywhere else: jump there.
+      // Two fingers: pinch to zoom the waveform in or out, move them sideways to scroll it
+      const fingers = new Map();  // pointer id → clientX, for fingers on the waveform
+      let pinch = null;
+      function startPinch() {
+        if (drag) {
+          // The first finger may already have started a new loop: put the loop back
+          clearTimeout(drag.timer);
+          if (drag.moved) setLoop(drag.orig.a, drag.orig.b, drag.orig.loop);
+          drag = null; renderArm();
+        }
+        const xs = [...fingers.values()], [v0, v1] = viewRange();
+        pinch = { d0: Math.max(20, Math.abs(xs[0] - xs[1])), t: timeAt((xs[0] + xs[1]) / 2), span: v1 - v0 };
+        uiDirty = true;
+      }
+      function movePinch() {
+        const xs = [...fingers.values()].slice(0, 2), r = canvas.getBoundingClientRect();
+        const mid = (xs[0] + xs[1]) / 2, span = pinch.span * pinch.d0 / Math.max(20, Math.abs(xs[0] - xs[1]));
+        // The moment under the middle of the two fingers stays under it
+        setView(pinch.t - (mid - r.left) / r.width * span, span);
+      }
       canvas.addEventListener("pointerdown", function (e) {
         if (!buffer || e.button > 0) return;
+        if (e.pointerType !== "mouse") {
+          fingers.set(e.pointerId, e.clientX);
+          try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+          if (fingers.size === 2) { startPinch(); return; }
+          if (fingers.size > 2 || pinch) return;
+        }
         const hit = flagAt(e, !!armed);
-        drag = { mode: hit || "new", x0: e.clientX, t0: timeAt(e.clientX), moved: false, grabbed: false, id: e.pointerId, finger: e.pointerType !== "mouse", timer: 0 };
+        drag = { mode: hit || "new", x0: e.clientX, t0: timeAt(e.clientX), moved: false, grabbed: false, id: e.pointerId, finger: e.pointerType !== "mouse", timer: 0, orig: { a: song.a, b: song.b, loop: song.loop } };
         if (hit && drag.finger) {
           const d = drag;
           d.timer = setTimeout(function () {
@@ -1412,6 +1455,8 @@
         try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
       });
       canvas.addEventListener("pointermove", function (e) {
+        if (fingers.has(e.pointerId)) fingers.set(e.pointerId, e.clientX);
+        if (pinch) { if (fingers.size >= 2) movePinch(); return; }
         if (!drag) { if (buffer && e.pointerType === "mouse") canvas.classList.toggle("on-flag", !!flagAt(e)); return; }
         if (e.pointerId !== drag.id) return;
         if (!drag.moved) {
@@ -1428,20 +1473,41 @@
         if (drag.mode === "new") { const t0 = snap(drag.t0); setLoop(Math.min(t0, tm), Math.max(t0, tm), true); }
         else moveFlag(drag.mode, tm, false);
       });
-      // While a flag is held, a finger moving up or down should not scroll the page
-      canvas.addEventListener("touchmove", function (e) { if (drag && drag.grabbed) e.preventDefault(); }, { passive: false });
+      // While a flag is held or two fingers are down, moving up or down should not scroll the page
+      canvas.addEventListener("touchmove", function (e) { if ((drag && drag.grabbed) || pinch || e.touches.length > 1) e.preventDefault(); }, { passive: false });
+      // Safari's own pinch-to-zoom of the page
+      canvas.addEventListener("gesturestart", function (e) { e.preventDefault(); });
       canvas.addEventListener("contextmenu", function (e) { e.preventDefault(); });
       function endDrag(e) {
+        fingers.delete(e.pointerId);
+        // After a pinch, the finger still down does nothing until it is lifted
+        if (pinch) { if (fingers.size < 2) { pinch = null; uiDirty = true; redraw(); } return; }
         if (!drag || e.pointerId !== drag.id) return;
         const d = drag; drag = null;
         clearTimeout(d.timer);
-        if (e.type === "pointercancel" || d.moved || d.grabbed) { view = null; uiDirty = true; renderArm(); if (!playing) frame(); return; }
+        if (e.type === "pointercancel" || d.moved || d.grabbed) { uiDirty = true; renderArm(); if (!playing) frame(); return; }
         if (d.mode !== "new") setArmed(armed === d.mode ? null : d.mode);
         else if (armed) { const f = armed; armed = null; moveFlag(f, snap(d.t0), true); renderArm(); }
         else seek(d.t0);
       }
       canvas.addEventListener("pointerup", endDrag);
       canvas.addEventListener("pointercancel", endDrag);
+      // Computer: Ctrl + wheel (a trackpad pinch sends this) zooms around the pointer; Shift + wheel or a sideways swipe scrolls.
+      // A plain wheel still scrolls the page.
+      canvas.addEventListener("wheel", function (e) {
+        if (!buffer) return;
+        const r = canvas.getBoundingClientRect(), [v0, v1] = viewRange(), span = v1 - v0;
+        const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? r.width : 1;
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          const ns = span * Math.exp(clamp(e.deltaY * unit, -100, 100) * 0.01), at = timeAt(e.clientX);
+          setView(at - (e.clientX - r.left) / r.width * ns, ns);
+        } else if (view && (e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY))) {
+          e.preventDefault();
+          const d = (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * unit;
+          setView(v0 + d / r.width * span, span);
+        }
+      }, { passive: false });
       new ResizeObserver(() => { uiDirty = true; if (!playing) frame(); }).observe(canvas);
 
       // ---------- Loop range ----------
@@ -1511,7 +1577,7 @@
       }
       function goSection(s) {
         setLoop(s.a, s.b, true);
-        if (zoom) view = null;
+        if (view) fitLoop();
         seek(s.a);
       }
 
@@ -1521,7 +1587,8 @@
         const d = digits === undefined ? 2 : digits, m = Math.floor(sec / 60), s = sec - m * 60;
         let ss = s.toFixed(d);
         if (+ss >= 60) { return fmt(Math.ceil(sec), d); }
-        if (s < 10) ss = "0" + ss;
+        // Pad after rounding (9.97 is shown as 10.0, not 010.0)
+        if (+ss < 10) ss = "0" + ss;
         return m + ":" + ss;
       }
       const signed = (n) => (n > 0 ? "+" + n : n < 0 ? "−" + Math.abs(n) : "±0");
@@ -1577,7 +1644,7 @@
         $("aVal").textContent = has ? fmt(s.a) : "–"; $("bVal").textContent = has ? fmt(s.b) : "–";
         ["setA", "setB", "saveSecBtn", "wholeBtn", "zoomBtn"].forEach((id) => { $(id).disabled = !has; });
         document.querySelectorAll("[data-nudge]").forEach((b) => { b.disabled = !has; });
-        $("zoomBtn").setAttribute("aria-pressed", zoom);
+        $("zoomBtn").setAttribute("aria-pressed", !!view);
         // Auto speed-up
         const au = prefs.auto;
         $("autoBtn").setAttribute("aria-pressed", au.on); $("autoBtn").textContent = t(au.on ? "on" : "off");
@@ -1630,8 +1697,16 @@
       }
       function renderAll() { renderPlay(); renderControls(); uiDirty = true; if (!playing) frame(); }
       let lastPass = 0, lastSpeed = 0, lastText = "";
+      let cursorInView = true;
       function frame() {
         const h = buffer ? heard() : { pos: 0 };
+        // Zoomed in and playing: when the cursor runs off the screen, scroll so it is near the left again
+        if (view && playing && !drag && !pinch) {
+          const span = view[1] - view[0];
+          if ((h.pos < view[0] || h.pos > view[1]) && cursorInView) setView(h.pos - span * 0.1, span);
+          const [w0, w1] = viewRange();
+          cursorInView = h.pos >= w0 && h.pos <= w1;
+        } else cursorInView = true;
         draw(h.pos);
         const text = (h.beat || 0) + ":" + h.pos.toFixed(1) + "/" + (buffer ? buffer.duration : 0);
         if (text !== lastText) { renderTime(h.pos, h.beat); lastText = text; }
@@ -1652,9 +1727,10 @@
         const [which, dir] = b.dataset.nudge.split(":");
         b.onclick = () => nudge(which, +dir);
       });
-      $("wholeBtn").onclick = () => { setLoop(0, buffer.duration); zoom = false; view = null; renderControls(); };
+      $("wholeBtn").onclick = () => { setLoop(0, buffer.duration); view = null; renderControls(); };
       $("saveSecBtn").onclick = saveSection;
-      function toggleZoom() { if (!buffer) return; zoom = !zoom; view = null; uiDirty = true; renderControls(); if (!playing) frame(); }
+      // Zoomed in (by this button or a pinch): back to the whole song. Otherwise: zoom to the loop
+      function toggleZoom() { if (!buffer) return; if (view) setView(0, buffer.duration); else fitLoop(); renderControls(); }
       $("zoomBtn").onclick = toggleZoom;
       $("snapBtn").onclick = () => { prefs.snap = !prefs.snap; saveNow(); renderControls(); };
       $("halfBtn").onclick = () => changeTempo(0.5);

@@ -10,8 +10,8 @@ A practice player for learning songs by ear. Open an audio file you have, loop a
 
 - **Open audio files**: MP3, AAC (m4a), WAV, and other formats the browser can decode (FLAC, Ogg, … depending on the browser), by file picker or drag and drop. Decoded with the Web Audio API in the browser
   MP3・AAC（m4a）・WAV など、ブラウザがデコードできる形式。ファイル選択とドラッグ＆ドロップに対応。Web Audio API でブラウザ内でデコード
-- **Waveform**: drag to choose the loop, tap to jump. Move a flag by tapping it (it turns blue) and then tapping where it should go, or by long-pressing it and dragging (with a mouse, drag it straight away). “Zoom to loop” shows just the loop for fine changes
-  波形をドラッグしてループ範囲を選択、タップで移動。旗はタップして（青くなる）移動先をタップするか、長押しして掴んだままドラッグ（マウスならそのままドラッグ）。「ループを拡大」で細かく調整
+- **Waveform**: drag to choose the loop, tap to jump. Move a flag by tapping it (it turns blue) and then tapping where it should go, or by long-pressing it and dragging (with a mouse, drag it straight away). Pinch to zoom the waveform in or out and move two fingers sideways to scroll (Ctrl + wheel / Shift + wheel on a computer); while playing zoomed in, the view follows the cursor. “Zoom to loop” fits the loop to the screen
+  波形をドラッグしてループ範囲を選択、タップで移動。旗はタップして（青くなる）移動先をタップするか、長押しして掴んだままドラッグ（マウスならそのままドラッグ）。ピンチで波形を横に拡大・縮小、2 本指を左右に動かしてスクロール（パソコンは Ctrl＋ホイール／Shift＋ホイール）。拡大中に再生するとカーソルに付いて表示が動く。「ループを拡大」でループを画面いっぱいに表示
 - **Beat detection and snapping**: the tempo and the beats are found in the browser after a file is opened, the beats are drawn on the waveform, and A / B snap to the nearest beat (◀ ▶ then move by one beat). ½ / ×2 fix a tempo found at half or double speed. The detected tempo is used for the count-in until a BPM is entered or tapped
   開いた曲のテンポと拍をブラウザ内で検出して波形に表示し、A・B を一番近い拍に吸着（◀ ▶ は 1 拍ずつ）。テンポが倍・半分になったときは ½ / ×2 で修正。BPM を手で入れるまでは検出したテンポをカウントインに使う
 - **A-B loop**: set A / B at the current position, move them by a beat (or 0.05 s without snapping), loop on / off, back to A
