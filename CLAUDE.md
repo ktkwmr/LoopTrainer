@@ -23,6 +23,7 @@
 - 手で編集するのはアプリ本体 `public/looptrainer/index.html` と `scripts/`。生成ファイル（`public/looptrainer/ja/index.html`、情報ページ `<slug>/` とその `ja/`、`public/looptrainer/sitemap.xml`）は編集せず、`node scripts/build-ja.mjs` と `node scripts/build-pages.mjs` で作り直す（`--check` で確認）。
 - 画面の文言は `index.html` の `I18N`（en / ja）に書き、要素には `data-i18n` / `data-i18n-html` / `data-i18n-attr` を付ける（`build-ja.mjs` が日本語ページの本文を置き換える）。JS で作る文言は `t()` を使う。子要素を持つ要素に `data-i18n` は付けない（`build-ja.mjs` が止まる）。`data-i18n-html` の中に同じタグ名の要素を入れ子にしない。
 - 音声処理は SoundTouchJS（LGPL-2.1）を jsDelivr から**バージョン固定・改変なし**で読み込む（`ST_URL`）。バージョンを変えるときは `index.html` の `ST_URL`、`sw.js` の `CDN`、`THIRD_PARTY_LICENSES.md` を同じ PR で直す。`createStretcher()` は SoundTouchJS 0.3.0 の内部（`_intermediateBuffer`・`_rate`・`_tempo`）を読んでいるので、上げたら再生位置の表示とカウントインのずれを確かめる。
+- 拍の検出は `detectBeats()`（スペクトルフラックス → 自己相関でテンポ → 動的計画法で拍）。`BEAT_BIAS`（14 ms）はテンポと位置が分かっている合成音で測った値なので、解析の窓や刻み（`N`・`HOP`）を変えたら測り直す。吸着したループ点は拍の `LEAD`（10 ms）手前に置く。
 - ピッチ処理を差し替えるときは `createStretcher()` だけを置き換える。Rubber Band（GPL）にする場合はアプリ全体を GPL 互換で公開し、WASM の元ソースへのリンクを載せる（LICENSE・README・about・THIRD_PARTY_LICENSES も直す）。
 - 保存は `localStorage` の `looptrainer-state`（`prefs` と、`ファイル名|サイズ` をキーにした `songs`）。読み込んだ値は `sanitizePrefs()` / `sanitizeSong()` で検証してから使う。保存形式を変えるときは古い形式も読めるようにする。保存できなくても再生は動くこと。
 - 外部ホストを足したら `public/_headers` の CSP と、プライバシーの説明（`scripts/pages/privacy.mjs`、アプリ内の `privacy.body`、README）を同じ PR で直す。

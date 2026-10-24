@@ -10,10 +10,12 @@ A practice player for learning songs by ear. Open an audio file you have, loop a
 
 - **Open audio files**: MP3, AAC (m4a), WAV, and other formats the browser can decode (FLAC, Ogg, … depending on the browser), by file picker or drag and drop. Decoded with the Web Audio API in the browser
   MP3・AAC（m4a）・WAV など、ブラウザがデコードできる形式。ファイル選択とドラッグ＆ドロップに対応。Web Audio API でブラウザ内でデコード
-- **Waveform**: drag to choose the loop, drag the A / B lines to adjust, tap to jump. “Zoom to loop” shows just the loop for fine changes
-  波形をドラッグしてループ範囲を選択、A・B の線のドラッグで調整、タップで移動。「ループを拡大」で細かく調整
-- **A-B loop**: set A / B at the current position, move them by 0.05 s, loop on / off, back to A
-  今の位置を A・B に設定、0.05 秒ずつ移動、ループのオン・オフ、A に戻る
+- **Waveform**: drag to choose the loop, tap to jump. Move a flag by tapping it (it turns blue) and then tapping where it should go, or by long-pressing it and dragging (with a mouse, drag it straight away). “Zoom to loop” shows just the loop for fine changes
+  波形をドラッグしてループ範囲を選択、タップで移動。旗はタップして（青くなる）移動先をタップするか、長押しして掴んだままドラッグ（マウスならそのままドラッグ）。「ループを拡大」で細かく調整
+- **Beat detection and snapping**: the tempo and the beats are found in the browser after a file is opened, the beats are drawn on the waveform, and A / B snap to the nearest beat (◀ ▶ then move by one beat). ½ / ×2 fix a tempo found at half or double speed. The detected tempo is used for the count-in until a BPM is entered or tapped
+  開いた曲のテンポと拍をブラウザ内で検出して波形に表示し、A・B を一番近い拍に吸着（◀ ▶ は 1 拍ずつ）。テンポが倍・半分になったときは ½ / ×2 で修正。BPM を手で入れるまでは検出したテンポをカウントインに使う
+- **A-B loop**: set A / B at the current position, move them by a beat (or 0.05 s without snapping), loop on / off, back to A
+  今の位置を A・B に設定、1 拍ずつ（吸着オフなら 0.05 秒ずつ）移動、ループのオン・オフ、A に戻る
 - **Speed (pitch unchanged)**: 50–150% in 1% steps, with 50–100% presets
   50〜150%（1% 単位）、50〜100% のプリセット
 - **Key (tempo unchanged)**: ±6 semitones, together with the speed
@@ -39,6 +41,7 @@ Not supported: music from streaming services (Apple Music / Spotify DRM, YouTube
 - [SoundTouchJS](https://github.com/cutterbl/SoundTouchJS) (LGPL-2.1) does the time stretching and pitch shifting. It is loaded **unmodified, as a separate file**, from `https://cdn.jsdelivr.net/npm/soundtouchjs@0.3.0/dist/soundtouch.js` the first time a file is opened, and `sw.js` keeps a copy for offline use.
 - The player reads the decoded `AudioBuffer` itself and feeds it to SoundTouch from a `ScriptProcessorNode` (works on iOS Safari). Loops are joined in the source, so there is no gap at the loop point, and a count-in is inserted there as silence while the clicks are scheduled on the audio clock.
 - Everything that depends on the library is inside `createStretcher()` in `index.html` (`setSpeed`, `setSemitones`, `put`, `receive`, `pendingInput`). To try another engine (for example Rubber Band in WebAssembly), replace that function. Note that Rubber Band is GPL: the whole app would then have to be published under a GPL-compatible license, with a link to the source of the WebAssembly build.
+- Beat detection (`detectBeats()`): spectral flux of an 11 kHz mono copy → tempo by autocorrelation weighted toward 120 BPM → beats by dynamic programming (Ellis 2007) → each beat moved to the nearest onset peak. With test signals the beats land within ±3 ms; songs whose onsets do not repeat clearly get no beats (“No beat found”). It runs on the main thread in small chunks, so playback is not interrupted.
 - iOS only starts audio from a tap: the AudioContext is resumed by the first Play. `navigator.audioSession.type = "playback"` lets it play with the silent switch on (Safari 17+).
 
 - 速度とキーの変更は [SoundTouchJS](https://github.com/cutterbl/SoundTouchJS)（LGPL-2.1）で行います。最初にファイルを開いたときに jsDelivr から**改変せずに別ファイルとして**読み込み、`sw.js` がオフライン用に保存します。
