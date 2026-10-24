@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Loop Trainer" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+  <title>Slow Down Music &amp; Loop a Section for Practice, Pitch Unchanged – Loop Trainer</title>
+  <meta name="description" content="A free online practice player for learning songs by ear. Loop any section (A-B repeat), slow it down to 50% without changing the pitch, change the key, and speed up a little on every loop. Files stay on your device. No sign-up." />
+  <link rel="canonical" href="https://ktkwmr.com/looptrainer/" />
+  <link rel="alternate" hreflang="en" href="https://ktkwmr.com/looptrainer/" />
+  <link rel="alternate" hreflang="ja" href="https://ktkwmr.com/looptrainer/ja/" />
+  <link rel="alternate" hreflang="x-default" href="https://ktkwmr.com/looptrainer/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Loop Trainer" />
+  <meta property="og:title" content="Loop Trainer – Slow down and loop any section of a song" />
+  <meta property="og:description" content="A-B loop, slow down without changing the pitch, change the key, and speed up a little on every loop. A free practice player for guitarists and bands. Files never leave your device." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="ja_JP" />
+  <meta property="og:url" content="https://ktkwmr.com/looptrainer/" />
+  <meta property="og:image" content="https://ktkwmr.com/looptrainer/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Loop Trainer: a waveform with an A-B loop, played at 70% speed" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Loop Trainer",
+    "url": "https://ktkwmr.com/looptrainer/",
+    "description": "A practice player that loops a section of an audio file and slows it down or changes the key without changing the other.",
+    "applicationCategory": "MultimediaApplication",
+    "inLanguage": "en",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires a modern web browser",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "ktkwmr" }
+  }
+  </script>
+  <style>
+    /* Layout: same family as ktkwmr.com/setlistmetronome. White toolbar, grey canvas with white panels.
+       Dark colours follow the system setting (for practising at night). */
+    :root {
+      color-scheme: light;
+      --ink: #000; --paper: #fff; --muted: #525252; --subtle: #737373; --line: #e5e5e5; --line-strong: #d4d4d4;
+      --hover-fill: #f5f5f5; --canvas: #f5f5f5; --press: #404040; --press-hover: #262626;
+      --wave: #a3a3a3; --wave-loop: #000; --loop-fill: rgba(0, 0, 0, .07); --cursor: #000;
+      --paper-shadow: 0 1px 3px rgba(0,0,0,.08), 0 6px 20px rgba(0,0,0,.08);
+      --shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+      --radius: 8px; --ctl-h: 40px;
+      --mono: "Cascadia Mono", "Consolas", "SF Mono", Menlo, "MS Gothic", monospace;
+      --sans: "Segoe UI Variable Text", "Segoe UI", "Yu Gothic UI", "Meiryo UI", "Meiryo", system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+      --pad-x: 20px;
+      /* Notch / home bar in landscape (0 where unsupported) */
+      --gl: max(var(--pad-x), env(safe-area-inset-left, 0px)); --gr: max(var(--pad-x), env(safe-area-inset-right, 0px));
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --ink: #f5f5f5; --paper: #171717; --muted: #c4c4c4; --subtle: #a3a3a3; --line: #2e2e2e; --line-strong: #404040;
+        --hover-fill: #262626; --canvas: #0a0a0a; --press: #d4d4d4; --press-hover: #e5e5e5;
+        --wave: #6b6b6b; --wave-loop: #f5f5f5; --loop-fill: rgba(255, 255, 255, .09); --cursor: #f5f5f5;
+        --paper-shadow: 0 0 0 1px #262626; --shadow: 0 24px 64px rgba(0, 0, 0, 0.7);
+      }
+    }
+    @media (max-width: 900px) { :root { --pad-x: 16px; } }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body { margin: 0; min-height: 100dvh; color: var(--ink); background: var(--canvas); font-family: var(--sans); font-size: 13px; line-height: 1.6; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+    button, select, input { font-family: inherit; }
+    :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .mark-bg { fill: var(--ink); }
+    .mark-fg { stroke: var(--paper); }
+    .mark-fill { fill: var(--paper); }
+
+    /* Toolbar */
+    .topbar { background: var(--paper); border-bottom: 1px solid var(--line); padding: calc(10px + env(safe-area-inset-top, 0px)) var(--gr) 10px var(--gl); }
+    .toolbar { display: flex; align-items: center; gap: 12px 20px; }
+    .brand { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 14px; font-weight: 700; letter-spacing: .01em; white-space: nowrap; }
+    .brand svg { width: 28px; height: 28px; flex: 0 0 auto; }
+    .toolbar .end { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    #settingsBtn { appearance: none; width: 34px; height: 34px; padding: 0; border: 1px solid transparent; border-radius: 50%; background: var(--paper); color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+    #settingsBtn svg { flex: none; width: 28px; height: 28px; }
+    #settingsBtn:active { background: var(--line); }
+    @media (hover: hover) { #settingsBtn:hover { background: var(--hover-fill); } }
+
+    /* Settings menu (below the gear button) */
+    .menu { position: fixed; z-index: 1000; min-width: 168px; padding: 4px; border: 1px solid var(--ink); border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow); }
+    .menu button, .menu a { display: block; width: 100%; height: 40px; padding: 0 12px; border: 0; border-radius: 6px; background: transparent; color: var(--ink); font-size: 14px; font-weight: 600; text-align: left; cursor: pointer; }
+    .menu a { line-height: 40px; text-decoration: none; white-space: nowrap; }
+    .menu button:active, .menu a:active { background: var(--line); }
+    .menu button:focus-visible, .menu a:focus-visible { outline-offset: -2px; }
+    @media (hover: hover) { .menu button:hover, .menu a:hover { background: var(--hover-fill); } }
+
+    /* Canvas and panels */
+    .canvas { padding: 16px var(--gr) 16px var(--gl); display: flex; flex-direction: column; gap: 12px; max-width: 1080px; margin: 0 auto; }
+    .lead { margin: 0; color: var(--muted); font-size: 13px; }
+    .panel { min-width: 0; background: var(--paper); border: 1px solid var(--line-strong); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+    .panel.out { border-color: transparent; box-shadow: var(--paper-shadow); }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 8px 12px; min-height: 52px; padding: 6px 8px 6px 16px; border-bottom: 1px solid var(--line); font-size: 13px; font-weight: 700; }
+    .file-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
+    .file-name.empty { color: var(--subtle); font-weight: 600; }
+    .foot { color: var(--subtle); font-size: 12px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .foot svg { flex: 0 0 auto; }
+
+    /* Shared controls */
+    .group { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+    .label { font-size: 12px; font-weight: 700; color: var(--ink); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .label .val { font-family: var(--mono); color: var(--muted); font-weight: 700; }
+    .hint { font-size: 12px; color: var(--subtle); margin: 0; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip { appearance: none; height: var(--ctl-h); padding: 0 14px; border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--paper); color: var(--ink); font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; touch-action: manipulation; }
+    .chip.mono { font-family: var(--mono); min-width: 48px; padding: 0 8px; }
+    .chip.sq { width: var(--ctl-h); padding: 0; }
+    .chip svg { width: 18px; height: 18px; flex: none; }
+    .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+    .chip:active:not(:disabled) { background: var(--line); }
+    .chip[aria-pressed="true"]:active { background: var(--press); }
+    .chip:disabled { opacity: .4; cursor: default; }
+    @media (hover: hover) {
+      .chip:hover:not(:disabled) { border-color: var(--ink); background: var(--hover-fill); }
+      .chip[aria-pressed="true"]:hover:not(:disabled) { background: var(--press-hover); }
+    }
+    input[type=range] { width: 100%; accent-color: var(--ink); margin: 0; height: 28px; }
+    .stepper { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .stepper .num { font-family: var(--mono); font-weight: 700; font-size: 16px; min-width: 3.4ch; text-align: center; font-variant-numeric: tabular-nums; }
+    .num-input { appearance: textfield; -moz-appearance: textfield; width: 5ch; height: var(--ctl-h); border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--paper); color: var(--ink); font: 700 16px var(--mono); text-align: center; padding: 0 4px; }
+    .num-input::-webkit-outer-spin-button, .num-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .num-input:focus { outline: none; border-color: var(--ink); }
+    .row-label { font-size: 12px; color: var(--muted); min-width: 5.5em; }
+
+    /* Waveform */
+    .wave-wrap { position: relative; height: 150px; border-bottom: 1px solid var(--line); background: var(--paper); }
+    @media (max-width: 640px) { .wave-wrap { height: 120px; } }
+    #wave { display: block; width: 100%; height: 100%; touch-action: pan-y; cursor: crosshair; }
+    .drop { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 12px 16px; text-align: center; border: 2px dashed transparent; border-radius: 0; }
+    .drop p { margin: 0; color: var(--subtle); font-size: 12px; max-width: 460px; }
+    .wave-wrap.dragover .drop, .wave-wrap.dragover { border-color: var(--ink); }
+    .wave-wrap.dragover .drop { display: flex !important; background: var(--paper); }
+    .open-big { height: 48px; padding: 0 22px; font-size: 15px; }
+    .timeline { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px 8px 16px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+    .time { font-family: var(--mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .time b { color: var(--ink); }
+
+    /* Big status: speed / key / loop */
+    .status { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.6fr); border-bottom: 1px solid var(--line); }
+    .tile { padding: 12px 16px 14px; min-width: 0; border-left: 1px solid var(--line); }
+    .tile:first-child { border-left: 0; }
+    .tile .k { display: block; font-size: 12px; font-weight: 700; color: var(--subtle); }
+    .tile .v { display: block; font-family: var(--mono); font-size: 40px; font-weight: 700; line-height: 1.15; letter-spacing: -.02em; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tile .v.small { font-size: 26px; line-height: 1.55; }
+    .tile .s { display: block; font-size: 12px; color: var(--muted); min-height: 1.6em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tile.off .v { color: var(--subtle); }
+    @media (max-width: 640px) {
+      .status { grid-template-columns: 1fr 1fr; }
+      .tile.loop { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); }
+      .tile .v { font-size: 34px; }
+      .tile .v.small { font-size: 22px; line-height: 1.4; }
+    }
+
+    /* Transport and A/B */
+    .transport { display: flex; gap: 8px; padding: 14px 16px; border-bottom: 1px solid var(--line); align-items: stretch; }
+    .transport .chip { height: 60px; min-width: 60px; }
+    .play { appearance: none; flex: 1 1 auto; height: 60px; border: 0; border-radius: 10px; background: var(--ink); color: var(--paper); font-size: 17px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px; touch-action: manipulation; }
+    .play svg { width: 20px; height: 20px; }
+    .play:disabled { opacity: .4; cursor: default; }
+    @media (hover: hover) { .play:hover:not(:disabled) { background: var(--press-hover); } }
+    .play:active:not(:disabled) { background: var(--press); }
+    .ab { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 24px; padding: 14px 16px 16px; }
+    @media (max-width: 640px) { .ab { grid-template-columns: 1fr; } }
+    .ab-row { display: flex; align-items: center; gap: 6px; }
+    .ab-row .set { flex: 1 1 auto; font-family: var(--mono); }
+    .ab-row .set b { font-family: var(--sans); margin-right: 4px; }
+    .ab-foot { grid-column: 1 / -1; display: flex; gap: 6px; flex-wrap: wrap; }
+
+    /* Practice settings */
+    .settings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 28px; padding: 16px 16px 20px; }
+    @media (max-width: 640px) { .settings { grid-template-columns: 1fr; } }
+    .settings .group + .group { min-width: 0; }
+    .sub-rows { display: flex; flex-direction: column; gap: 6px; }
+    .sub-rows .stepper { flex-wrap: nowrap; }
+    .sections { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+    .sections li { display: flex; align-items: center; gap: 6px; }
+    .sec-go { flex: 0 0 auto; min-width: 9.5em; font-family: var(--mono); font-size: 13px; }
+    .sec-name { flex: 1; min-width: 0; height: var(--ctl-h); border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--paper); color: var(--ink); font-size: 14px; font-weight: 600; padding: 0 10px; }
+    .sec-name:focus { outline: none; border-color: var(--ink); }
+    .sections li.current .sec-go { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+    .keys { font-size: 12px; color: var(--subtle); padding: 0 16px 16px; margin: 0; line-height: 2; }
+    kbd { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; color: var(--muted); background: var(--paper); }
+    @media (pointer: coarse) { .keys { display: none; } }
+    .notice { margin: 0; padding: 10px 16px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--ink); background: var(--hover-fill); }
+    .notice:empty { display: none; }
+
+    /* Description below the app (indexed by search engines; the Japanese page gets it in Japanese) */
+    .intro { max-width: 760px; margin: 0 auto; padding: 32px var(--gr) calc(48px + env(safe-area-inset-bottom, 0px)) var(--gl); font-size: 15px; line-height: 1.8; }
+    .intro h1 { margin: 0 0 16px; font-size: 22px; line-height: 1.4; }
+    .intro h2 { margin: 28px 0 6px; font-size: 16px; line-height: 1.5; }
+    .intro p { margin: 0 0 12px; }
+    .intro ul { margin: 0 0 12px; padding-left: 1.4em; }
+    .intro a { color: inherit; }
+
+    /* Dialogs */
+    .primary { appearance: none; height: 36px; padding: 0 16px; border: 1px solid transparent; border-radius: var(--radius); color: var(--paper); background: var(--ink); font-weight: 600; cursor: pointer; }
+    .primary:active { background: var(--press); }
+    @media (hover: hover) { .primary:hover { background: var(--press-hover); } }
+
+    /* Tap feedback for one-shot buttons: shrink and darken briefly, like a mobile app.
+       .is-pressed is held for a moment by JS so even a quick tap shows it. */
+    .chip, .play, .primary, #settingsBtn { transition: background-color .12s, border-color .12s, color .12s, transform .1s ease-out; }
+    .chip.is-pressed:not(:disabled), #settingsBtn.is-pressed { background: var(--line); transform: scale(.94); }
+    .play.is-pressed:not(:disabled), .primary.is-pressed { background: var(--press); transform: scale(.97); }
+    @media (prefers-reduced-motion: reduce) { .is-pressed { transform: none !important; } }
+    dialog.msg { width: min(420px, calc(100vw - 32px)); border: 1px solid var(--ink); border-radius: 12px; padding: 24px 24px 20px; box-shadow: var(--shadow); background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    dialog.msg:focus { outline: none; }
+    dialog.msg::backdrop { background: rgba(0, 0, 0, 0.55); }
+    dialog.msg h2 { margin: 0 0 8px; font-size: 16px; font-weight: 700; }
+    dialog.msg .dlg-actions { display: flex; justify-content: flex-end; }
+    dialog.help { width: min(520px, calc(100vw - 32px)); max-height: calc(100% - 32px); }
+    dialog.help[open] { display: flex; flex-direction: column; }
+    .help-body { flex: 0 1 auto; min-height: 0; overflow-y: auto; margin-bottom: 16px; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+    .help-list { margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.7; color: var(--muted); }
+    .help-list li { margin-bottom: 10px; }
+    .help-list li:last-child { margin-bottom: 0; }
+    .help-list b { color: var(--ink); }
+    ul.help-list { list-style: disc; }
+    .help-list a { color: inherit; }
+    dialog.about { width: min(560px, calc(100vw - 32px)); height: min(640px, calc(100% - 32px)); }
+    dialog.about[open] { display: flex; flex-direction: column; }
+    dialog.msg p.about-license { margin: 0 0 12px; color: var(--subtle); font-size: 12px; }
+    .about-license a { color: inherit; }
+    .about-body { flex: 1 1 auto; min-height: 0; overflow: auto; margin-bottom: 16px; border: 1px solid var(--line); border-radius: var(--radius); -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+    .about-body pre { margin: 0; padding: 12px; color: var(--muted); font-family: var(--mono); font-size: 11px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; user-select: text; }
+    @media (prefers-reduced-motion: reduce) { *, ::before, ::after { transition: none !important; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="toolbar">
+      <div class="brand">
+        <svg viewBox="0 0 28 28" aria-hidden="true"><rect class="mark-bg" width="28" height="28" rx="7"></rect><g class="mark-fg" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14A6.5 6.5 0 1 1 14 7.5"></path><path d="M11.6 4.9l2.8 2.6-2.8 2.6"></path></g><path class="mark-fill" d="M12 10.8v6.4l5-3.2z"></path></svg>
+        <span>Loop Trainer</span>
+      </div>
+      <div class="end">
+        <button id="settingsBtn" type="button" aria-label="Settings" data-i18n-attr="aria-label:settings" aria-haspopup="menu" aria-expanded="false" aria-controls="settingsMenu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.89 5.11 L10.33 2.55 L13.67 2.55 L14.11 5.11 A7.2 7.2 0 0 1 15.38 5.64 L17.51 4.14 L19.86 6.49 L18.36 8.62 A7.2 7.2 0 0 1 18.89 9.89 L21.45 10.33 L21.45 13.67 L18.89 14.11 A7.2 7.2 0 0 1 18.36 15.38 L19.86 17.51 L17.51 19.86 L15.38 18.36 A7.2 7.2 0 0 1 14.11 18.89 L13.67 21.45 L10.33 21.45 L9.89 18.89 A7.2 7.2 0 0 1 8.62 18.36 L6.49 19.86 L4.14 17.51 L5.64 15.38 A7.2 7.2 0 0 1 5.11 14.11 L2.55 13.67 L2.55 10.33 L5.11 9.89 A7.2 7.2 0 0 1 5.64 8.62 L4.14 6.49 L6.49 4.14 L8.62 5.64 A7.2 7.2 0 0 1 9.89 5.11 Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="canvas">
+    <p class="lead" data-i18n="lead">Open a song you have, pick the part you want to learn, and loop it slower without changing the pitch. Your loops and settings are saved for each song.</p>
+
+    <section class="panel out" aria-label="Player" data-i18n-attr="aria-label:player">
+      <div class="panel-head">
+        <span class="file-name empty" id="fileName" data-i18n="noFile">No file open</span>
+        <button type="button" class="chip" id="openBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+          <span data-i18n="open">Open file</span>
+        </button>
+        <input type="file" id="fileInput" accept="audio/*,.mp3,.m4a,.aac,.mp4,.wav,.flac,.ogg,.oga,.opus,.webm" hidden>
+      </div>
+      <p class="notice" id="notice" role="status" aria-live="polite"></p>
+      <div class="wave-wrap" id="waveWrap">
+        <canvas id="wave" role="img" aria-label="Waveform. Drag to choose the loop, tap to jump." data-i18n-attr="aria-label:wave.aria"></canvas>
+        <div class="drop" id="drop">
+          <button type="button" class="chip open-big" id="openBig" data-i18n="open.big">Open an audio file</button>
+          <p data-i18n="drop">MP3, AAC (m4a), WAV, and more. You can also drop a file here. Files are never uploaded.</p>
+        </div>
+      </div>
+      <div class="timeline">
+        <span class="time" id="time"><b>0:00.0</b> / 0:00.0</span>
+        <div class="chips">
+          <button type="button" class="chip" id="zoomBtn" aria-pressed="false" data-i18n="zoom">Zoom to loop</button>
+        </div>
+      </div>
+      <div class="status">
+        <div class="tile"><span class="k" data-i18n="speed">Speed</span><span class="v" id="speedBig">100%</span><span class="s" id="speedSub"></span></div>
+        <div class="tile"><span class="k" data-i18n="key">Key</span><span class="v" id="keyBig">±0</span><span class="s" id="keySub"></span></div>
+        <div class="tile loop" id="loopTile"><span class="k" data-i18n="loop">Loop</span><span class="v small" id="loopBig">–</span><span class="s" id="loopSub"></span></div>
+      </div>
+      <div class="transport">
+        <button type="button" class="chip" id="toStartBtn" aria-label="Back to the start of the loop" data-i18n-attr="aria-label:toStart">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></path><path d="M19 5v14L9 12z" fill="currentColor"></path></svg>
+        </button>
+        <button type="button" class="play" id="playBtn" disabled></button>
+        <button type="button" class="chip" id="loopBtn" aria-pressed="false" aria-label="Loop on / off" data-i18n-attr="aria-label:loop.aria">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 2l4 4-4 4"></path><path d="M3 11V9a3 3 0 0 1 3-3h15"></path><path d="M7 22l-4-4 4-4"></path><path d="M21 13v2a3 3 0 0 1-3 3H3"></path></svg>
+        </button>
+      </div>
+      <div class="ab">
+        <div class="ab-row">
+          <button type="button" class="chip sq mono" data-nudge="a:-1" aria-label="Move A earlier" data-i18n-attr="aria-label:a.earlier">◀</button>
+          <button type="button" class="chip set" id="setA" aria-label="Set A to the current position" data-i18n-attr="aria-label:a.set"><b>A</b><span id="aVal">–</span></button>
+          <button type="button" class="chip sq mono" data-nudge="a:1" aria-label="Move A later" data-i18n-attr="aria-label:a.later">▶</button>
+        </div>
+        <div class="ab-row">
+          <button type="button" class="chip sq mono" data-nudge="b:-1" aria-label="Move B earlier" data-i18n-attr="aria-label:b.earlier">◀</button>
+          <button type="button" class="chip set" id="setB" aria-label="Set B to the current position" data-i18n-attr="aria-label:b.set"><b>B</b><span id="bVal">–</span></button>
+          <button type="button" class="chip sq mono" data-nudge="b:1" aria-label="Move B later" data-i18n-attr="aria-label:b.later">▶</button>
+        </div>
+        <div class="ab-foot">
+          <button type="button" class="chip" id="saveSecBtn" data-i18n="sec.save">+ Save this loop</button>
+          <button type="button" class="chip" id="wholeBtn" data-i18n="whole">Whole song</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Practice settings" data-i18n-attr="aria-label:practice">
+      <div class="settings">
+        <div class="group">
+          <label class="label" for="speedSlider"><span data-i18n="speed">Speed</span> <span class="val" id="speedVal"></span></label>
+          <input type="range" id="speedSlider" min="50" max="150" step="1">
+          <div class="chips">
+            <button type="button" class="chip mono" data-speed-step="-5" aria-label="Speed −5%" data-i18n-attr="aria-label:speed.m5">−5</button>
+            <button type="button" class="chip mono" data-speed-step="-1" aria-label="Speed −1%" data-i18n-attr="aria-label:speed.m1">−1</button>
+            <button type="button" class="chip mono" data-speed-step="1" aria-label="Speed +1%" data-i18n-attr="aria-label:speed.p1">+1</button>
+            <button type="button" class="chip mono" data-speed-step="5" aria-label="Speed +5%" data-i18n-attr="aria-label:speed.p5">+5</button>
+          </div>
+          <div class="chips" id="presets"></div>
+          <p class="hint" data-i18n="speed.hint">The pitch stays the same. Below 50% the sound breaks up, so 50% is the lowest.</p>
+        </div>
+
+        <div class="group">
+          <span class="label"><span data-i18n="key">Key</span></span>
+          <div class="stepper">
+            <button type="button" class="chip sq mono" id="keyDown" aria-label="Key down a semitone" data-i18n-attr="aria-label:key.down">−</button>
+            <span class="num" id="keyNum"></span>
+            <button type="button" class="chip sq mono" id="keyUp" aria-label="Key up a semitone" data-i18n-attr="aria-label:key.up">+</button>
+            <button type="button" class="chip" id="keyReset" data-i18n="key.reset">Original key</button>
+          </div>
+          <p class="hint" data-i18n="key.hint">In semitones, up to ±6. The tempo stays the same, and it works together with the speed.</p>
+        </div>
+
+        <div class="group">
+          <span class="label"><span data-i18n="auto">Speed up on every loop</span> <button type="button" class="chip" id="autoBtn" aria-pressed="false" data-i18n="off">Off</button></span>
+          <div class="sub-rows">
+            <div class="stepper"><span class="row-label" data-i18n="auto.start">Start at</span><button type="button" class="chip sq mono" data-auto="start:-5" aria-label="Start speed −5%" data-i18n-attr="aria-label:auto.start.m">−</button><span class="num" id="autoStart"></span><button type="button" class="chip sq mono" data-auto="start:5" aria-label="Start speed +5%" data-i18n-attr="aria-label:auto.start.p">+</button></div>
+            <div class="stepper"><span class="row-label" data-i18n="auto.step">Each loop</span><button type="button" class="chip sq mono" data-auto="step:-1" aria-label="Step −1%" data-i18n-attr="aria-label:auto.step.m">−</button><span class="num" id="autoStep"></span><button type="button" class="chip sq mono" data-auto="step:1" aria-label="Step +1%" data-i18n-attr="aria-label:auto.step.p">+</button></div>
+            <div class="stepper"><span class="row-label" data-i18n="auto.max">Up to</span><button type="button" class="chip sq mono" data-auto="max:-5" aria-label="Top speed −5%" data-i18n-attr="aria-label:auto.max.m">−</button><span class="num" id="autoMax"></span><button type="button" class="chip sq mono" data-auto="max:5" aria-label="Top speed +5%" data-i18n-attr="aria-label:auto.max.p">+</button></div>
+          </div>
+          <p class="hint" id="autoHint"></p>
+        </div>
+
+        <div class="group">
+          <span class="label"><span data-i18n="count">Count-in before each loop</span> <button type="button" class="chip" id="countBtn" aria-pressed="false" data-i18n="off">Off</button></span>
+          <div class="sub-rows">
+            <div class="stepper"><span class="row-label" data-i18n="count.beats">Clicks</span><button type="button" class="chip sq mono" id="beatsDown" aria-label="Fewer clicks" data-i18n-attr="aria-label:count.fewer">−</button><span class="num" id="beatsNum"></span><button type="button" class="chip sq mono" id="beatsUp" aria-label="More clicks" data-i18n-attr="aria-label:count.more">+</button></div>
+            <div class="stepper"><label class="row-label" for="bpmInput" data-i18n="count.bpm">Song BPM</label><input id="bpmInput" class="num-input" type="number" inputmode="numeric" min="30" max="300"><button type="button" class="chip" id="tapBtn" data-i18n="tap">Tap</button></div>
+          </div>
+          <p class="hint" id="countHint"></p>
+        </div>
+
+        <div class="group">
+          <span class="label"><span data-i18n="secs">Saved loops for this song</span></span>
+          <ul class="sections" id="sections"></ul>
+          <p class="hint" id="secsHint" data-i18n="secs.hint">Save loops such as “Intro” or “Solo, first half” and jump back to them any time.</p>
+        </div>
+
+        <div class="group">
+          <label class="label" for="vol"><span data-i18n="vol">Volume</span> <span class="val" id="volVal"></span></label>
+          <input type="range" id="vol" min="0" max="100" step="1">
+          <label class="label" for="clickVol"><span data-i18n="clickVol">Count-in volume</span> <span class="val" id="clickVolVal"></span></label>
+          <input type="range" id="clickVol" min="0" max="100" step="1">
+        </div>
+      </div>
+      <p class="keys" data-i18n-html="keys"><kbd>Space</kbd> play / pause　<kbd>↑</kbd><kbd>↓</kbd> speed ±1% (<kbd>Shift</kbd> ±5%)　<kbd>←</kbd><kbd>→</kbd> move A (<kbd>Shift</kbd> move B)　<kbd>A</kbd> <kbd>B</kbd> set A / B here　<kbd>L</kbd> loop on / off　<kbd>Enter</kbd> back to A　<kbd>-</kbd> <kbd>+</kbd> key　<kbd>Z</kbd> zoom　<kbd>O</kbd> open file</p>
+    </section>
+    <footer class="foot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg><span id="saveState" data-i18n="foot">The audio is processed only in your browser and never uploaded. Loops and settings are saved in this browser for each song.</span></footer>
+  </main>
+
+  <!-- Description below the app. The generated ja/index.html has it in Japanese, so search engines read it as the page text -->
+  <section class="intro" aria-labelledby="introTitle">
+    <h1 id="introTitle" data-i18n="intro.title">Slow down a song and loop any section, without changing the pitch</h1>
+    <div class="intro-body" data-i18n-html="intro.body">
+      <p>Loop Trainer is a free practice player for learning songs by ear. Open an audio file you have, drag over the waveform to choose the part you want to learn, and it repeats that part as many times as you like. Slow it down to 70% or even 50% and the pitch stays the same, so you can hear every note of a fast guitar solo and play along in the original key.</p>
+      <h2>Speed up a little on every loop</h2>
+      <p>Turn on “Speed up on every loop” and the loop starts slow, then gets a little faster each time it comes around: for example 70%, 72%, 74% … up to 100%. You practise the phrase slowly first and reach the real tempo without stopping to change anything. A count-in can click before each loop so you have time to get ready.</p>
+      <h2>Change the key, save your loops</h2>
+      <p>Shift the key up or down by up to six semitones, together with the speed. Tune to a song recorded a half step down, or move it to fit your voice. The loops, speed, and key are saved for each song in your browser, and you can keep several named loops per song, such as “Intro” and “Solo, first half”. Open the same file next time and you pick up where you left off.</p>
+      <h2>Files stay on your device</h2>
+      <p>The audio is decoded and processed only in your browser and is never uploaded. It works with MP3, AAC (m4a), WAV, and other formats your browser can play, on a computer, tablet, or phone. Music from streaming services (Apple Music, Spotify, YouTube) cannot be opened. No sign-up is needed.</p>
+    </div>
+  </section>
+
+  <dialog class="msg help" id="helpDlg" tabindex="-1" aria-labelledby="helpTitle">
+    <h2 id="helpTitle" data-i18n="menu.help">How to use</h2>
+    <div class="help-body">
+      <ol class="help-list" data-i18n-html="help.body">
+        <li><b>Open a song</b> – Tap “Open file” or drop an audio file on the waveform. MP3, AAC (m4a), and WAV work in every browser. Music from streaming services cannot be opened.</li>
+        <li><b>Choose the loop</b> – Drag across the waveform. Drag the A or B line to adjust it, or use “A” and “B” to set them at the current position while it plays. ◀ and ▶ move them by 0.05 seconds. “Zoom to loop” shows just the loop for fine changes.</li>
+        <li><b>Slow down</b> – Set the speed between 50% and 150% with the buttons or the slider. The pitch does not change.</li>
+        <li><b>Change the key</b> – Move it up or down in semitones (up to ±6). The tempo does not change.</li>
+        <li><b>Speed up on every loop</b> – Turn it on and set where to start, how much to add each loop, and where to stop. It goes back to the first speed when you play from the start of the loop.</li>
+        <li><b>Count-in</b> – Clicks play before each loop. Enter the song's BPM (at 100%) or tap it in; the clicks follow the current speed.</li>
+        <li><b>Saved loops</b> – “+ Save this loop” adds the current loop to the list. Give it a name, and tap its time to go back to it. Everything is saved for each song and comes back when you open the same file.</li>
+      </ol>
+    </div>
+    <div class="dlg-actions">
+      <button class="primary" id="helpClose" type="button" data-i18n="close">Close</button>
+    </div>
+  </dialog>
+
+  <dialog class="msg help" id="privacyDlg" tabindex="-1" aria-labelledby="privacyTitle">
+    <h2 id="privacyTitle" data-i18n="menu.privacy">Privacy</h2>
+    <div class="help-body">
+      <ul class="help-list" data-i18n-html="privacy.body">
+        <li><b>Your audio stays on your device</b> – Audio files are decoded and played only in your browser. They are never uploaded to a server. This app has no accounts, cookies, or ads.</li>
+        <li><b>Data saved in your browser</b> – For each song you open, the file name and size, the loops, speed, key, and count-in tempo are saved in your browser's storage so they are there next time. The audio itself is not saved. To work offline, the app is saved there too. You can delete them by clearing this site's data in your browser settings.</li>
+        <li><b>Audio library</b> – When you open the first file, the app loads the SoundTouchJS library from the jsDelivr CDN. Like any web request, this sends your IP address and browser information to jsDelivr. Nothing about your audio is sent.</li>
+        <li><b>Server logs and page views</b> – This site is hosted on Cloudflare. Standard access logs (such as IP address, time, and the requested page) are kept for operation and security. Cloudflare Web Analytics counts page views without cookies (the page URL, referrer, browser information, and page load time).</li>
+        <li><b>Contact</b> – Questions and feedback: <a href="https://github.com/ktkwmr/LoopTrainer/issues" target="_blank" rel="noopener">GitHub Issues</a>.</li>
+        <li><b>Full policy</b> – See the <a href="/looptrainer/privacy/">privacy policy</a> and <a href="/looptrainer/about/">about this site</a>.</li>
+      </ul>
+    </div>
+    <div class="dlg-actions">
+      <button class="primary" id="privacyClose" type="button" data-i18n="close">Close</button>
+    </div>
+  </dialog>
+
+  <div class="menu" id="settingsMenu" role="menu" aria-label="Settings" data-i18n-attr="aria-label:settings" hidden>
+    <button type="button" role="menuitem" id="menuHelp" data-i18n="menu.help">How to use</button>
+    <button type="button" role="menuitem" id="menuPrivacy" data-i18n="menu.privacy">Privacy</button>
+    <button type="button" role="menuitem" id="menuAbout" data-i18n="menu.about">About</button>
+  </div>
+
+  <dialog class="msg about" id="aboutDlg" tabindex="-1" aria-labelledby="aboutTitle">
+    <h2 id="aboutTitle" data-i18n="menu.about">About</h2>
+    <p class="about-license" data-i18n-html="about.license">© 2026 ktkwmr · Licensed under the <a href="https://github.com/ktkwmr/LoopTrainer/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a> · <a href="/looptrainer/about/">About this site</a> · Audio processing: <a href="https://github.com/cutterbl/SoundTouchJS" target="_blank" rel="noopener">SoundTouchJS</a> (LGPL-2.1, loaded unmodified from jsDelivr)</p>
+    <div class="about-body"><pre id="licenseText">Loading…</pre></div>
+    <div class="dlg-actions">
+      <button class="primary" id="aboutClose" type="button" data-i18n="close">Close</button>
+    </div>
+  </dialog>
+
+  <script>
+    (function () {
+      // ---------- English / Japanese ----------
+      // Text is set with data-i18n (textContent) / data-i18n-html (innerHTML, fixed strings below only) / data-i18n-attr (attributes)
+      const I18N = {
+        en: {
+          "settings": "Settings",
+          "lead": "Open a song you have, pick the part you want to learn, and loop it slower without changing the pitch. Your loops and settings are saved for each song.",
+          "player": "Player",
+          "practice": "Practice settings",
+          "noFile": "No file open",
+          "open": "Open file",
+          "open.big": "Open an audio file",
+          "drop": "MP3, AAC (m4a), WAV, and more. You can also drop a file here. Files are never uploaded.",
+          "wave.aria": "Waveform. Drag to choose the loop, tap to jump.",
+          "zoom": "Zoom to loop",
+          "speed": "Speed",
+          "key": "Key",
+          "loop": "Loop",
+          "loop.off": "Off",
+          "loop.len": "{s} s",
+          "loop.pass": "Loop {n}",
+          "counting": "Count-in…",
+          "orig": "Original",
+          "semis": "{n} semitones",
+          "semi.one": "{n} semitone",
+          "toStart": "Back to the start of the loop",
+          "loop.aria": "Loop on / off",
+          "play": "Play",
+          "pause": "Pause",
+          "loading": "Loading…",
+          "a.earlier": "Move A earlier",
+          "a.later": "Move A later",
+          "a.set": "Set A to the current position",
+          "b.earlier": "Move B earlier",
+          "b.later": "Move B later",
+          "b.set": "Set B to the current position",
+          "sec.save": "+ Save this loop",
+          "whole": "Whole song",
+          "speed.m5": "Speed −5%",
+          "speed.m1": "Speed −1%",
+          "speed.p1": "Speed +1%",
+          "speed.p5": "Speed +5%",
+          "speed.hint": "The pitch stays the same. Below 50% the sound breaks up, so 50% is the lowest.",
+          "key.down": "Key down a semitone",
+          "key.up": "Key up a semitone",
+          "key.reset": "Original key",
+          "key.hint": "In semitones, up to ±6. The tempo stays the same, and it works together with the speed.",
+          "auto": "Speed up on every loop",
+          "on": "On",
+          "off": "Off",
+          "auto.start": "Start at",
+          "auto.step": "Each loop",
+          "auto.max": "Up to",
+          "auto.start.m": "Start speed −5%",
+          "auto.start.p": "Start speed +5%",
+          "auto.step.m": "Step −1%",
+          "auto.step.p": "Step +1%",
+          "auto.max.m": "Top speed −5%",
+          "auto.max.p": "Top speed +5%",
+          "auto.hint": "Starts at {start}% from the start of the loop and adds {step}% each loop until {max}%. Turns the loop on.",
+          "count": "Count-in before each loop",
+          "count.beats": "Clicks",
+          "count.fewer": "Fewer clicks",
+          "count.more": "More clicks",
+          "count.bpm": "Song BPM",
+          "tap": "Tap",
+          "count.hint": "{beats} clicks at {bpm} BPM × {speed}% = {real} BPM. Enter the song's tempo at 100%, or tap it in.",
+          "secs": "Saved loops for this song",
+          "secs.hint": "Save loops such as “Intro” or “Solo, first half” and jump back to them any time.",
+          "sec.name": "Loop name",
+          "sec.default": "Loop {n}",
+          "sec.go": "Play loop {name}",
+          "sec.del": "Delete loop {name}",
+          "vol": "Volume",
+          "clickVol": "Count-in volume",
+          "keys": "<kbd>Space</kbd> play / pause　<kbd>↑</kbd><kbd>↓</kbd> speed ±1% (<kbd>Shift</kbd> ±5%)　<kbd>←</kbd><kbd>→</kbd> move A (<kbd>Shift</kbd> move B)　<kbd>A</kbd> <kbd>B</kbd> set A / B here　<kbd>L</kbd> loop on / off　<kbd>Enter</kbd> back to A　<kbd>-</kbd> <kbd>+</kbd> key　<kbd>Z</kbd> zoom　<kbd>O</kbd> open file",
+          "foot": "The audio is processed only in your browser and never uploaded. Loops and settings are saved in this browser for each song.",
+          "foot.fail": "This browser cannot save your loops (check private browsing or blocked site data). Everything else works.",
+          "msg.decoding": "Reading “{name}”…",
+          "msg.restored": "Picked up where you left off: loop {a} – {b}, {speed}%.",
+          "msg.long": "This file is long ({min} min) and needs about {mb} MB of memory. On some phones it may be slow or fail to open.",
+          "msg.decodeFail": "Could not open “{name}”. This browser may not support the format, or the file is protected (music from streaming services cannot be opened). Try MP3, AAC (m4a), or WAV.",
+          "msg.libFail": "Could not load the audio library (SoundTouchJS). Check your connection and try again. After the first time, it also works offline.",
+          "msg.notAudio": "“{name}” does not look like an audio file.",
+          "menu.help": "How to use",
+          "menu.privacy": "Privacy",
+          "menu.about": "About",
+          "intro.title": "Slow down a song and loop any section, without changing the pitch",
+          "intro.body": "<p>Loop Trainer is a free practice player for learning songs by ear. Open an audio file you have, drag over the waveform to choose the part you want to learn, and it repeats that part as many times as you like. Slow it down to 70% or even 50% and the pitch stays the same, so you can hear every note of a fast guitar solo and play along in the original key.</p>\n      <h2>Speed up a little on every loop</h2>\n      <p>Turn on “Speed up on every loop” and the loop starts slow, then gets a little faster each time it comes around: for example 70%, 72%, 74% … up to 100%. You practise the phrase slowly first and reach the real tempo without stopping to change anything. A count-in can click before each loop so you have time to get ready.</p>\n      <h2>Change the key, save your loops</h2>\n      <p>Shift the key up or down by up to six semitones, together with the speed. Tune to a song recorded a half step down, or move it to fit your voice. The loops, speed, and key are saved for each song in your browser, and you can keep several named loops per song, such as “Intro” and “Solo, first half”. Open the same file next time and you pick up where you left off.</p>\n      <h2>Files stay on your device</h2>\n      <p>The audio is decoded and processed only in your browser and is never uploaded. It works with MP3, AAC (m4a), WAV, and other formats your browser can play, on a computer, tablet, or phone. Music from streaming services (Apple Music, Spotify, YouTube) cannot be opened. No sign-up is needed.</p>",
+          "help.body": "<li><b>Open a song</b> – Tap “Open file” or drop an audio file on the waveform. MP3, AAC (m4a), and WAV work in every browser. Music from streaming services cannot be opened.</li>\n        <li><b>Choose the loop</b> – Drag across the waveform. Drag the A or B line to adjust it, or use “A” and “B” to set them at the current position while it plays. ◀ and ▶ move them by 0.05 seconds. “Zoom to loop” shows just the loop for fine changes.</li>\n        <li><b>Slow down</b> – Set the speed between 50% and 150% with the buttons or the slider. The pitch does not change.</li>\n        <li><b>Change the key</b> – Move it up or down in semitones (up to ±6). The tempo does not change.</li>\n        <li><b>Speed up on every loop</b> – Turn it on and set where to start, how much to add each loop, and where to stop. It goes back to the first speed when you play from the start of the loop.</li>\n        <li><b>Count-in</b> – Clicks play before each loop. Enter the song's BPM (at 100%) or tap it in; the clicks follow the current speed.</li>\n        <li><b>Saved loops</b> – “+ Save this loop” adds the current loop to the list. Give it a name, and tap its time to go back to it. Everything is saved for each song and comes back when you open the same file.</li>",
+          "privacy.body": "<li><b>Your audio stays on your device</b> – Audio files are decoded and played only in your browser. They are never uploaded to a server. This app has no accounts, cookies, or ads.</li>\n        <li><b>Data saved in your browser</b> – For each song you open, the file name and size, the loops, speed, key, and count-in tempo are saved in your browser's storage so they are there next time. The audio itself is not saved. To work offline, the app is saved there too. You can delete them by clearing this site's data in your browser settings.</li>\n        <li><b>Audio library</b> – When you open the first file, the app loads the SoundTouchJS library from the jsDelivr CDN. Like any web request, this sends your IP address and browser information to jsDelivr. Nothing about your audio is sent.</li>\n        <li><b>Server logs and page views</b> – This site is hosted on Cloudflare. Standard access logs (such as IP address, time, and the requested page) are kept for operation and security. Cloudflare Web Analytics counts page views without cookies (the page URL, referrer, browser information, and page load time).</li>\n        <li><b>Contact</b> – Questions and feedback: <a href=\"https://github.com/ktkwmr/LoopTrainer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a>.</li>\n        <li><b>Full policy</b> – See the <a href=\"/looptrainer/privacy/\">privacy policy</a> and <a href=\"/looptrainer/about/\">about this site</a>.</li>",
+          "about.license": "© 2026 ktkwmr · Licensed under the <a href=\"https://github.com/ktkwmr/LoopTrainer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT License</a> · <a href=\"/looptrainer/about/\">About this site</a> · Audio processing: <a href=\"https://github.com/cutterbl/SoundTouchJS\" target=\"_blank\" rel=\"noopener\">SoundTouchJS</a> (LGPL-2.1, loaded unmodified from jsDelivr)",
+          "close": "Close",
+          "err.license": "Could not load the license information. Check your connection and try again."
+        },
+        ja: {
+          "settings": "設定",
+          "lead": "手持ちの音源を開いて、練習したい部分を選ぶと、音程を変えずにゆっくりループ再生できます。ループと設定は曲ごとに保存されます。",
+          "player": "プレイヤー",
+          "practice": "練習の設定",
+          "noFile": "ファイルが開かれていません",
+          "open": "ファイルを開く",
+          "open.big": "音源ファイルを開く",
+          "drop": "MP3・AAC（m4a）・WAV など。ここにドロップしても開けます。ファイルはどこにもアップロードされません。",
+          "wave.aria": "波形。ドラッグでループ範囲を選び、タップでその位置に移動します。",
+          "zoom": "ループを拡大",
+          "speed": "速度",
+          "key": "キー",
+          "loop": "ループ",
+          "loop.off": "オフ",
+          "loop.len": "{s} 秒",
+          "loop.pass": "{n} 周目",
+          "counting": "カウント中…",
+          "orig": "原曲のキー",
+          "semis": "半音 {n} つ",
+          "semi.one": "半音 {n} つ",
+          "toStart": "ループの先頭に戻る",
+          "loop.aria": "ループのオン・オフ",
+          "play": "再生",
+          "pause": "一時停止",
+          "loading": "読み込み中…",
+          "a.earlier": "A 点を前へ",
+          "a.later": "A 点を後ろへ",
+          "a.set": "A 点を今の位置にする",
+          "b.earlier": "B 点を前へ",
+          "b.later": "B 点を後ろへ",
+          "b.set": "B 点を今の位置にする",
+          "sec.save": "＋ このループを保存",
+          "whole": "曲全体",
+          "speed.m5": "速度を5%下げる",
+          "speed.m1": "速度を1%下げる",
+          "speed.p1": "速度を1%上げる",
+          "speed.p5": "速度を5%上げる",
+          "speed.hint": "音程は変わりません。50%未満は音が崩れやすいため、50%が下限です。",
+          "key.down": "キーを半音下げる",
+          "key.up": "キーを半音上げる",
+          "key.reset": "原曲のキー",
+          "key.hint": "半音単位で ±6 まで。テンポは変わらず、速度と同時に使えます。",
+          "auto": "1周ごとに速くする",
+          "on": "オン",
+          "off": "オフ",
+          "auto.start": "開始",
+          "auto.step": "1周ごとに",
+          "auto.max": "上限",
+          "auto.start.m": "開始の速度を5%下げる",
+          "auto.start.p": "開始の速度を5%上げる",
+          "auto.step.m": "上げ幅を1%減らす",
+          "auto.step.p": "上げ幅を1%増やす",
+          "auto.max.m": "上限の速度を5%下げる",
+          "auto.max.p": "上限の速度を5%上げる",
+          "auto.hint": "ループの先頭から {start}% で始まり、1周ごとに {step}% ずつ上げて {max}% で止めます。ループもオンになります。",
+          "count": "ループの前にカウントイン",
+          "count.beats": "クリック数",
+          "count.fewer": "クリックを減らす",
+          "count.more": "クリックを増やす",
+          "count.bpm": "曲の BPM",
+          "tap": "タップ",
+          "count.hint": "{bpm} BPM × {speed}% ＝ {real} BPM で {beats} 回鳴らします。BPM は原曲（100%）のテンポを入れるか、タップで合わせてください。",
+          "secs": "この曲の保存したループ",
+          "secs.hint": "「イントロ」「ソロ前半」のようにループを保存して、いつでも呼び出せます。",
+          "sec.name": "ループの名前",
+          "sec.default": "ループ {n}",
+          "sec.go": "ループ「{name}」を再生",
+          "sec.del": "ループ「{name}」を削除",
+          "vol": "音量",
+          "clickVol": "カウントインの音量",
+          "keys": "<kbd>Space</kbd> 再生/一時停止　<kbd>↑</kbd><kbd>↓</kbd> 速度 ±1%（<kbd>Shift</kbd>で±5%）　<kbd>←</kbd><kbd>→</kbd> A 点を移動（<kbd>Shift</kbd>で B 点）　<kbd>A</kbd> <kbd>B</kbd> 今の位置を A/B に　<kbd>L</kbd> ループのオン/オフ　<kbd>Enter</kbd> A 点に戻る　<kbd>-</kbd> <kbd>+</kbd> キー　<kbd>Z</kbd> 拡大　<kbd>O</kbd> ファイルを開く",
+          "foot": "音源はブラウザの中だけで処理され、アップロードされません。ループと設定は曲ごとにこのブラウザに保存されます。",
+          "foot.fail": "このブラウザではループを保存できません（プライベートモードやサイトデータのブロックを確認してください）。保存以外の機能はそのまま使えます。",
+          "msg.decoding": "「{name}」を読み込んでいます…",
+          "msg.restored": "前回の続きから：ループ {a} – {b}、速度 {speed}%",
+          "msg.long": "長い音源です（{min} 分）。メモリを約 {mb} MB 使うため、スマホでは動作が重くなったり開けなかったりすることがあります。",
+          "msg.decodeFail": "「{name}」を開けませんでした。このブラウザが対応していない形式か、保護されたファイルの可能性があります（配信サービスの曲は開けません）。MP3・AAC（m4a）・WAV でお試しください。",
+          "msg.libFail": "音声処理のライブラリ（SoundTouchJS）を読み込めませんでした。接続を確認して、もう一度お試しください。一度読み込めば、次からはオフラインでも使えます。",
+          "msg.notAudio": "「{name}」は音声ファイルではないようです。",
+          "menu.help": "使い方",
+          "menu.privacy": "プライバシー",
+          "menu.about": "このアプリについて",
+          "intro.title": "音程を変えずにスロー再生・区間ループできる耳コピ練習プレイヤー",
+          "intro.body": "<p>Loop Trainer は、耳コピやフレーズ練習のための無料の練習用プレイヤーです。手持ちの音源ファイルを開き、波形の上をドラッグして練習したい部分を選ぶと、その区間を何度でも繰り返し再生（A-B リピート）します。速度を 70% や 50% まで落としても音程（ピッチ）は変わらないので、速いギターソロの一音一音を聞き取りながら、原曲のキーのまま一緒に弾けます。</p>\n      <h2>1周ごとに少しずつ速くする</h2>\n      <p>「1周ごとに速くする」をオンにすると、最初はゆっくり、ループが一周するたびに少しずつ速くなります（例：70% → 72% → 74% … → 100%）。手を止めて設定を変えなくても、ゆっくり確実に弾くところから原曲のテンポまで続けて練習できます。ループの頭にカウントインのクリックを入れて、構えてから弾き始めることもできます。</p>\n      <h2>キー変更とループの保存</h2>\n      <p>キーは速度と同時に、半音単位で上下 6 つまで変えられます。半音下げチューニングの曲に合わせたり、歌いやすいキーに移したりするときに使えます。ループ範囲・速度・キーは曲ごとにブラウザに保存され、「イントロ」「ソロ前半」のように名前を付けたループを 1 曲にいくつでも残せます。次に同じファイルを開けば、前回の続きから練習できます。</p>\n      <h2>ファイルは端末の外に出ません</h2>\n      <p>音源の読み込みと処理はブラウザの中だけで行い、どこにもアップロードしません。MP3・AAC（m4a）・WAV など、ブラウザが再生できる形式に対応し、パソコン・タブレット・スマホで使えます。Apple Music・Spotify・YouTube など配信サービスの曲は開けません。登録は不要です。</p>",
+          "help.body": "<li><b>曲を開く</b> – 「ファイルを開く」を押すか、波形の場所に音源ファイルをドロップします。MP3・AAC（m4a）・WAV はどのブラウザでも開けます。配信サービスの曲は開けません。</li>\n        <li><b>ループ範囲を選ぶ</b> – 波形の上をドラッグします。A・B の線をドラッグすると調整でき、再生中に「A」「B」を押すとその位置に設定されます。◀ ▶ で 0.05 秒ずつ動かせます。「ループを拡大」でループ部分だけを大きく表示できます。</li>\n        <li><b>速度を落とす</b> – ボタンやスライダーで 50%〜150% に設定します。音程は変わりません。</li>\n        <li><b>キーを変える</b> – 半音単位で上下に動かします（±6 まで）。テンポは変わりません。</li>\n        <li><b>1周ごとに速くする</b> – オンにして、開始の速度・1周ごとの上げ幅・上限を決めます。ループの先頭から再生すると、開始の速度に戻ります。</li>\n        <li><b>カウントイン</b> – ループの前にクリックが鳴ります。曲の BPM（100% のとき）を入力するか、タップで合わせます。クリックは今の速度に合わせて鳴ります。</li>\n        <li><b>ループの保存</b> – 「＋ このループを保存」で今のループを一覧に追加します。名前を付けておき、時間のボタンを押すと呼び出せます。設定は曲ごとに保存され、同じファイルを開くと元に戻ります。</li>",
+          "privacy.body": "<li><b>音源は端末の外に出ません</b> – 音源ファイルの読み込みと再生はブラウザの中だけで行い、サーバーにアップロードすることはありません。アカウント登録・Cookie・広告はありません。</li>\n        <li><b>ブラウザに保存するデータ</b> – 次に開いたときにも使えるよう、開いた曲ごとにファイル名とサイズ、ループ範囲・速度・キー・カウントインのテンポをブラウザ内に保存します。音源そのものは保存しません。オフラインで使えるよう、アプリ本体も保存します。ブラウザの設定でこのサイトのデータを削除すると消えます。</li>\n        <li><b>音声処理のライブラリ</b> – 最初にファイルを開いたとき、jsDelivr（CDN）から SoundTouchJS というライブラリを読み込みます。通常の Web の通信と同じく、IP アドレスやブラウザの情報が jsDelivr に送られます。音源に関する情報は送られません。</li>\n        <li><b>サーバーのログと閲覧数</b> – 本サイトは Cloudflare で配信しています。運用とセキュリティのため、一般的なアクセスログ（IP アドレス・日時・アクセスしたページなど）が記録されます。Cloudflare Web Analytics で、Cookie を使わずにページの閲覧数（ページの URL・参照元・ブラウザの情報・表示速度）を集計しています。</li>\n        <li><b>お問い合わせ</b> – ご質問・ご意見は <a href=\"https://github.com/ktkwmr/LoopTrainer/issues\" target=\"_blank\" rel=\"noopener\">GitHub の Issues</a> へ。</li>\n        <li><b>詳しくは</b> – <a href=\"/looptrainer/ja/privacy/\">プライバシーポリシー</a>と<a href=\"/looptrainer/ja/about/\">運営者情報</a>をご覧ください。</li>",
+          "about.license": "© 2026 ktkwmr · <a href=\"https://github.com/ktkwmr/LoopTrainer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT ライセンス</a> · <a href=\"/looptrainer/ja/about/\">運営者情報</a> · 音声処理：<a href=\"https://github.com/cutterbl/SoundTouchJS\" target=\"_blank\" rel=\"noopener\">SoundTouchJS</a>（LGPL-2.1。jsDelivr から改変せずに読み込み）",
+          "close": "閉じる",
+          "err.license": "ライセンス情報を読み込めませんでした。接続を確認して、もう一度お試しください。"
+        }
+      };
+
+      // Order: ?lang=ja|en in the URL → the page's fixed language (data-page-lang of ja/index.html) → the browser's first language (English unless Japanese)
+      function detectLang() {
+        const q = new URLSearchParams(location.search).get("lang");
+        if (q === "ja" || q === "en") return q;
+        const fixed = document.documentElement.dataset.pageLang;
+        if (fixed === "ja" || fixed === "en") return fixed;
+        const first = (navigator.languages && navigator.languages[0]) || navigator.language || "";
+        return /^ja\b/i.test(first) ? "ja" : "en";
+      }
+      const lang = detectLang();
+
+      function t(key, vars) {
+        let str = I18N[lang][key];
+        if (str === undefined) str = I18N.en[key] !== undefined ? I18N.en[key] : key;
+        if (vars) str = str.replace(/\{(\w+)\}/g, function (m, k) { return k in vars ? String(vars[k]) : m; });
+        return str;
+      }
+
+      function applyI18n() {
+        document.documentElement.lang = lang;
+        document.querySelectorAll("[data-i18n]").forEach(function (el) { el.textContent = t(el.dataset.i18n); });
+        document.querySelectorAll("[data-i18n-html]").forEach(function (el) { el.innerHTML = t(el.dataset.i18nHtml); });
+        document.querySelectorAll("[data-i18n-attr]").forEach(function (el) {
+          el.dataset.i18nAttr.split(";").forEach(function (pair) {
+            const parts = pair.split(":");
+            el.setAttribute(parts[0], t(parts[1]));
+          });
+        });
+      }
+
+      function isIOS() {
+        return /iP(hone|ad|od)/.test(navigator.userAgent) ||
+          (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      }
+      // iOS Safari zooms in when a control under 16px is tapped, so only on iOS add maximum-scale (pinch zoom still works)
+      if (isIOS()) {
+        const vp = document.querySelector('meta[name="viewport"]');
+        if (vp) vp.setAttribute("content", vp.getAttribute("content") + ", maximum-scale=1");
+      }
+      // Phones: `accept` hides files the picker cannot classify, so let every file be chosen there
+      if (matchMedia("(pointer: coarse)").matches) document.getElementById("fileInput").removeAttribute("accept");
+
+      const $ = (id) => document.getElementById(id);
+      const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+      const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+      const SPEED_MIN = 50, SPEED_MAX = 150, SEMI_MAX = 6, MIN_LOOP = 0.1, NUDGE = 0.05;
+      const PRESETS = [50, 60, 70, 80, 90, 100];
+      // Decoded audio takes about 20 MB per minute (stereo, 32-bit float); warn above this
+      const LONG_BYTES = 200 * 1024 * 1024;
+
+      // ---------- Saved state ----------
+      // Per song (keyed by file name + size): loops, speed, key, count-in tempo. Shared: practice preferences.
+      const STATE_KEY = "looptrainer-state";
+      const MAX_SONGS = 100;
+      const num = (v, d, a, b) => { const n = +v; return Number.isFinite(n) ? clamp(n, a, b) : d; };
+      const bool = (v, d) => typeof v === "boolean" ? v : d;
+      // Every value read from storage is checked, so a broken or old save cannot break the app
+      function sanitizePrefs(o) {
+        o = o && typeof o === "object" ? o : {};
+        const a = o.auto || {}, c = o.count || {};
+        return {
+          vol: num(o.vol, .9, 0, 1), clickVol: num(o.clickVol, .7, 0, 1),
+          auto: { on: bool(a.on, false), start: Math.round(num(a.start, 70, SPEED_MIN, SPEED_MAX)), step: Math.round(num(a.step, 2, 1, 10)), max: Math.round(num(a.max, 100, SPEED_MIN, SPEED_MAX)) },
+          count: { on: bool(c.on, false), beats: Math.round(num(c.beats, 4, 1, 8)) },
+        };
+      }
+      function sanitizeSong(o, dur) {
+        o = o && typeof o === "object" ? o : {};
+        const d = dur || 1e9;
+        let a = num(o.a, 0, 0, d), b = num(o.b, d === 1e9 ? 0 : d, 0, d);
+        if (b - a < MIN_LOOP) { a = 0; b = dur || 0; }
+        const sections = (Array.isArray(o.sections) ? o.sections : []).slice(0, 50).map(function (s) {
+          s = s && typeof s === "object" ? s : {};
+          const sa = num(s.a, 0, 0, d), sb = num(s.b, 0, 0, d);
+          return { id: typeof s.id === "string" && s.id ? s.id : uid(), name: typeof s.name === "string" ? s.name.slice(0, 40) : "", a: sa, b: sb };
+        }).filter((s) => s.b - s.a >= MIN_LOOP);
+        return {
+          a: a, b: b, loop: bool(o.loop, false),
+          speed: Math.round(num(o.speed, 100, SPEED_MIN, SPEED_MAX)), semi: Math.round(num(o.semi, 0, -SEMI_MAX, SEMI_MAX)),
+          bpm: Math.round(num(o.bpm, 120, 30, 300)), sections: sections, pos: num(o.pos, 0, 0, d),
+          updated: num(o.updated, 0, 0, 1e15), name: typeof o.name === "string" ? o.name.slice(0, 200) : "",
+        };
+      }
+      let store = (function () {
+        let s = null;
+        try { s = JSON.parse(localStorage.getItem(STATE_KEY) || "null"); } catch (e) {}
+        s = s && typeof s === "object" ? s : {};
+        const songs = {};
+        if (s.songs && typeof s.songs === "object") Object.keys(s.songs).forEach((k) => { songs[k] = sanitizeSong(s.songs[k]); });
+        return { prefs: sanitizePrefs(s.prefs), songs: songs };
+      })();
+      const prefs = store.prefs;
+      let saveTimer = null;
+      function saveNow() {
+        clearTimeout(saveTimer); saveTimer = null;
+        if (songKey && song) { song.updated = Date.now(); song.pos = playing ? heard().pos : position; store.songs[songKey] = song; }
+        // Keep only the most recently used songs
+        const keys = Object.keys(store.songs);
+        if (keys.length > MAX_SONGS) keys.sort((x, y) => store.songs[y].updated - store.songs[x].updated).slice(MAX_SONGS).forEach((k) => { delete store.songs[k]; });
+        try { localStorage.setItem(STATE_KEY, JSON.stringify(store)); }
+        catch (e) { $("saveState").textContent = t("foot.fail"); }
+      }
+      // Sliders and dragging change values many times a second; write a moment later
+      function save() { if (!saveTimer) saveTimer = setTimeout(saveNow, 400); }
+      window.addEventListener("pagehide", function () { if (saveTimer || playing) saveNow(); });
+      document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden" && (saveTimer || playing)) saveNow(); });
+
+      // ---------- Song and audio ----------
+      let ctx = null, master = null, clickBus = null, buffer = null, songKey = null, song = null, fileLabel = "";
+      let position = 0;            // seconds; where playback starts / where it was paused
+      let freePos = false;         // true after tapping the waveform: play from there even if it is before A
+      let lib = null, libPromise = null;
+      // SoundTouchJS (LGPL-2.1) is loaded unmodified from the CDN as a separate file, the first time a file is opened.
+      // The version is pinned; sw.js keeps a copy for offline use.
+      const ST_URL = "https://cdn.jsdelivr.net/npm/soundtouchjs@0.3.0/dist/soundtouch.js";
+      function loadLib() {
+        if (!libPromise) libPromise = import(ST_URL).then((m) => { lib = m; return m; }, (e) => { libPromise = null; throw e; });
+        return libPromise;
+      }
+      function ensureCtx() {
+        if (!ctx) {
+          // iOS: play through the speaker even when the ring/silent switch is on (Safari 17+)
+          try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) {}
+          ctx = new (window.AudioContext || window.webkitAudioContext)();
+          master = ctx.createGain(); master.gain.value = prefs.vol; master.connect(ctx.destination);
+          clickBus = ctx.createGain(); clickBus.gain.value = prefs.clickVol; clickBus.connect(ctx.destination);
+        }
+        return ctx;
+      }
+      // iOS only starts audio from a tap: resume (and play one silent sample) inside the click handler
+      function unlockAudio() {
+        ensureCtx();
+        if (ctx.state !== "running") {
+          try { ctx.resume(); } catch (e) {}
+          try { const s = ctx.createBufferSource(); s.buffer = ctx.createBuffer(1, 1, ctx.sampleRate); s.connect(ctx.destination); s.start(); } catch (e) {}
+        }
+      }
+
+      // ---------- Pitch / tempo processing ----------
+      // Everything that depends on the library is in this object, so it can be swapped for another engine
+      // (for example Rubber Band compiled to WebAssembly) without touching the player.
+      // Contract: setSpeed(ratio) changes the tempo without the pitch, setSemitones(n) the pitch without the tempo;
+      // put(interleavedStereo, frames) feeds input, receive(out, frames) returns up to `frames` processed frames;
+      // pendingInput() is how many input frames are inside the engine and not yet heard as output.
+      function createStretcher() {
+        const st = new lib.SoundTouch();
+        return {
+          setSpeed(r) { st.tempo = r; },
+          setSemitones(n) { st.pitchSemitones = n; },
+          put(samples, frames) { st.inputBuffer.putSamples(samples, 0, frames); st.process(); },
+          available() { return st.outputBuffer.frameCount; },
+          receive(out, frames) { const k = Math.min(frames, st.outputBuffer.frameCount); st.outputBuffer.receiveSamples(out, k); return k; },
+          // Input-side frames still buffered: the input FIFO plus the FIFO between the two stages
+          // (SoundTouchJS 0.3.0 internals; the version is pinned). Its units depend on which stage runs first.
+          pendingInput(speed) {
+            const mid = st._intermediateBuffer ? st._intermediateBuffer.frameCount : 0;
+            const midIn = st._rate > 1 ? mid * st._tempo : mid * st._rate;
+            return st.inputBuffer.frameCount + midIn + st.outputBuffer.frameCount * speed;
+          },
+        };
+      }
+
+      // ---------- Player ----------
+      // The source is read in "input frames". Segments map input frames to what is heard:
+      // audio from the buffer, or the silence of a count-in (clicks are scheduled on the audio clock).
+      // Loops are joined in the source, so the stretcher runs without a gap across the loop point.
+      const BLOCK = 4096, CHUNK = 2048;
+      let node = null, eng = null, playing = false, starting = false;
+      let readPos = 0, pulled = 0, silenceLeft = 0, ended = false, segs = [], clicks = [];
+      let blockStartIn = 0, blockEndIn = 0, blockTime = 0, blockSpeed = 1, loopPass = 1, wakeLock = null;
+      const tmpIn = new Float32Array(CHUNK * 2), tmpOut = new Float32Array(BLOCK * 2);
+      const sr = () => buffer.sampleRate;
+      const loopActive = () => song.loop && song.b - song.a >= MIN_LOOP;
+      const speedRatio = () => song.speed / 100;
+
+      function pushSeg(seg) { seg.in = pulled; segs.push(seg); }
+      function startCount(isWrap) {
+        const beatIn = Math.round(60 / song.bpm * sr());
+        silenceLeft = beatIn * prefs.count.beats;
+        pushSeg({ kind: "c", beatIn: beatIn, beats: prefs.count.beats, wrap: isWrap });
+      }
+      // Fills `out` (interleaved stereo) with up to n input frames and returns how many
+      function pull(out, n) {
+        const L = buffer.getChannelData(0), R = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : L;
+        let i = 0;
+        while (i < n) {
+          if (silenceLeft > 0) {
+            const m = Math.min(n - i, silenceLeft);
+            out.fill(0, i * 2, (i + m) * 2);
+            silenceLeft -= m; i += m; pulled += m;
+            if (!silenceLeft) pushSeg({ kind: "a", pos: readPos });
+            continue;
+          }
+          const loopOn = loopActive();
+          const end = loopOn ? Math.round(song.b * sr()) : buffer.length;
+          if (readPos >= end) {
+            if (!loopOn) { ended = true; break; }
+            readPos = Math.round(song.a * sr());
+            if (prefs.count.on) startCount(true);
+            else pushSeg({ kind: "a", pos: readPos, wrap: true });
+            continue;
+          }
+          const m = Math.min(n - i, end - readPos);
+          for (let j = 0; j < m; j++) { out[(i + j) * 2] = L[readPos + j]; out[(i + j) * 2 + 1] = R[readPos + j]; }
+          readPos += m; i += m; pulled += m;
+        }
+        return i;
+      }
+      function onAudio(e) {
+        const outL = e.outputBuffer.getChannelData(0), outR = e.outputBuffer.getChannelData(1), n = outL.length;
+        if (!playing) { outL.fill(0); outR.fill(0); return; }
+        while (eng.available() < n && !ended) {
+          const got = pull(tmpIn, CHUNK);
+          if (got) eng.put(tmpIn, got);
+        }
+        const k = eng.receive(tmpOut, n);
+        for (let j = 0; j < k; j++) { outL[j] = tmpOut[j * 2]; outR[j] = tmpOut[j * 2 + 1]; }
+        if (k < n) { outL.fill(0, k); outR.fill(0, k); }
+        // Which input frames this block plays: recomputed every block from what is still inside the engine, so it cannot drift
+        const sp = speedRatio();
+        blockEndIn = pulled - eng.pendingInput(sp);
+        blockStartIn = blockEndIn - k * sp;
+        blockSpeed = sp;
+        blockTime = e.playbackTime || ctx.currentTime;
+        handleEvents(blockEndIn + n * sp);
+        if (ended && k === 0) setTimeout(function () { if (playing && ended) finish(); }, 0);
+      }
+      // Loop points and count-ins that will be heard within the next block
+      function handleEvents(horizon) {
+        for (const s of segs) {
+          if (s.done || s.in > horizon) continue;
+          s.done = true;
+          if (s.wrap) onWrap();
+          if (s.kind === "c") {
+            const sp = speedRatio();
+            for (let b = 0; b < s.beats; b++) {
+              const at = blockTime + (s.in + b * s.beatIn - blockStartIn) / (sp * sr());
+              if (at >= ctx.currentTime - 0.01) click(Math.max(at, ctx.currentTime), b === 0);
+            }
+          }
+        }
+        // Forget segments that have been heard (with a margin: heard() looks back from the block being filled)
+        while (segs.length > 1 && segs[1].in <= blockStartIn - 3 * BLOCK * blockSpeed) segs.shift();
+      }
+      function onWrap() {
+        loopPass++;
+        if (prefs.auto.on && song.speed < prefs.auto.max) {
+          song.speed = Math.min(prefs.auto.max, song.speed + prefs.auto.step);
+          if (eng) eng.setSpeed(speedRatio());
+          save();
+        }
+        // Drawn from requestAnimationFrame
+        uiDirty = true;
+      }
+      function click(at, accent) {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = "square"; o.frequency.value = accent ? 1760 : 1320;
+        g.gain.setValueAtTime(0.0001, at);
+        g.gain.exponentialRampToValueAtTime(accent ? 0.5 : 0.32, at + 0.002);
+        g.gain.exponentialRampToValueAtTime(0.0001, at + 0.05);
+        o.connect(g); g.connect(clickBus); o.start(at); o.stop(at + 0.08);
+        clicks.push(o);
+        o.onended = function () { const i = clicks.indexOf(o); if (i >= 0) clicks.splice(i, 1); };
+      }
+      // What is heard now: the position in the song, or the count-in
+      function heard() {
+        if (!playing || !segs.length) return { pos: position };
+        const now = ctx.currentTime - (ctx.outputLatency || 0);
+        const x = Math.min(blockStartIn + (now - blockTime) * sr() * blockSpeed, pulled);
+        let s = segs[0];
+        for (const seg of segs) { if (seg.in <= x) s = seg; else break; }
+        if (s.kind === "c") return { pos: song.loop ? song.a : readPos / sr(), beat: Math.min(s.beats, Math.floor(Math.max(0, x - s.in) / s.beatIn) + 1) };
+        return { pos: clamp((s.pos + Math.max(0, x - s.in)) / sr(), 0, buffer.duration) };
+      }
+
+      async function play() {
+        if (!buffer || playing || starting) return;
+        unlockAudio();
+        starting = true; renderPlay();
+        try { await loadLib(); } catch (e) { starting = false; renderPlay(); notice(t("msg.libFail")); return; }
+        starting = false;
+        if (prefs.auto.on) song.loop = true;
+        let pos = position;
+        if (pos >= buffer.duration - 0.05) pos = 0;
+        const loopOn = loopActive();
+        // After B it starts again at A. Before A it starts at A too, unless that position was tapped (then it plays on into the loop)
+        if (loopOn && (pos >= song.b - 0.02 || (pos < song.a && !freePos))) pos = song.a;
+        // Speed-up starts again from the first speed when playing from the start of the loop
+        if (prefs.auto.on && Math.abs(pos - song.a) < 0.05) song.speed = prefs.auto.start;
+        eng = createStretcher();
+        eng.setSpeed(speedRatio()); eng.setSemitones(song.semi);
+        readPos = Math.round(pos * sr()); pulled = 0; silenceLeft = 0; ended = false; segs = []; loopPass = 1;
+        blockStartIn = blockEndIn = 0; blockTime = ctx.currentTime; blockSpeed = speedRatio();
+        if (loopOn && prefs.count.on && Math.abs(pos - song.a) < 0.05) startCount(false);
+        else pushSeg({ kind: "a", pos: readPos });
+        // ScriptProcessorNode works on every browser this app targets, including iOS Safari
+        node = ctx.createScriptProcessor(BLOCK, 2, 2);
+        node.onaudioprocess = onAudio;
+        node.connect(master);
+        playing = true;
+        requestWake();
+        renderAll();
+        requestAnimationFrame(frame);
+      }
+      function halt() {
+        playing = false;
+        if (node) { node.onaudioprocess = null; try { node.disconnect(); } catch (e) {} node = null; }
+        clicks.slice().forEach((o) => { try { o.stop(); } catch (e) {} });
+        clicks = []; eng = null; segs = [];
+        try { if (wakeLock) wakeLock.release(); } catch (e) {}
+        wakeLock = null;
+      }
+      function pause() {
+        if (!playing) return;
+        position = heard().pos;
+        halt(); saveNow(); renderAll();
+      }
+      function finish() { position = buffer.duration; halt(); saveNow(); renderAll(); }
+      // Jump while playing restarts the engine at the new position (keeps the speed and loop pass)
+      function seek(sec) {
+        sec = clamp(sec, 0, buffer ? buffer.duration : 0);
+        freePos = true;
+        if (playing) {
+          const pass = loopPass;
+          halt(); position = sec;
+          play().then(function () { if (Math.abs(sec - song.a) >= 0.05) loopPass = pass; renderAll(); });
+        } else { position = sec; save(); renderAll(); }
+      }
+      function requestWake() {
+        try { if (navigator.wakeLock) navigator.wakeLock.request("screen").then((w) => { wakeLock = w; }).catch(() => {}); } catch (e) {}
+      }
+      document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "visible" && playing) requestWake();
+      });
+
+      // ---------- Opening a file ----------
+      let loadToken = 0;
+      async function openFile(file) {
+        if (!file) return;
+        if (file.type && !/^(audio|video)\//.test(file.type) && !/\.(mp3|m4a|aac|mp4|wav|flac|ogg|oga|opus|webm|aif|aiff|caf)$/i.test(file.name)) {
+          notice(t("msg.notAudio", { name: file.name })); return;
+        }
+        const token = ++loadToken;
+        if (playing) pause();
+        if (songKey) saveNow();
+        notice(t("msg.decoding", { name: file.name }));
+        ensureCtx();
+        loadLib().catch(() => {});
+        let decoded;
+        try {
+          const data = await file.arrayBuffer();
+          decoded = await new Promise((res, rej) => {
+            const p = ctx.decodeAudioData(data, res, rej);
+            if (p && p.then) p.then(res, rej);
+          });
+        } catch (e) {
+          if (token === loadToken) notice(t("msg.decodeFail", { name: file.name }));
+          return;
+        }
+        if (token !== loadToken) return;
+        buffer = decoded;
+        fileLabel = file.name;
+        songKey = file.name + "|" + file.size;
+        const known = store.songs[songKey];
+        song = sanitizeSong(known, buffer.duration);
+        song.name = file.name;
+        if (!known) { song.a = 0; song.b = buffer.duration; song.pos = 0; }
+        position = song.pos >= buffer.duration - 0.05 ? 0 : song.pos;
+        view = null; zoom = false; peaksCache = null; freePos = false;
+        const bytes = buffer.length * buffer.numberOfChannels * 4;
+        const msgs = [];
+        if (known && (song.loop || song.speed !== 100 || song.semi)) msgs.push(t("msg.restored", { a: fmt(song.a), b: fmt(song.b), speed: song.speed }));
+        if (bytes > LONG_BYTES) msgs.push(t("msg.long", { min: Math.round(buffer.duration / 60), mb: Math.round(bytes / 1048576) }));
+        notice(msgs.join(" "));
+        saveNow();
+        renderAll();
+      }
+      $("openBtn").onclick = () => $("fileInput").click();
+      $("openBig").onclick = () => $("fileInput").click();
+      $("fileInput").onchange = (e) => { const f = e.target.files && e.target.files[0]; e.target.value = ""; openFile(f); };
+      const waveWrap = $("waveWrap");
+      ["dragenter", "dragover"].forEach((ev) => document.addEventListener(ev, function (e) {
+        if (!e.dataTransfer || !Array.prototype.includes.call(e.dataTransfer.types || [], "Files")) return;
+        e.preventDefault(); waveWrap.classList.add("dragover");
+      }));
+      ["dragleave", "dragend"].forEach((ev) => document.addEventListener(ev, function (e) {
+        if (ev === "dragleave" && e.relatedTarget) return;
+        waveWrap.classList.remove("dragover");
+      }));
+      document.addEventListener("drop", function (e) {
+        if (!e.dataTransfer || !e.dataTransfer.files.length) return;
+        e.preventDefault(); waveWrap.classList.remove("dragover");
+        openFile(e.dataTransfer.files[0]);
+      });
+
+      function notice(msg) { $("notice").textContent = msg || ""; }
+
+      // ---------- Waveform ----------
+      const canvas = $("wave");
+      let view = null, zoom = false, peaksCache = null, drag = null, uiDirty = true;
+      function viewRange() {
+        if (!buffer) return [0, 1];
+        if (zoom && song.b - song.a >= MIN_LOOP) {
+          if (!view || !drag) {
+            const pad = Math.max(0.25, (song.b - song.a) * 0.12);
+            view = [Math.max(0, song.a - pad), Math.min(buffer.duration, song.b + pad)];
+          }
+          return view;
+        }
+        return [0, buffer.duration];
+      }
+      // Min / max per pixel column for the visible range (cached until the range or size changes)
+      function peaks(w, v0, v1) {
+        const key = w + ":" + v0 + ":" + v1;
+        if (peaksCache && peaksCache.key === key) return peaksCache.data;
+        const L = buffer.getChannelData(0), R = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : null;
+        const f0 = v0 * sr(), per = (v1 - v0) * sr() / w, data = new Float32Array(w * 2);
+        const step = Math.max(1, Math.floor(per / 400));
+        for (let x = 0; x < w; x++) {
+          let lo = 0, hi = 0;
+          const s = Math.floor(f0 + x * per), e = Math.min(buffer.length, Math.floor(f0 + (x + 1) * per) + 1);
+          for (let i = s; i < e; i += step) {
+            const v = R ? (L[i] + R[i]) * 0.5 : L[i];
+            if (v < lo) lo = v; else if (v > hi) hi = v;
+          }
+          data[x * 2] = lo; data[x * 2 + 1] = hi;
+        }
+        peaksCache = { key: key, data: data };
+        return data;
+      }
+      function draw(pos) {
+        const dpr = window.devicePixelRatio || 1;
+        const w = Math.max(1, Math.round(canvas.clientWidth * dpr)), h = Math.max(1, Math.round(canvas.clientHeight * dpr));
+        if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+        const g = canvas.getContext("2d");
+        const css = getComputedStyle(document.documentElement);
+        const col = (n) => css.getPropertyValue(n).trim();
+        g.clearRect(0, 0, w, h);
+        if (!buffer) return;
+        const [v0, v1] = viewRange();
+        const X = (sec) => (sec - v0) / (v1 - v0) * w;
+        const mid = h / 2, amp = h * 0.46;
+        const loopOn = song.loop;
+        const ax = X(song.a), bx = X(song.b);
+        g.fillStyle = col("--loop-fill");
+        if (loopOn && song.b - song.a >= MIN_LOOP) g.fillRect(ax, 0, bx - ax, h);
+        const p = peaks(w, v0, v1);
+        const waveCol = col("--wave"), loopCol = col("--wave-loop");
+        for (let x = 0; x < w; x++) {
+          const inLoop = x >= ax && x <= bx;
+          g.fillStyle = inLoop && loopOn ? loopCol : waveCol;
+          const lo = p[x * 2], hi = p[x * 2 + 1];
+          const y0 = mid - hi * amp, y1 = mid - lo * amp;
+          g.fillRect(x, y0, 1, Math.max(dpr, y1 - y0));
+        }
+        // A and B lines with labels
+        g.fillStyle = col("--ink");
+        g.font = `700 ${11 * dpr}px ${col("--sans") || "sans-serif"}`;
+        g.textBaseline = "top";
+        [[ax, "A"], [bx, "B"]].forEach(function (m) {
+          if (m[0] < -2 || m[0] > w + 2) return;
+          g.fillRect(Math.round(m[0]) - dpr, 0, 2 * dpr, h);
+          const tw = 14 * dpr, left = m[1] === "A" ? m[0] : m[0] - tw;
+          g.fillRect(left, 0, tw, 15 * dpr);
+          g.fillStyle = col("--paper"); g.fillText(m[1], left + 3.5 * dpr, 2 * dpr); g.fillStyle = col("--ink");
+        });
+        // Playback cursor
+        const cx = X(pos);
+        if (cx >= 0 && cx <= w) { g.fillStyle = col("--cursor"); g.globalAlpha = 0.85; g.fillRect(Math.round(cx) - dpr / 2, 0, Math.max(1, dpr), h); g.globalAlpha = 1; }
+      }
+      const timeAt = (clientX) => {
+        const r = canvas.getBoundingClientRect(), [v0, v1] = viewRange();
+        return clamp(v0 + (clientX - r.left) / r.width * (v1 - v0), 0, buffer.duration);
+      };
+      canvas.addEventListener("pointerdown", function (e) {
+        if (!buffer || e.button > 0) return;
+        const r = canvas.getBoundingClientRect(), [v0, v1] = viewRange();
+        const px = (sec) => r.left + (sec - v0) / (v1 - v0) * r.width;
+        const grab = e.pointerType === "touch" ? 18 : 8;
+        const da = Math.abs(e.clientX - px(song.a)), db = Math.abs(e.clientX - px(song.b));
+        let mode = "new";
+        if (song.b - song.a >= MIN_LOOP && Math.min(da, db) <= grab) mode = da <= db ? "a" : "b";
+        drag = { mode: mode, x0: e.clientX, t0: timeAt(e.clientX), moved: false, id: e.pointerId };
+        try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+      });
+      canvas.addEventListener("pointermove", function (e) {
+        if (!drag || e.pointerId !== drag.id) return;
+        if (!drag.moved && Math.abs(e.clientX - drag.x0) < 6) return;
+        drag.moved = true;
+        const tm = timeAt(e.clientX);
+        if (drag.mode === "a") setLoop(Math.min(tm, song.b - MIN_LOOP), song.b, true);
+        else if (drag.mode === "b") setLoop(song.a, Math.max(tm, song.a + MIN_LOOP), true);
+        else setLoop(Math.min(drag.t0, tm), Math.max(drag.t0, tm), true);
+      });
+      function endDrag(e) {
+        if (!drag || e.pointerId !== drag.id) return;
+        const d = drag; drag = null;
+        if (e.type === "pointerup" && !d.moved) seek(d.t0);
+        else { view = null; uiDirty = true; }
+      }
+      canvas.addEventListener("pointerup", endDrag);
+      canvas.addEventListener("pointercancel", endDrag);
+      new ResizeObserver(() => { uiDirty = true; if (!playing) frame(); }).observe(canvas);
+
+      // ---------- Loop range ----------
+      function setLoop(a, b, on) {
+        if (!buffer) return;
+        a = clamp(a, 0, buffer.duration); b = clamp(b, 0, buffer.duration);
+        if (b - a < MIN_LOOP) { if (a + MIN_LOOP <= buffer.duration) b = a + MIN_LOOP; else a = b - MIN_LOOP; }
+        song.a = a; song.b = b;
+        if (on !== undefined) song.loop = on;
+        freePos = false;
+        save(); uiDirty = true; renderControls();
+      }
+      const cur = () => (playing ? heard().pos : position);
+      // Setting A after B (or B before A) moves the other point to the end (or the start) of the song
+      function setA(sec) { setLoop(Math.min(sec, buffer.duration - MIN_LOOP), sec + MIN_LOOP > song.b ? buffer.duration : song.b, true); }
+      function setB(sec) { setLoop(sec - MIN_LOOP < song.a ? 0 : song.a, Math.max(sec, MIN_LOOP), true); }
+      function nudge(which, dir) {
+        if (!buffer) return;
+        if (which === "a") setLoop(Math.min(song.a + dir * NUDGE, song.b - MIN_LOOP), song.b);
+        else setLoop(song.a, Math.max(song.b + dir * NUDGE, song.a + MIN_LOOP));
+      }
+      function toStart() {
+        if (!buffer) return;
+        seek(song.loop || song.a > 0 ? song.a : 0);
+      }
+      function toggleLoop() {
+        if (!buffer) return;
+        song.loop = !song.loop;
+        if (song.b - song.a < MIN_LOOP) { song.a = 0; song.b = buffer.duration; }
+        save(); uiDirty = true; renderControls();
+      }
+
+      // ---------- Speed and key ----------
+      function setSpeed(v) {
+        if (!song) return;
+        song.speed = clamp(Math.round(v), SPEED_MIN, SPEED_MAX);
+        if (eng) eng.setSpeed(speedRatio());
+        save(); renderControls();
+      }
+      function setSemi(v) {
+        if (!song) return;
+        song.semi = clamp(Math.round(v), -SEMI_MAX, SEMI_MAX);
+        if (eng) eng.setSemitones(song.semi);
+        save(); renderControls();
+      }
+
+      // ---------- Saved loops ----------
+      function saveSection() {
+        if (!buffer || song.b - song.a < MIN_LOOP) return;
+        const s = { id: uid(), name: t("sec.default", { n: song.sections.length + 1 }), a: song.a, b: song.b };
+        song.sections.push(s); song.loop = true;
+        save(); renderControls(); uiDirty = true;
+        const input = document.querySelector(`#sections li[data-id="${s.id}"] .sec-name`);
+        if (input && !matchMedia("(pointer: coarse)").matches) { input.focus(); input.select(); }
+      }
+      function goSection(s) {
+        setLoop(s.a, s.b, true);
+        if (zoom) view = null;
+        seek(s.a);
+      }
+
+      // ---------- Rendering ----------
+      function fmt(sec, digits) {
+        sec = Math.max(0, sec || 0);
+        const d = digits === undefined ? 2 : digits, m = Math.floor(sec / 60), s = sec - m * 60;
+        let ss = s.toFixed(d);
+        if (+ss >= 60) { return fmt(Math.ceil(sec), d); }
+        if (s < 10) ss = "0" + ss;
+        return m + ":" + ss;
+      }
+      const signed = (n) => (n > 0 ? "+" + n : n < 0 ? "−" + Math.abs(n) : "±0");
+      function renderPlay() {
+        const b = $("playBtn");
+        b.disabled = !buffer;
+        const label = starting ? t("loading") : t(playing ? "pause" : "play");
+        b.innerHTML = (playing
+          ? '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="3" width="4.5" height="14" rx="1" fill="currentColor"></rect><rect x="11.5" y="3" width="4.5" height="14" rx="1" fill="currentColor"></rect></svg>'
+          : '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2.5v15l12.5-7.5z" fill="currentColor"></path></svg>') + "<span></span>";
+        b.querySelector("span").textContent = label;
+        b.setAttribute("aria-label", label);
+      }
+      function renderControls() {
+        const has = !!buffer, s = song || sanitizeSong({});
+        $("fileName").textContent = has ? fileLabel : t("noFile");
+        $("fileName").classList.toggle("empty", !has);
+        $("drop").hidden = has;
+        // Speed
+        $("speedBig").textContent = s.speed + "%";
+        $("speedVal").textContent = s.speed + "%";
+        $("speedSlider").value = s.speed;
+        $("speedSub").textContent = prefs.auto.on && playing && s.loop ? t("loop.pass", { n: loopPass }) + " · " + prefs.auto.start + "→" + prefs.auto.max + "%" : (prefs.auto.on ? t("auto") : "");
+        const pre = $("presets");
+        if (!pre.children.length) PRESETS.forEach(function (v) {
+          const b = document.createElement("button"); b.type = "button"; b.className = "chip mono"; b.textContent = v + "%"; b.dataset.preset = v;
+          b.onclick = () => setSpeed(v);
+          pre.appendChild(b);
+        });
+        pre.querySelectorAll("button").forEach((b) => { b.setAttribute("aria-pressed", +b.dataset.preset === s.speed); b.disabled = !has; });
+        document.querySelectorAll("[data-speed-step]").forEach((b) => { b.disabled = !has; });
+        $("speedSlider").disabled = !has;
+        // Key
+        $("keyBig").textContent = signed(s.semi);
+        $("keyNum").textContent = signed(s.semi);
+        const abs = Math.abs(s.semi);
+        $("keySub").textContent = s.semi ? t(abs === 1 ? "semi.one" : "semis", { n: abs }) + (s.semi > 0 ? " ↑" : " ↓") : t("orig");
+        $("keyDown").disabled = !has || s.semi <= -SEMI_MAX; $("keyUp").disabled = !has || s.semi >= SEMI_MAX; $("keyReset").disabled = !has || !s.semi;
+        // Loop
+        const hasRange = has && s.b - s.a >= MIN_LOOP;
+        $("loopBig").textContent = hasRange ? fmt(s.a) + "–" + fmt(s.b) : "–";
+        $("loopTile").classList.toggle("off", !s.loop);
+        $("loopSub").textContent = !has ? "" : (s.loop ? t("loop.len", { s: (s.b - s.a).toFixed(2) }) + (playing ? " · " + t("loop.pass", { n: loopPass }) : "") : t("loop.off"));
+        $("loopBtn").setAttribute("aria-pressed", has && s.loop);
+        $("loopBtn").disabled = !has; $("toStartBtn").disabled = !has;
+        $("aVal").textContent = has ? fmt(s.a) : "–"; $("bVal").textContent = has ? fmt(s.b) : "–";
+        ["setA", "setB", "saveSecBtn", "wholeBtn", "zoomBtn"].forEach((id) => { $(id).disabled = !has; });
+        document.querySelectorAll("[data-nudge]").forEach((b) => { b.disabled = !has; });
+        $("zoomBtn").setAttribute("aria-pressed", zoom);
+        // Auto speed-up
+        const au = prefs.auto;
+        $("autoBtn").setAttribute("aria-pressed", au.on); $("autoBtn").textContent = t(au.on ? "on" : "off");
+        $("autoStart").textContent = au.start + "%"; $("autoStep").textContent = "+" + au.step + "%"; $("autoMax").textContent = au.max + "%";
+        $("autoHint").textContent = t("auto.hint", { start: au.start, step: au.step, max: au.max });
+        // Count-in
+        const c = prefs.count;
+        $("countBtn").setAttribute("aria-pressed", c.on); $("countBtn").textContent = t(c.on ? "on" : "off");
+        $("beatsNum").textContent = c.beats;
+        $("beatsDown").disabled = c.beats <= 1; $("beatsUp").disabled = c.beats >= 8;
+        if (document.activeElement !== $("bpmInput")) $("bpmInput").value = s.bpm;
+        $("countHint").textContent = t("count.hint", { beats: c.beats, bpm: s.bpm, speed: s.speed, real: Math.round(s.bpm * s.speed / 100) });
+        // Volume
+        $("vol").value = Math.round(prefs.vol * 100); $("volVal").textContent = Math.round(prefs.vol * 100) + "%";
+        $("clickVol").value = Math.round(prefs.clickVol * 100); $("clickVolVal").textContent = Math.round(prefs.clickVol * 100) + "%";
+        renderSections();
+      }
+      function renderSections() {
+        const box = $("sections"), list = song ? song.sections : [];
+        // Do not rebuild while a name is being typed
+        if (box.contains(document.activeElement) && document.activeElement.classList.contains("sec-name") && box.children.length === list.length) {
+          box.querySelectorAll("li").forEach(function (li, i) { li.classList.toggle("current", Math.abs(list[i].a - song.a) < 0.005 && Math.abs(list[i].b - song.b) < 0.005); });
+          return;
+        }
+        box.innerHTML = "";
+        list.forEach(function (s) {
+          const li = document.createElement("li"); li.dataset.id = s.id;
+          if (Math.abs(s.a - song.a) < 0.005 && Math.abs(s.b - song.b) < 0.005) li.className = "current";
+          const go = document.createElement("button"); go.type = "button"; go.className = "chip sec-go";
+          go.textContent = fmt(s.a, 1) + "–" + fmt(s.b, 1);
+          go.setAttribute("aria-label", t("sec.go", { name: s.name || go.textContent }));
+          go.onclick = () => goSection(s);
+          const nm = document.createElement("input"); nm.type = "text"; nm.className = "sec-name"; nm.maxLength = 40; nm.value = s.name;
+          nm.setAttribute("aria-label", t("sec.name")); nm.autocomplete = "off";
+          nm.oninput = () => { s.name = nm.value.slice(0, 40); save(); };
+          nm.onkeydown = (e) => { if (e.key === "Enter") nm.blur(); };
+          const del = document.createElement("button"); del.type = "button"; del.className = "chip sq mono";
+          del.textContent = "×"; del.setAttribute("aria-label", t("sec.del", { name: s.name || go.textContent }));
+          del.onclick = () => { song.sections = song.sections.filter((x) => x !== s); save(); renderSections(); };
+          li.append(go, nm, del); box.appendChild(li);
+        });
+        $("secsHint").hidden = list.length > 0;
+      }
+      function renderTime(pos, beat) {
+        const dur = buffer ? buffer.duration : 0;
+        const el = $("time");
+        el.innerHTML = "<b></b> / <span></span>";
+        el.firstChild.textContent = beat ? t("counting") + " " + beat : fmt(pos, 1);
+        el.lastChild.textContent = fmt(dur, 1);
+      }
+      function renderAll() { renderPlay(); renderControls(); uiDirty = true; if (!playing) frame(); }
+      let lastPass = 0, lastSpeed = 0, lastText = "";
+      function frame() {
+        const h = buffer ? heard() : { pos: 0 };
+        draw(h.pos);
+        const text = (h.beat || 0) + ":" + h.pos.toFixed(1) + "/" + (buffer ? buffer.duration : 0);
+        if (text !== lastText) { renderTime(h.pos, h.beat); lastText = text; }
+        if (uiDirty || loopPass !== lastPass || (song && song.speed !== lastSpeed)) {
+          uiDirty = false; lastPass = loopPass; lastSpeed = song ? song.speed : 0;
+          renderControls();
+        }
+        if (playing) requestAnimationFrame(frame);
+      }
+
+      // ---------- Controls ----------
+      $("playBtn").onclick = () => (playing ? pause() : play());
+      $("toStartBtn").onclick = toStart;
+      $("loopBtn").onclick = toggleLoop;
+      $("setA").onclick = () => buffer && setA(cur());
+      $("setB").onclick = () => buffer && setB(cur());
+      document.querySelectorAll("[data-nudge]").forEach(function (b) {
+        const [which, dir] = b.dataset.nudge.split(":");
+        b.onclick = () => nudge(which, +dir);
+      });
+      $("wholeBtn").onclick = () => { setLoop(0, buffer.duration); zoom = false; view = null; renderControls(); };
+      $("saveSecBtn").onclick = saveSection;
+      function toggleZoom() { if (!buffer) return; zoom = !zoom; view = null; uiDirty = true; renderControls(); if (!playing) frame(); }
+      $("zoomBtn").onclick = toggleZoom;
+      document.querySelectorAll("[data-speed-step]").forEach((b) => { b.onclick = () => setSpeed(song.speed + +b.dataset.speedStep); });
+      $("speedSlider").oninput = (e) => setSpeed(+e.target.value);
+      $("keyDown").onclick = () => setSemi(song.semi - 1);
+      $("keyUp").onclick = () => setSemi(song.semi + 1);
+      $("keyReset").onclick = () => setSemi(0);
+      $("autoBtn").onclick = () => {
+        prefs.auto.on = !prefs.auto.on;
+        if (prefs.auto.on && song) {
+          if (buffer && song.b - song.a < MIN_LOOP) setLoop(0, buffer.duration);
+          song.loop = true;
+          // While stopped, show the speed it will start at
+          if (!playing) song.speed = prefs.auto.start;
+        }
+        saveNow(); renderControls(); uiDirty = true;
+      };
+      document.querySelectorAll("[data-auto]").forEach(function (b) {
+        const [field, d] = b.dataset.auto.split(":");
+        b.onclick = function () {
+          const a = prefs.auto;
+          if (field === "step") a.step = clamp(a.step + +d, 1, 10);
+          else a[field] = clamp(a[field] + +d, SPEED_MIN, SPEED_MAX);
+          if (field === "start" && a.max < a.start) a.max = a.start;
+          if (field === "max" && a.start > a.max) a.start = a.max;
+          if (a.on && song && !playing && field === "start") song.speed = a.start;
+          saveNow(); renderControls();
+        };
+      });
+      $("countBtn").onclick = () => { prefs.count.on = !prefs.count.on; saveNow(); renderControls(); };
+      $("beatsDown").onclick = () => { prefs.count.beats = clamp(prefs.count.beats - 1, 1, 8); saveNow(); renderControls(); };
+      $("beatsUp").onclick = () => { prefs.count.beats = clamp(prefs.count.beats + 1, 1, 8); saveNow(); renderControls(); };
+      function setBpm(v) { if (!song) song = sanitizeSong({}); song.bpm = clamp(Math.round(v), 30, 300); save(); renderControls(); }
+      $("bpmInput").onchange = (e) => { const v = +e.target.value; if (v) setBpm(v); else renderControls(); };
+      $("bpmInput").onblur = () => renderControls();
+      $("bpmInput").onkeydown = (e) => { if (e.key === "Enter") e.target.blur(); };
+      let taps = [];
+      function tap() {
+        const now = performance.now();
+        if (taps.length && now - taps[taps.length - 1] > 2000) taps = [];
+        taps.push(now); if (taps.length > 6) taps.shift();
+        // Taps follow what is heard, so convert back to the song's tempo at 100%
+        if (taps.length >= 2) setBpm(60000 / ((taps[taps.length - 1] - taps[0]) / (taps.length - 1)) / (playing && song ? speedRatio() : 1));
+      }
+      $("tapBtn").onclick = tap;
+      $("vol").oninput = (e) => { prefs.vol = +e.target.value / 100; if (master) master.gain.value = prefs.vol; save(); renderControls(); };
+      $("clickVol").oninput = (e) => { prefs.clickVol = +e.target.value / 100; if (clickBus) clickBus.gain.value = prefs.clickVol; save(); renderControls(); };
+
+      // Tap feedback: buttons that don't stay on (no aria-pressed) get .is-pressed for at least 150 ms
+      const PRESSABLE = ".chip:not([aria-pressed]), .play, .primary, #settingsBtn";
+      document.addEventListener("pointerdown", function (e) {
+        const el = e.target.closest && e.target.closest(PRESSABLE);
+        if (!el || el.disabled || e.button > 0) return;
+        const t0 = performance.now();
+        el.classList.add("is-pressed");
+        const release = function () {
+          document.removeEventListener("pointerup", release); document.removeEventListener("pointercancel", release);
+          setTimeout(() => el.classList.remove("is-pressed"), Math.max(0, 150 - (performance.now() - t0)));
+        };
+        document.addEventListener("pointerup", release); document.addEventListener("pointercancel", release);
+      });
+
+      // Keyboard shortcuts (not while typing, or while a menu or dialog is open)
+      document.addEventListener("keydown", function (e) {
+        const el = e.target, tag = el && el.tagName;
+        if (e.ctrlKey || e.metaKey || e.altKey || e.defaultPrevented) return;
+        if (!$("settingsMenu").hidden || document.querySelector("dialog[open]")) return;
+        if ((tag === "INPUT" && el.type !== "range") || tag === "SELECT" || tag === "TEXTAREA") return;
+        const k = e.key;
+        if (k === "o" || k === "O") { e.preventDefault(); $("fileInput").click(); return; }
+        if (!buffer) return;
+        if (k === " ") { if (tag === "BUTTON") return; e.preventDefault(); if (playing) pause(); else play(); }
+        else if (tag === "INPUT") return;
+        else if (k === "ArrowUp") { e.preventDefault(); setSpeed(song.speed + (e.shiftKey ? 5 : 1)); }
+        else if (k === "ArrowDown") { e.preventDefault(); setSpeed(song.speed - (e.shiftKey ? 5 : 1)); }
+        else if (k === "ArrowLeft") { e.preventDefault(); nudge(e.shiftKey ? "b" : "a", -1); }
+        else if (k === "ArrowRight") { e.preventDefault(); nudge(e.shiftKey ? "b" : "a", 1); }
+        else if (k === "a" || k === "A") setA(cur());
+        else if (k === "b" || k === "B") setB(cur());
+        else if (k === "l" || k === "L") toggleLoop();
+        else if (k === "Enter" || k === "Home") { if (tag === "BUTTON" && k === "Enter") return; e.preventDefault(); toStart(); }
+        else if (k === "-" || k === "_") setSemi(song.semi - 1);
+        else if (k === "+" || k === "=") setSemi(song.semi + 1);
+        else if (k === "z" || k === "Z") toggleZoom();
+      });
+
+      // ---------- Settings (gear) menu: How to use / Privacy / About ----------
+      const settingsBtn = $("settingsBtn");
+      const settingsMenu = $("settingsMenu");
+      const helpDlg = $("helpDlg");
+      const privacyDlg = $("privacyDlg");
+      const aboutDlg = $("aboutDlg");
+
+      function closeMenu(returnFocus) {
+        if (settingsMenu.hidden) return;
+        settingsMenu.hidden = true;
+        settingsBtn.setAttribute("aria-expanded", "false");
+        if (returnFocus) settingsBtn.focus();
+      }
+      function openMenu() {
+        const r = settingsBtn.getBoundingClientRect();
+        settingsMenu.style.top = r.bottom + 6 + "px";
+        settingsMenu.style.right = Math.max(8, document.documentElement.clientWidth - r.right) + "px";
+        settingsMenu.hidden = false;
+        settingsBtn.setAttribute("aria-expanded", "true");
+        $("menuHelp").focus();
+      }
+      settingsBtn.addEventListener("click", function () {
+        if (settingsMenu.hidden) openMenu(); else closeMenu(true);
+      });
+      document.addEventListener("click", function (e) {
+        if (!settingsMenu.hidden && !settingsMenu.contains(e.target) && !settingsBtn.contains(e.target)) closeMenu(false);
+      });
+      document.addEventListener("keydown", function (e) {
+        if (settingsMenu.hidden) return;
+        if (e.key === "Escape") { closeMenu(true); return; }
+        if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+          e.preventDefault();
+          const items = Array.prototype.slice.call(settingsMenu.querySelectorAll('[role="menuitem"]'));
+          const i = items.indexOf(document.activeElement);
+          const next = e.key === "ArrowDown" ? (i + 1) % items.length : (i - 1 + items.length) % items.length;
+          items[next].focus();
+        }
+      }, true);
+      window.addEventListener("resize", function () { closeMenu(false); });
+
+      // About: the license text is read from THIRD_PARTY_LICENSES.md
+      let licenseLoaded = false;
+      async function loadLicenses() {
+        if (licenseLoaded) return;
+        const el = $("licenseText");
+        el.textContent = t("loading");
+        try {
+          const res = await fetch("THIRD_PARTY_LICENSES.md");
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          // Hide the marker (HTML comment) used by the update script
+          el.textContent = (await res.text()).replace(/<!--[\s\S]*?-->\n?/g, "");
+          licenseLoaded = true;
+        } catch (e) {
+          el.textContent = t("err.license");
+        }
+      }
+
+      // Focus the dialog itself, not its first link, so no link looks selected on open
+      function openDlg(dlg) {
+        if (typeof dlg.showModal !== "function") return;
+        dlg.showModal(); dlg.focus();
+      }
+      $("menuHelp").addEventListener("click", function () {
+        closeMenu(false);
+        openDlg(helpDlg);
+      });
+      $("menuPrivacy").addEventListener("click", function () {
+        closeMenu(false);
+        openDlg(privacyDlg);
+      });
+      $("menuAbout").addEventListener("click", function () {
+        closeMenu(false);
+        loadLicenses();
+        openDlg(aboutDlg);
+      });
+
+      // Dialogs: close with the Close button or a click outside
+      [[helpDlg, "helpClose"], [privacyDlg, "privacyClose"], [aboutDlg, "aboutClose"]].forEach(function (pair) {
+        const dlg = pair[0];
+        $(pair[1]).addEventListener("click", function () { dlg.close(); });
+        // The menu item that opened it is hidden, so return focus to the settings button
+        dlg.addEventListener("close", function () { $("settingsBtn").focus(); });
+        dlg.addEventListener("click", function (e) {
+          const r = dlg.getBoundingClientRect();
+          if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close();
+        });
+      });
+
+      // Redraw when the colour scheme changes (the waveform reads the colours)
+      matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { uiDirty = true; if (!playing) frame(); });
+
+      applyI18n();
+      renderAll();
+    })();
+  </script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    });
+  }
+</script>
+<!-- Cloudflare Web Analytics (page views; no cookies) -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "5c53079cb9a64d819d1ca53e8533ca63"}'></script>
+</body>
+</html>

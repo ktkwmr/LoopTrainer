@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!-- Source of public/looptrainer/og-image.png (1200x630). Regenerate with:
+     node scripts/render-og-image.mjs -->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; background: #fff; color: #000;
+    font-family: "Inter", "Segoe UI", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { box-sizing: border-box; height: 100%; padding: 72px 96px 64px; display: flex; flex-direction: column; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 28px; }
+  .brand svg { width: 104px; height: 104px; }
+  h1 { margin: 0; font-size: 76px; font-weight: 700; letter-spacing: -0.02em; }
+  p { margin: 0; font-size: 34px; color: #525252; line-height: 1.4; }
+  .wave { display: flex; align-items: center; gap: 4px; height: 96px; position: relative; }
+  .wave i { flex: 1; background: #a3a3a3; border-radius: 2px; }
+  .wave i.on { background: #000; }
+  .loop { position: absolute; top: -8px; bottom: -8px; border-left: 4px solid #000; border-right: 4px solid #000; background: rgba(0,0,0,.06); }
+  .row { display: flex; justify-content: space-between; align-items: baseline; }
+  .tags { display: flex; gap: 14px; font-family: "Cascadia Mono", "Consolas", "DejaVu Sans Mono", monospace; font-size: 28px; font-weight: 700; }
+  .tags span { border: 2px solid #d4d4d4; border-radius: 12px; padding: 8px 18px; }
+  .tags span.on { background: #000; color: #fff; border-color: #000; }
+  .url { font-size: 26px; color: #737373; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <svg viewBox="0 0 28 28"><rect width="28" height="28" rx="7"/><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14A6.5 6.5 0 1 1 14 7.5"/><path d="M11.6 4.9l2.8 2.6-2.8 2.6"/></g><path d="M12 10.8v6.4l5-3.2z" fill="#fff"/></svg>
+      <h1>Loop Trainer</h1>
+    </div>
+    <p>Loop any section of a song and slow it down<br />without changing the pitch.</p>
+    <div class="wave" id="wave"><div class="loop" style="left:38%;width:24%"></div></div>
+    <div class="row">
+      <div class="tags"><span>A–B loop</span><span class="on">70%</span><span>Key +2</span><span>+2% / loop</span></div>
+      <div class="url">ktkwmr.com/looptrainer</div>
+    </div>
+  </div>
+  <script>
+    // A made-up waveform (fixed values, so the image is the same every time)
+    const w = document.getElementById("wave");
+    for (let i = 0; i < 120; i++) {
+      const x = i / 120, h = 18 + 70 * Math.abs(Math.sin(i * 0.37) * Math.sin(i * 0.11 + 1)) * (0.6 + 0.4 * Math.sin(x * 9));
+      const el = document.createElement("i"); el.style.height = Math.max(8, h) + "px";
+      if (x >= 0.38 && x <= 0.62) el.className = "on";
+      w.appendChild(el);
+    }
+  </script>
+</body>
+</html>

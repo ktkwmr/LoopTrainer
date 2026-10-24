@@ -1,0 +1,16 @@
+{
+  "name": "Loop Trainer",
+  "short_name": "Loop Trainer",
+  "description": "Loop a section of a song and slow it down without changing the pitch. 音程を変えずにスロー再生・区間ループできる耳コピ練習プレイヤー",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
