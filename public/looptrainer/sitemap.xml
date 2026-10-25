@@ -15,6 +15,66 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://ktkwmr.com/looptrainer/" />
   </url>
   <url>
+    <loc>https://ktkwmr.com/looptrainer/guide/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ktkwmr.com/looptrainer/guide/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ktkwmr.com/looptrainer/ja/guide/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ktkwmr.com/looptrainer/guide/" />
+  </url>
+  <url>
+    <loc>https://ktkwmr.com/looptrainer/ja/guide/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ktkwmr.com/looptrainer/guide/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ktkwmr.com/looptrainer/ja/guide/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ktkwmr.com/looptrainer/guide/" />
+  </url>
+  <url>
+    <loc>https://ktkwmr.com/looptrainer/learn-by-ear/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ktkwmr.com/looptrainer/learn-by-ear/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ktkwmr.com/looptrainer/ja/learn-by-ear/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ktkwmr.com/looptrainer/learn-by-ear/" />
+  </url>
+  <url>
+    <loc>https://ktkwmr.com/looptrainer/ja/learn-by-ear/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ktkwmr.com/looptrainer/learn-by-ear/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ktkwmr.com/looptrainer/ja/learn-by-ear/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ktkwmr.com/looptrainer/learn-by-ear/" />
+  </url>
+  <url>
+    <loc>https://ktkwmr.com/looptrainer/speed-up-practice/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ktkwmr.com/looptrainer/speed-up-practice/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ktkwmr.com/looptrainer/ja/speed-up-practice/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ktkwmr.com/looptrainer/speed-up-practice/" />
+  </url>
+  <url>
+    <loc>https://ktkwmr.com/looptrainer/ja/speed-up-practice/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ktkwmr.com/looptrainer/speed-up-practice/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ktkwmr.com/looptrainer/ja/speed-up-practice/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ktkwmr.com/looptrainer/speed-up-practice/" />
+  </url>
+  <url>
+    <loc>https://ktkwmr.com/looptrainer/change-key/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ktkwmr.com/looptrainer/change-key/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ktkwmr.com/looptrainer/ja/change-key/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ktkwmr.com/looptrainer/change-key/" />
+  </url>
+  <url>
+    <loc>https://ktkwmr.com/looptrainer/ja/change-key/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ktkwmr.com/looptrainer/change-key/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ktkwmr.com/looptrainer/ja/change-key/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ktkwmr.com/looptrainer/change-key/" />
+  </url>
+  <url>
+    <loc>https://ktkwmr.com/looptrainer/faq/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ktkwmr.com/looptrainer/faq/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ktkwmr.com/looptrainer/ja/faq/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ktkwmr.com/looptrainer/faq/" />
+  </url>
+  <url>
+    <loc>https://ktkwmr.com/looptrainer/ja/faq/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ktkwmr.com/looptrainer/faq/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ktkwmr.com/looptrainer/ja/faq/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ktkwmr.com/looptrainer/faq/" />
+  </url>
+  <url>
     <loc>https://ktkwmr.com/looptrainer/about/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://ktkwmr.com/looptrainer/about/" />
     <xhtml:link rel="alternate" hreflang="ja" href="https://ktkwmr.com/looptrainer/ja/about/" />

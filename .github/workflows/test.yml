@@ -1,0 +1,38 @@
+name: Tests
+
+# Unit tests of the beat and bar analysis, the browser test of the app (Playwright, Chromium),
+# and a check that the generated files are up to date. Runs on pull requests and on push to main.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generated files are up to date
+        run: |
+          node scripts/build-ja.mjs --check
+          node scripts/build-pages.mjs --check
+
+      - name: Analysis unit tests
+        run: node --test tests/analysis.test.mjs
+
+      - name: Install Playwright and SoundTouchJS (the same version as the app loads)
+        run: |
+          npm install --no-save playwright@1.63.0 soundtouchjs@0.3.0
+          npx playwright install --with-deps chromium
+
+      - name: Browser test
+        run: node tests/e2e.mjs
