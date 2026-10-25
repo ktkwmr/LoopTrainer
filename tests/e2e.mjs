@@ -146,7 +146,8 @@ const text = (page, sel) => page.textContent(sel);
     await page.click("#barBtn");
   });
   await check("plays at 70 % inside the loop, and the loop comes around", async () => {
-    await page.click('[data-preset="70"]');
+    await page.locator("#speedSlider").fill("70");
+    assert.match(await text(page, "#tempo"), /≈ 84 \(original 120\)/);
     const s = await saved(page);
     await page.click("#playBtn");
     await page.waitForTimeout(800);
@@ -204,7 +205,13 @@ const text = (page, sel) => page.textContent(sel);
   await page.click("#playBtn");
   const pitch = async () => { await page.waitForTimeout(1300); return page.evaluate(() => window.__pitch()); };
   await check("100 %: 440 Hz", async () => { const hz = await pitch(); assert.ok(Math.abs(hz - 440) < 6, `${hz}`); });
-  await check("50 %: still 440 Hz", async () => { await page.click('[data-preset="50"]'); const hz = await pitch(); assert.ok(Math.abs(hz - 440) < 6, `${hz}`); });
+  await check("50 %: still 440 Hz", async () => { await page.locator("#speedSlider").fill("50"); const hz = await pitch(); assert.ok(Math.abs(hz - 440) < 6, `${hz}`); });
+  await check("Original speed sets 100 % again", async () => {
+    assert.ok(!(await page.isDisabled("#speedReset")));
+    await page.click("#speedReset");
+    assert.equal(await text(page, "#speedBig"), "100%");
+    assert.ok(await page.isDisabled("#speedReset"));
+  });
   await check("key +2: 493.9 Hz", async () => { await page.click("#keyUp"); await page.click("#keyUp"); const hz = await pitch(); assert.ok(Math.abs(hz - 493.9) < 6, `${hz}`); });
   await check("key −3: 370 Hz", async () => { for (let i = 0; i < 5; i++) await page.click("#keyDown"); const hz = await pitch(); assert.ok(Math.abs(hz - 370) < 6, `${hz}`); });
   await check("no beats in a steady tone", async () => { await page.waitForFunction(() => !/…/.test(document.getElementById("tempo").textContent)); assert.doesNotMatch(await text(page, "#tempo"), /≈/); });

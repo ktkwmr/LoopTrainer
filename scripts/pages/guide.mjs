@@ -50,13 +50,13 @@ export default {
 
 <h2 id="player">The player</h2>
 <figure class="shot">
-  ${img("en", "player", "Loop Trainer on a computer: the waveform of a song with an A-B loop of two bars highlighted, the time and the detected tempo of 120 under it, large displays of speed 70%, key +2, and the loop times, the Play button, and the A and B buttons. Numbers 1 to 10 mark the controls.")}
+  ${img("en", "player", "Loop Trainer on a computer: the waveform of a song with an A-B loop of two bars highlighted, the time and the tempo under it (84 at this speed, 120 in the original), large displays of speed 70%, key +2, and the loop times, the Play button, and the A and B buttons. Numbers 1 to 10 mark the controls.")}
   <figcaption>The numbers match the list below. Tap the image to enlarge it.</figcaption>
 </figure>
 <ol>
   <li><b>Open file</b> – Choose an audio file. The file is read in your browser and never uploaded.</li>
   <li><b>Waveform</b> – The whole song, with the loop shaded between the A and B flags. Tap anywhere to jump there; drag to choose a new loop. The small ticks at the bottom are the beats, and the taller ones are the bar starts.</li>
-  <li><b>Time and tempo</b> – Where you are in the song, and the tempo the app found (♩ ≈ 120 means about 120 beats per minute).</li>
+  <li><b>Time and tempo</b> – Where you are in the song, and the tempo the app found (♩ ≈ 120 means about 120 beats per minute). When you change the speed, it shows the tempo you hear and the original: ♩ ≈ 84 (original 120) at 70%.</li>
   <li><b>Zoom to loop</b> – Fits the loop to the screen for fine changes. Press it again to see the whole song.</li>
   <li><b>Speed, key, and loop</b> – Large enough to read from a distance. Under the loop: its length in seconds and in beats or bars, and which time round it is while it plays.</li>
   <li><b>Back to A</b> – Goes to the start of the loop.</li>
@@ -90,11 +90,11 @@ export default {
 
 <h2 id="settings">Practice settings</h2>
 <figure class="shot">
-  ${img("en", "settings", "The practice settings: speed with a slider, buttons and presets from 50% to 100%, key with minus and plus, beats and bars, speed up on every loop with start, step, and top speed, count-in with clicks and song BPM, saved loops with a loop named Chorus, and volume. Numbers 1 to 7 mark the groups.")}
+  ${img("en", "settings", "The practice settings: speed with a slider, step buttons, and Original speed, key with minus and plus, beats and bars, speed up on every loop with start, step, and top speed, count-in with clicks and song BPM, saved loops with a loop named Chorus, and volume. Numbers 1 to 7 mark the groups.")}
   <figcaption>The numbers match the list below.</figcaption>
 </figure>
 <ol>
-  <li><b>Speed</b> – From ${SPEED_MIN}% to ${SPEED_MAX}% in 1% steps, with buttons for 50%–100%. The pitch does not change. Below ${SPEED_MIN}% the sound breaks up too much to be useful.</li>
+  <li><b>Speed</b> – From ${SPEED_MIN}% to ${SPEED_MAX}% in 1% steps; “Original speed” sets it back to 100%. The pitch does not change. Below ${SPEED_MIN}% the sound breaks up too much to be useful.</li>
   <li><b>Key</b> – Up to ${SEMI_MAX} semitones up or down. The tempo does not change, and it works together with the speed. See <a href="../change-key/">changing the key</a>.</li>
   <li><b>Beats and bars</b> – See <a href="#beats">above</a>.</li>
   <li><b>Speed up on every loop</b> – Starts at the first speed (70% at first) and adds a little each time the loop comes around (+2%), until the top speed (100%). It starts again from the first speed when you play from the start of the loop. See <a href="../speed-up-practice/">speeding up step by step</a>.</li>
@@ -174,13 +174,13 @@ export default {
 
 <h2 id="player">プレイヤー</h2>
 <figure class="shot">
-  ${img("ja", "player", "パソコンで開いた Loop Trainer。曲の波形の上で 2 小節の A-B ループが強調表示され、その下に時間と検出したテンポ 120、大きく表示した速度 70%・キー +2・ループの時間、再生ボタン、A・B のボタンが並ぶ。1〜10 の番号で各部分を示している。")}
+  ${img("ja", "player", "パソコンで開いた Loop Trainer。曲の波形の上で 2 小節の A-B ループが強調表示され、その下に時間とテンポ（この速度で 84、原曲 120）、大きく表示した速度 70%・キー +2・ループの時間、再生ボタン、A・B のボタンが並ぶ。1〜10 の番号で各部分を示している。")}
   <figcaption>番号は下の一覧と対応しています。画像を押すと拡大します。</figcaption>
 </figure>
 <ol>
   <li><b>ファイルを開く</b> – 音源ファイルを選びます。ファイルはブラウザの中で読み込まれ、アップロードされません。</li>
   <li><b>波形</b> – 曲全体の波形です。A と B の旗の間がループで、色が付きます。タップするとその位置に移動し、ドラッグすると新しいループを選べます。下端の短い目盛りが拍、長い目盛りが小節の頭です。</li>
-  <li><b>時間とテンポ</b> – 曲のどこを再生しているかと、検出したテンポです（♩ ≈ 120 は 1 分間に約 120 拍）。</li>
+  <li><b>時間とテンポ</b> – 曲のどこを再生しているかと、検出したテンポです（♩ ≈ 120 は 1 分間に約 120 拍）。速度を変えると、聞こえるテンポと原曲のテンポを表示します（70% なら ♩ ≈ 84（原曲 120））。</li>
   <li><b>ループを拡大</b> – ループを画面いっぱいに表示して、細かく調整できます。もう一度押すと曲全体に戻ります。</li>
   <li><b>速度・キー・ループ</b> – 離れていても読める大きさで表示します。ループの下には、長さ（秒と拍数・小節数）と、再生中は何周目かが出ます。</li>
   <li><b>A に戻る</b> – ループの先頭に戻ります。</li>
@@ -214,11 +214,11 @@ export default {
 
 <h2 id="settings">練習の設定</h2>
 <figure class="shot">
-  ${img("ja", "settings", "練習の設定。速度のスライダー・ボタン・50〜100% のプリセット、キーの − と +、拍と小節、1周ごとに速くする（開始・上げ幅・上限）、カウントイン（クリック数と曲の BPM）、「サビ」という名前の保存したループ、音量。1〜7 の番号で各項目を示している。")}
+  ${img("ja", "settings", "練習の設定。速度のスライダー・増減ボタン・「原曲の速度」、キーの − と +、拍と小節、1周ごとに速くする（開始・上げ幅・上限）、カウントイン（クリック数と曲の BPM）、「サビ」という名前の保存したループ、音量。1〜7 の番号で各項目を示している。")}
   <figcaption>番号は下の一覧と対応しています。</figcaption>
 </figure>
 <ol>
-  <li><b>速度</b> – ${SPEED_MIN}%〜${SPEED_MAX}% を 1% 単位で。50%〜100% はボタンでも選べます。音程は変わりません。${SPEED_MIN}% より遅いと音が崩れすぎるため、${SPEED_MIN}% が下限です。</li>
+  <li><b>速度</b> – ${SPEED_MIN}%〜${SPEED_MAX}% を 1% 単位で。「原曲の速度」で 100% に戻ります。音程は変わりません。${SPEED_MIN}% より遅いと音が崩れすぎるため、${SPEED_MIN}% が下限です。</li>
   <li><b>キー</b> – 半音単位で上下 ${SEMI_MAX} つまで。テンポは変わらず、速度と同時に使えます。<a href="../change-key/">キー変更の使い方</a>も参考にしてください。</li>
   <li><b>拍と小節</b> – <a href="#beats">上の説明</a>をご覧ください。</li>
   <li><b>1周ごとに速くする</b> – 開始の速度（最初は 70%）から始まり、ループが一周するたびに少しずつ（+2%）上げて、上限（100%）で止めます。ループの先頭から再生すると、開始の速度に戻ります。<a href="../speed-up-practice/">少しずつ速くする練習法</a>もどうぞ。</li>

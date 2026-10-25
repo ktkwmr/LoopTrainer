@@ -12,9 +12,6 @@ function constant(name) {
 export const SPEED_MIN = constant("SPEED_MIN");
 export const SPEED_MAX = constant("SPEED_MAX");
 export const SEMI_MAX = constant("SEMI_MAX");
-const presets = html.match(/const PRESETS = \[([\d, ]+)\]/);
-if (!presets) throw new Error("scripts/pages/practice.mjs: PRESETS not found in index.html");
-export const PRESETS = presets[1].split(",").map(Number);
 
 /** The tempo you hear (BPM) when a song at `bpm` is played at `percent` % */
 export const heardBpm = (bpm, percent) => Math.round((bpm * percent) / 100);

@@ -18,8 +18,8 @@ A practice player for learning songs by ear. Open an audio file you have, change
   小節の頭をコードの変わり目（クロマ）と低音（ベース・キック）から推定して長い線で表示。「小節の頭に合わせる」で A・B を小節の頭に吸着（◀ ▶ は 1 小節ずつ）。1 小節の拍数（2〜7）と小節の頭のずらしは曲ごとに保存
 - **A-B loop**: set A / B at the current position, move them by a beat (or 0.05 s without snapping), loop on / off, back to A
   今の位置を A・B に設定、1 拍ずつ（吸着オフなら 0.05 秒ずつ）移動、ループのオン・オフ、A に戻る
-- **Speed (pitch unchanged)**: 50–150% in 1% steps, with 50–100% presets
-  50〜150%（1% 単位）、50〜100% のプリセット
+- **Speed (pitch unchanged)**: 50–150% in 1% steps, with an Original speed button; the tempo shown next to the time follows the speed
+  50〜150%（1% 単位）、原曲の速度ボタン。時間の横のテンポも速度に合わせて表示
 - **Key (tempo unchanged)**: ±6 semitones, together with the speed
   半音単位で ±6。速度と同時に使える
 - **Speed up on every loop**: start speed, step per loop, and top speed (for example 70% → +2% → 100%)
@@ -152,7 +152,7 @@ npx wrangler deploy
 Edit only `public/looptrainer/index.html` and `scripts/`. These files are generated and must not be edited by hand:
 
 - `public/looptrainer/ja/index.html` – `index.html` with Japanese `<head>` (title, description, canonical, Open Graph, JSON-LD) and Japanese UI text, so search engines can index the Japanese version. The Japanese title and description are in `scripts/build-ja.mjs`; UI text comes from `I18N.ja` in `index.html`.
-- The articles (`guide`, `learn-by-ear`, `speed-up-practice`, `change-key`, `faq`), the info pages (`about`, `privacy`), their `ja/` versions, and `sitemap.xml` – from `scripts/pages/<slug>.mjs` (English and Japanese written separately) and `scripts/pages/layout.mjs`. The tables in the articles are calculated by `scripts/pages/practice.mjs`, which reads the app's limits (`SPEED_MIN`, `SPEED_MAX`, `SEMI_MAX`, `PRESETS`) from `index.html`.
+- The articles (`guide`, `learn-by-ear`, `speed-up-practice`, `change-key`, `faq`), the info pages (`about`, `privacy`), their `ja/` versions, and `sitemap.xml` – from `scripts/pages/<slug>.mjs` (English and Japanese written separately) and `scripts/pages/layout.mjs`. The tables in the articles are calculated by `scripts/pages/practice.mjs`, which reads the app's limits (`SPEED_MIN`, `SPEED_MAX`, `SEMI_MAX`) from `index.html`.
 
 They are regenerated automatically by `npx wrangler deploy` / `npx wrangler dev` (`build.command` in `wrangler.jsonc`) and by the **Build generated pages** GitHub Actions workflow on push to `main`. To run them manually:
 

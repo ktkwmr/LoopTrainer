@@ -85,7 +85,7 @@ async function setUp(page, lang) {
   await page.click("#barBtn");
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.mouse.move(X(12.4), y); await page.mouse.down(); await page.mouse.move(X(16.2), y, { steps: 8 }); await page.mouse.up();
-  await page.click('[data-preset="70"]');
+  await page.locator("#speedSlider").fill("70");
   await page.click("#keyUp"); await page.click("#keyUp");
   await page.click("#saveSecBtn");
   await page.fill(".sec-name", lang === "ja" ? "サビ" : "Chorus");

@@ -1,8 +1,9 @@
 // Article: speeding up step by step (the "Speed up on every loop" feature), with calculated tables
 import { wideTable } from "./layout.mjs";
-import { PRESETS, SPEED_MIN, heardBpm, passes, rampSeconds, mmss, barsSeconds } from "./practice.mjs";
+import { SPEED_MIN, heardBpm, passes, rampSeconds, mmss, barsSeconds } from "./practice.mjs";
 
 const SONG_BPMS = [70, 90, 100, 120, 140, 160, 180];
+const SPEEDS = [50, 60, 70, 80, 90, 100];
 // The table of passes: a 4-bar loop at 120 BPM (8 s at 100 %), from 70 % to 100 %
 const LOOP_BARS = 4, LOOP_BPM = 120, START = 70, TOP = 100;
 const STEPS = [1, 2, 3, 5];
@@ -10,8 +11,8 @@ const loopSec = barsSeconds(LOOP_BARS, 4, LOOP_BPM);
 const two = passes(START, 2, TOP);
 
 function bpmTable(lang) {
-  const head = `<th scope="col">${lang === "ja" ? "曲の BPM" : "Song BPM"}</th>` + PRESETS.map((p) => `<th scope="col">${p}%</th>`).join("");
-  const rows = SONG_BPMS.map((b) => `<tr><th scope="row">${b}</th>${PRESETS.map((p) => `<td class="num">${heardBpm(b, p)}</td>`).join("")}</tr>`).join("\n      ");
+  const head = `<th scope="col">${lang === "ja" ? "曲の BPM" : "Song BPM"}</th>` + SPEEDS.map((p) => `<th scope="col">${p}%</th>`).join("");
+  const rows = SONG_BPMS.map((b) => `<tr><th scope="row">${b}</th>${SPEEDS.map((p) => `<td class="num">${heardBpm(b, p)}</td>`).join("")}</tr>`).join("\n      ");
   return wideTable(lang, `<table>
     <thead><tr>${head}</tr></thead>
     <tbody>
@@ -61,7 +62,7 @@ export default {
 <h2 id="bpm">What tempo you hear at each speed</h2>
 <p>The speed in Loop Trainer is a percentage of the original. To know the tempo you are actually playing at, multiply the song's BPM by the speed:</p>
 ${bpmTable("en")}
-<p class="cap">The BPM you hear at each speed (rounded). The count-in clicks at this tempo too.</p>
+<p class="cap">The BPM you hear at each speed (rounded). The count-in clicks at this tempo too, and the app shows it next to the time (♩ ≈ 84 (original 120) at 70%).</p>
 <p>If you practise with a metronome as well, this is the number to set. A good place to start is the speed where you can play the phrase three times in a row without a mistake.</p>
 
 <h2 id="auto">Letting the app speed up on every loop</h2>
@@ -109,7 +110,7 @@ ${rampTable("en")}
 <h2 id="bpm">速度ごとの BPM</h2>
 <p>Loop Trainer の速度は原曲に対する割合です。実際に弾いているテンポは、曲の BPM に速度を掛けると分かります。</p>
 ${bpmTable("ja")}
-<p class="cap">各速度で聞こえる BPM（四捨五入）。カウントインもこのテンポで鳴ります。</p>
+<p class="cap">各速度で聞こえる BPM（四捨五入）。カウントインもこのテンポで鳴り、アプリでも時間の横に表示されます（70% なら ♩ ≈ 84（原曲 120））。</p>
 <p>メトロノームでも練習するなら、この数字に合わせます。最初の目安は、間違えずに 3 回続けて弾ける速度です。</p>
 
 <h2 id="auto">1周ごとに自動で速くする</h2>
