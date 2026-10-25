@@ -8,7 +8,7 @@ const JSDELIVR = "https://www.jsdelivr.com/terms/privacy-policy-jsdelivr-net";
 export default {
   slug: "privacy",
   schemaType: "WebPage",
-  modified: "2026-10-24",
+  modified: "2026-10-25",
   en: {
     title: "Privacy Policy",
     heading: "Privacy policy",
@@ -36,7 +36,7 @@ export default {
 <p>The following data is saved in your browser's storage on your device. It is not sent to us.</p>
 <ul>
   <li><b>Settings for each song:</b> the file name and size of each audio file you open (to recognize it next time), the loop points, saved loops and their names, speed, key, count-in tempo, and the last playback position, so you can continue next time. The audio itself is not saved.</li>
-  <li><b>Practice preferences:</b> the volume and the speed-up and count-in settings.</li>
+  <li><b>Practice preferences:</b> the volume, the speed-up, count-in, and snapping settings, and whether the install hint has been shown or closed.</li>
   <li><b>App files:</b> the pages and files of this site you have opened, and the SoundTouchJS library, so the app works offline.</li>
 </ul>
 <p>To delete this data, clear this site's data (site data, cookies, and storage for ktkwmr.com) in your browser settings.</p>
@@ -68,7 +68,7 @@ export default {
 
 <h2 id="changes">8. Changes to this policy</h2>
 <p>We may update this policy when the site changes, for example when we add or remove a service. The updated policy applies from the time it is posted on this page.</p>
-<p>Effective: October 24, 2026 (last updated: October 24, 2026)</p>
+<p>Effective: October 24, 2026 (last updated: October 25, 2026)</p>
 `,
   },
   ja: {
@@ -98,7 +98,7 @@ export default {
 <p>次のデータを、お使いの端末のブラウザ内に保存します。運営者に送られることはありません。</p>
 <ul>
   <li><b>曲ごとの設定：</b>次に開いたときに続きから使えるよう、開いた音源ファイルのファイル名とサイズ（同じ曲と分かるようにするため）、ループの範囲、保存したループとその名前、速度、キー、カウントインのテンポ、最後の再生位置を保存します。音源そのものは保存しません。</li>
-  <li><b>練習の設定：</b>音量、1周ごとに速くする設定、カウントインの設定を保存します。</li>
+  <li><b>練習の設定：</b>音量、1周ごとに速くする設定、カウントインと吸着の設定、インストールの案内を表示したか・閉じたかを保存します。</li>
   <li><b>アプリのファイル：</b>オフラインでも使えるよう、開いた本サイトのページやファイルと SoundTouchJS ライブラリを保存します。</li>
 </ul>
 <p>消したいときは、ブラウザの設定でこのサイト（ktkwmr.com）のデータ（サイトデータ・Cookie・ストレージ）を削除してください。</p>
@@ -130,7 +130,7 @@ export default {
 
 <h2 id="changes">8. 改定</h2>
 <p>サービスの追加・終了など本サイトの変更に合わせて、本ポリシーを改定することがあります。改定後のポリシーは、このページに掲載した時点から適用されます。</p>
-<p>制定日：2026 年 10 月 24 日（最終改定日：2026 年 10 月 24 日）</p>
+<p>制定日：2026 年 10 月 24 日（最終改定日：2026 年 10 月 25 日）</p>
 `,
   },
 };

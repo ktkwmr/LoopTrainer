@@ -146,7 +146,8 @@
     #wave { display: block; width: 100%; height: 100%; touch-action: pan-y; cursor: crosshair; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
     #wave.on-flag { cursor: ew-resize; }
     .arm-hint { margin: 0; padding: 8px 16px; border-bottom: 1px solid var(--line); font-size: 13px; font-weight: 600; color: var(--accent); }
-    .tempo { font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .tempo { align-self: center; font-family: var(--mono); font-size: 13px; line-height: 1.6; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .timeline .chips { align-items: center; }
     .drop { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 12px 16px; text-align: center; border: 2px dashed transparent; border-radius: 0; }
     .drop p { margin: 0; color: var(--subtle); font-size: 12px; max-width: 460px; }
     .wave-wrap.dragover .drop, .wave-wrap.dragover { border-color: var(--ink); }
@@ -202,6 +203,8 @@
     .keys { font-size: 12px; color: var(--subtle); padding: 0 16px 16px; margin: 0; line-height: 2; }
     kbd { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; color: var(--muted); background: var(--paper); }
     @media (pointer: coarse) { .keys { display: none; } }
+    .install { display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 16px; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--paper); }
+    .install p { margin: 0; flex: 1; min-width: 0; font-size: 13px; }
     .notice { margin: 0; padding: 10px 16px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--ink); background: var(--hover-fill); }
     .notice:empty { display: none; }
 
@@ -238,6 +241,8 @@
     .help-list b { color: var(--ink); }
     ul.help-list { list-style: disc; }
     .help-list a { color: inherit; }
+    dialog.msg p.help-more { margin: 14px 0 0; padding-left: 20px; font-size: 13px; }
+    .help-more a { color: var(--ink); font-weight: 600; }
     dialog.about { width: min(560px, calc(100vw - 32px)); height: min(640px, calc(100% - 32px)); }
     dialog.about[open] { display: flex; flex-direction: column; }
     dialog.msg p.about-license { margin: 0 0 12px; color: var(--subtle); font-size: 12px; }
@@ -263,6 +268,11 @@
   </header>
 
   <main class="canvas">
+    <div class="install" id="installBar" role="region" aria-label="Install the app" data-i18n-attr="aria-label:install.region" hidden>
+      <p id="installText"></p>
+      <button type="button" class="chip" id="installBtn" data-i18n="install.btn">Install</button>
+      <button type="button" class="chip sq mono" id="installClose" aria-label="Close" data-i18n-attr="aria-label:close">×</button>
+    </div>
     <p class="lead" data-i18n="lead">Open a song you have and change its key and tempo freely: the speed (50–150%) keeps the pitch, and the key keeps the tempo. Pick any section and it loops, snapped to the beat. Loops and settings are saved for each song.</p>
 
     <section class="panel out" aria-label="Player" data-i18n-attr="aria-label:player">
@@ -287,9 +297,6 @@
         <span class="time" id="time"><b>0:00.0</b> / 0:00.0</span>
         <div class="chips">
           <span class="tempo" id="tempo"></span>
-          <button type="button" class="chip sq mono" id="halfBtn" aria-label="Half the tempo (beats twice as far apart)" data-i18n-attr="aria-label:tempo.half">½</button>
-          <button type="button" class="chip sq mono" id="dblBtn" aria-label="Double the tempo (beats twice as close)" data-i18n-attr="aria-label:tempo.double">×2</button>
-          <button type="button" class="chip" id="snapBtn" aria-pressed="true" data-i18n="snap">Snap to beats</button>
           <button type="button" class="chip" id="zoomBtn" aria-pressed="false" data-i18n="zoom">Zoom to loop</button>
         </div>
       </div>
@@ -352,6 +359,20 @@
         </div>
 
         <div class="group">
+          <span class="label"><span data-i18n="beatsBars">Beats and bars</span></span>
+          <div class="chips">
+            <button type="button" class="chip" id="snapBtn" aria-pressed="true" data-i18n="snap">Snap to beats</button>
+            <button type="button" class="chip" id="barBtn" aria-pressed="false" data-i18n="snapBar">Snap to bar starts</button>
+          </div>
+          <div class="sub-rows">
+            <div class="stepper"><span class="row-label" data-i18n="tempo.label">Tempo</span><button type="button" class="chip sq mono" id="halfBtn" aria-label="Half the tempo (beats twice as far apart)" data-i18n-attr="aria-label:tempo.half">½</button><span class="num" id="tempoNum"></span><button type="button" class="chip sq mono" id="dblBtn" aria-label="Double the tempo (beats twice as close)" data-i18n-attr="aria-label:tempo.double">×2</button></div>
+            <div class="stepper"><span class="row-label" data-i18n="bar.beats">Beats per bar</span><button type="button" class="chip sq mono" id="barDown" aria-label="Fewer beats per bar" data-i18n-attr="aria-label:bar.fewer">−</button><span class="num" id="barNum"></span><button type="button" class="chip sq mono" id="barUp" aria-label="More beats per bar" data-i18n-attr="aria-label:bar.more">+</button></div>
+            <div class="stepper"><span class="row-label" data-i18n="bar.head">Bar starts</span><button type="button" class="chip sq mono" id="barLeft" aria-label="Move the bar start a beat earlier" data-i18n-attr="aria-label:bar.earlier">◀</button><button type="button" class="chip sq mono" id="barRight" aria-label="Move the bar start a beat later" data-i18n-attr="aria-label:bar.later">▶</button></div>
+          </div>
+          <p class="hint" id="beatHint"></p>
+        </div>
+
+        <div class="group">
           <span class="label"><span data-i18n="auto">Speed up on every loop</span> <button type="button" class="chip" id="autoBtn" aria-pressed="false" data-i18n="off">Off</button></span>
           <div class="sub-rows">
             <div class="stepper"><span class="row-label" data-i18n="auto.start">Start at</span><button type="button" class="chip sq mono" data-auto="start:-5" aria-label="Start speed −5%" data-i18n-attr="aria-label:auto.start.m">−</button><span class="num" id="autoStart"></span><button type="button" class="chip sq mono" data-auto="start:5" aria-label="Start speed +5%" data-i18n-attr="aria-label:auto.start.p">+</button></div>
@@ -399,6 +420,14 @@
       <p>You can also simply change the speed or the key of the whole song and listen or play along, without a loop. Shift the key up or down by up to six semitones, together with the speed. Tune to a song recorded a half step down, or move it to fit your voice. The loops, speed, and key are saved for each song in your browser, and you can keep several named loops per song, such as “Intro” and “Solo, first half”. Open the same file next time and you pick up where you left off.</p>
       <h2>Files stay on your device</h2>
       <p>The audio is decoded and processed only in your browser and is never uploaded. It works with MP3, AAC (m4a), WAV, and other formats your browser can play, on a computer, tablet, or phone. Music from streaming services (Apple Music, Spotify, YouTube) cannot be opened. No sign-up is needed.</p>
+      <h2>Guides</h2>
+      <ul>
+        <li><a href="/looptrainer/guide/">How to use Loop Trainer</a></li>
+        <li><a href="/looptrainer/learn-by-ear/">How to learn a song by ear with loops and slow playback</a></li>
+        <li><a href="/looptrainer/speed-up-practice/">Speeding up step by step: from slow to full tempo</a></li>
+        <li><a href="/looptrainer/change-key/">Changing the key: tuned-down recordings, capo, and vocal range</a></li>
+        <li><a href="/looptrainer/faq/">Frequently asked questions</a></li>
+      </ul>
     </div>
   </section>
 
@@ -409,13 +438,14 @@
         <li><b>Open a song</b> – Tap “Open file” or drop an audio file on the waveform. MP3, AAC (m4a), and WAV work in every browser. Music from streaming services cannot be opened.</li>
         <li><b>Choose the loop</b> – Drag across the waveform. To move a flag, tap A or B (it turns blue) and then tap where it should go, or long-press it and drag. While it plays, “A” and “B” set them at the current position. ◀ and ▶ move them to the previous or next beat. </li>
         <li><b>Zoom the waveform</b> – Pinch with two fingers to stretch or shrink the waveform, and move two fingers sideways to scroll. On a computer, use Ctrl + wheel (or pinch on the trackpad) and Shift + wheel. “Zoom to loop” fits the loop to the screen; press it again to see the whole song.</li>
-        <li><b>Snap to beats</b> – The app finds the tempo and the beats of the song (♩ ≈ 120 means about 120 BPM), and the loop points snap to the nearest beat. If the tempo looks twice too fast or too slow, use ½ or ×2. Turn off “Snap to beats” to place the points freely (◀ ▶ then move by 0.05 seconds).</li>
+        <li><b>Beats and bars</b> – The app finds the tempo and the beats of the song (♩ ≈ 120 means about 120 BPM), and the loop points snap to the nearest beat. Turn on “Snap to bar starts” to snap to the first beat of each bar instead (◀ ▶ then move by a bar). Bar starts are guessed, so move them with ◀ ▶ under “Bar starts” if they are off, and set the beats per bar for songs in 3/4 or 6/8. If the tempo looks twice too fast or too slow, use ½ or ×2. Turn off “Snap to beats” to place the points freely (◀ ▶ then move by 0.05 seconds).</li>
         <li><b>Slow down</b> – Set the speed between 50% and 150% with the buttons or the slider. The pitch does not change.</li>
         <li><b>Change the key</b> – Move it up or down in semitones (up to ±6). The tempo does not change.</li>
         <li><b>Speed up on every loop</b> – Turn it on and set where to start, how much to add each loop, and where to stop. It goes back to the first speed when you play from the start of the loop.</li>
         <li><b>Count-in</b> – Clicks play before each loop. Enter the song's BPM (at 100%) or tap it in; the clicks follow the current speed.</li>
         <li><b>Saved loops</b> – “+ Save this loop” adds the current loop to the list. Give it a name, and tap its time to go back to it. Everything is saved for each song and comes back when you open the same file.</li>
       </ol>
+      <p class="help-more"><a href="/looptrainer/guide/" data-i18n="help.more" data-i18n-attr="href:guide.url">Read the full guide →</a></p>
     </div>
     <div class="dlg-actions">
       <button class="primary" id="helpClose" type="button" data-i18n="close">Close</button>
@@ -441,6 +471,7 @@
 
   <div class="menu" id="settingsMenu" role="menu" aria-label="Settings" data-i18n-attr="aria-label:settings" hidden>
     <button type="button" role="menuitem" id="menuHelp" data-i18n="menu.help">How to use</button>
+    <a role="menuitem" id="menuGuide" href="/looptrainer/guide/" data-i18n="menu.guide" data-i18n-attr="href:guide.url">Guides &amp; articles</a>
     <button type="button" role="menuitem" id="menuPrivacy" data-i18n="menu.privacy">Privacy</button>
     <button type="button" role="menuitem" id="menuAbout" data-i18n="menu.about">About</button>
   </div>
@@ -470,6 +501,23 @@
           "drop": "MP3, AAC (m4a), WAV, and more. You can also drop a file here. Files are never uploaded.",
           "wave.aria": "Waveform. Drag to choose the loop, tap to jump. Tap the A or B flag, then tap where it should go, or long-press a flag and drag it. Pinch to zoom in or out, and move two fingers sideways to scroll.",
           "snap": "Snap to beats",
+          "snapBar": "Snap to bar starts",
+          "install.region": "Install the app",
+          "install.btn": "Install",
+          "install.text": "Install Loop Trainer as an app to open it from your home screen. It also works offline.",
+          "install.ios": "To use Loop Trainer like an app, tap the Share button and then “Add to Home Screen”.",
+          "beatsBars": "Beats and bars",
+          "tempo.label": "Tempo",
+          "bar.beats": "Beats per bar",
+          "bar.head": "Bar starts",
+          "bar.fewer": "Fewer beats per bar",
+          "bar.more": "More beats per bar",
+          "bar.earlier": "Move the bar start a beat earlier",
+          "bar.later": "Move the bar start a beat later",
+          "beats.hint": "A and B snap to the nearest beat, or to the nearest bar start. Bar starts are guessed from where the chords change and from the bass and kick drum, and drawn as taller lines. If they are off, move them with ◀ ▶.",
+          "beats.hintNone": "Beats appear here after a song with a steady beat is opened.",
+          "loop.bars": "{n} bars",
+          "loop.bar": "1 bar",
           "beats.analyzing": "Finding the beats…",
           "beats.tempo": "♩ ≈ {bpm}",
           "beats.none": "No beat found",
@@ -552,9 +600,12 @@
           "menu.help": "How to use",
           "menu.privacy": "Privacy",
           "menu.about": "About",
+          "menu.guide": "Guides & articles",
+          "guide.url": "/looptrainer/guide/",
+          "help.more": "Read the full guide →",
           "intro.title": "Change the key and tempo freely, and loop any section of a song",
-          "intro.body": "<p>Loop Trainer is a free practice player for learning songs by ear. Open an audio file you have, drag over the waveform to choose the part you want to learn, and it repeats that part as many times as you like. The app finds the beats of the song, so the loop points snap right onto the beat. Slow it down to 70% or even 50% and the pitch stays the same, so you can hear every note of a fast guitar solo and play along in the original key.</p>\n      <h2>Speed up a little on every loop</h2>\n      <p>Turn on “Speed up on every loop” and the loop starts slow, then gets a little faster each time it comes around: for example 70%, 72%, 74% … up to 100%. You practise the phrase slowly first and reach the real tempo without stopping to change anything. A count-in can click before each loop so you have time to get ready.</p>\n      <h2>Speed and key for the whole song, saved loops</h2>\n      <p>You can also simply change the speed or the key of the whole song and listen or play along, without a loop. Shift the key up or down by up to six semitones, together with the speed. Tune to a song recorded a half step down, or move it to fit your voice. The loops, speed, and key are saved for each song in your browser, and you can keep several named loops per song, such as “Intro” and “Solo, first half”. Open the same file next time and you pick up where you left off.</p>\n      <h2>Files stay on your device</h2>\n      <p>The audio is decoded and processed only in your browser and is never uploaded. It works with MP3, AAC (m4a), WAV, and other formats your browser can play, on a computer, tablet, or phone. Music from streaming services (Apple Music, Spotify, YouTube) cannot be opened. No sign-up is needed.</p>",
-          "help.body": "<li><b>Open a song</b> – Tap “Open file” or drop an audio file on the waveform. MP3, AAC (m4a), and WAV work in every browser. Music from streaming services cannot be opened.</li>\n        <li><b>Choose the loop</b> – Drag across the waveform. To move a flag, tap A or B (it turns blue) and then tap where it should go, or long-press it and drag. While it plays, “A” and “B” set them at the current position. ◀ and ▶ move them to the previous or next beat. </li>\n        <li><b>Zoom the waveform</b> – Pinch with two fingers to stretch or shrink the waveform, and move two fingers sideways to scroll. On a computer, use Ctrl + wheel (or pinch on the trackpad) and Shift + wheel. “Zoom to loop” fits the loop to the screen; press it again to see the whole song.</li>\n        <li><b>Snap to beats</b> – The app finds the tempo and the beats of the song (♩ ≈ 120 means about 120 BPM), and the loop points snap to the nearest beat. If the tempo looks twice too fast or too slow, use ½ or ×2. Turn off “Snap to beats” to place the points freely (◀ ▶ then move by 0.05 seconds).</li>\n        <li><b>Slow down</b> – Set the speed between 50% and 150% with the buttons or the slider. The pitch does not change.</li>\n        <li><b>Change the key</b> – Move it up or down in semitones (up to ±6). The tempo does not change.</li>\n        <li><b>Speed up on every loop</b> – Turn it on and set where to start, how much to add each loop, and where to stop. It goes back to the first speed when you play from the start of the loop.</li>\n        <li><b>Count-in</b> – Clicks play before each loop. Enter the song's BPM (at 100%) or tap it in; the clicks follow the current speed.</li>\n        <li><b>Saved loops</b> – “+ Save this loop” adds the current loop to the list. Give it a name, and tap its time to go back to it. Everything is saved for each song and comes back when you open the same file.</li>",
+          "intro.body": "<p>Loop Trainer is a free practice player for learning songs by ear. Open an audio file you have, drag over the waveform to choose the part you want to learn, and it repeats that part as many times as you like. The app finds the beats of the song, so the loop points snap right onto the beat. Slow it down to 70% or even 50% and the pitch stays the same, so you can hear every note of a fast guitar solo and play along in the original key.</p>\n      <h2>Speed up a little on every loop</h2>\n      <p>Turn on “Speed up on every loop” and the loop starts slow, then gets a little faster each time it comes around: for example 70%, 72%, 74% … up to 100%. You practise the phrase slowly first and reach the real tempo without stopping to change anything. A count-in can click before each loop so you have time to get ready.</p>\n      <h2>Speed and key for the whole song, saved loops</h2>\n      <p>You can also simply change the speed or the key of the whole song and listen or play along, without a loop. Shift the key up or down by up to six semitones, together with the speed. Tune to a song recorded a half step down, or move it to fit your voice. The loops, speed, and key are saved for each song in your browser, and you can keep several named loops per song, such as “Intro” and “Solo, first half”. Open the same file next time and you pick up where you left off.</p>\n      <h2>Files stay on your device</h2>\n      <p>The audio is decoded and processed only in your browser and is never uploaded. It works with MP3, AAC (m4a), WAV, and other formats your browser can play, on a computer, tablet, or phone. Music from streaming services (Apple Music, Spotify, YouTube) cannot be opened. No sign-up is needed.</p>\n      <h2>Guides</h2>\n      <ul>\n        <li><a href=\"/looptrainer/guide/\">How to use Loop Trainer</a></li>\n        <li><a href=\"/looptrainer/learn-by-ear/\">How to learn a song by ear with loops and slow playback</a></li>\n        <li><a href=\"/looptrainer/speed-up-practice/\">Speeding up step by step: from slow to full tempo</a></li>\n        <li><a href=\"/looptrainer/change-key/\">Changing the key: tuned-down recordings, capo, and vocal range</a></li>\n        <li><a href=\"/looptrainer/faq/\">Frequently asked questions</a></li>\n      </ul>",
+          "help.body": "<li><b>Open a song</b> – Tap “Open file” or drop an audio file on the waveform. MP3, AAC (m4a), and WAV work in every browser. Music from streaming services cannot be opened.</li>\n        <li><b>Choose the loop</b> – Drag across the waveform. To move a flag, tap A or B (it turns blue) and then tap where it should go, or long-press it and drag. While it plays, “A” and “B” set them at the current position. ◀ and ▶ move them to the previous or next beat. </li>\n        <li><b>Zoom the waveform</b> – Pinch with two fingers to stretch or shrink the waveform, and move two fingers sideways to scroll. On a computer, use Ctrl + wheel (or pinch on the trackpad) and Shift + wheel. “Zoom to loop” fits the loop to the screen; press it again to see the whole song.</li>\n        <li><b>Beats and bars</b> – The app finds the tempo and the beats of the song (♩ ≈ 120 means about 120 BPM), and the loop points snap to the nearest beat. Turn on “Snap to bar starts” to snap to the first beat of each bar instead (◀ ▶ then move by a bar). Bar starts are guessed, so move them with ◀ ▶ under “Bar starts” if they are off, and set the beats per bar for songs in 3/4 or 6/8. If the tempo looks twice too fast or too slow, use ½ or ×2. Turn off “Snap to beats” to place the points freely (◀ ▶ then move by 0.05 seconds).</li>\n        <li><b>Slow down</b> – Set the speed between 50% and 150% with the buttons or the slider. The pitch does not change.</li>\n        <li><b>Change the key</b> – Move it up or down in semitones (up to ±6). The tempo does not change.</li>\n        <li><b>Speed up on every loop</b> – Turn it on and set where to start, how much to add each loop, and where to stop. It goes back to the first speed when you play from the start of the loop.</li>\n        <li><b>Count-in</b> – Clicks play before each loop. Enter the song's BPM (at 100%) or tap it in; the clicks follow the current speed.</li>\n        <li><b>Saved loops</b> – “+ Save this loop” adds the current loop to the list. Give it a name, and tap its time to go back to it. Everything is saved for each song and comes back when you open the same file.</li>",
           "privacy.body": "<li><b>Your audio stays on your device</b> – Audio files are decoded and played only in your browser. They are never uploaded to a server. This app has no accounts, cookies, or ads.</li>\n        <li><b>Data saved in your browser</b> – For each song you open, the file name and size, the loops, speed, key, and count-in tempo are saved in your browser's storage so they are there next time. The audio itself is not saved. To work offline, the app is saved there too. You can delete them by clearing this site's data in your browser settings.</li>\n        <li><b>Audio library</b> – When you open the first file, the app loads the SoundTouchJS library from the jsDelivr CDN. Like any web request, this sends your IP address and browser information to jsDelivr. Nothing about your audio is sent.</li>\n        <li><b>Server logs and page views</b> – This site is hosted on Cloudflare. Standard access logs (such as IP address, time, and the requested page) are kept for operation and security. Cloudflare Web Analytics counts page views without cookies (the page URL, referrer, browser information, and page load time).</li>\n        <li><b>Contact</b> – Questions and feedback: <a href=\"https://github.com/ktkwmr/LoopTrainer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a>.</li>\n        <li><b>Full policy</b> – See the <a href=\"/looptrainer/privacy/\">privacy policy</a> and <a href=\"/looptrainer/about/\">about this site</a>.</li>",
           "about.license": "© 2026 ktkwmr · Licensed under the <a href=\"https://github.com/ktkwmr/LoopTrainer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT License</a> · <a href=\"/looptrainer/about/\">About this site</a> · Audio processing: <a href=\"https://github.com/cutterbl/SoundTouchJS\" target=\"_blank\" rel=\"noopener\">SoundTouchJS</a> (LGPL-2.1, loaded unmodified from jsDelivr)",
           "close": "Close",
@@ -571,6 +622,23 @@
           "drop": "MP3・AAC（m4a）・WAV など。ここにドロップしても開けます。ファイルはどこにもアップロードされません。",
           "wave.aria": "波形。ドラッグでループ範囲を選び、タップでその位置に移動します。A・B の旗をタップしてから移動先をタップするか、旗を長押ししてドラッグすると動かせます。ピンチで拡大・縮小、2本指を左右に動かすとスクロールします。",
           "snap": "拍に合わせる",
+          "snapBar": "小節の頭に合わせる",
+          "install.region": "アプリのインストール",
+          "install.btn": "インストール",
+          "install.text": "Loop Trainer をアプリとしてインストールすると、ホーム画面からすぐ開けて、オフラインでも使えます。",
+          "install.ios": "アプリのように使うには、共有ボタン →「ホーム画面に追加」をタップしてください。",
+          "beatsBars": "拍と小節",
+          "tempo.label": "テンポ",
+          "bar.beats": "1小節の拍数",
+          "bar.head": "小節の頭",
+          "bar.fewer": "1小節の拍数を減らす",
+          "bar.more": "1小節の拍数を増やす",
+          "bar.earlier": "小節の頭を1拍前へ",
+          "bar.later": "小節の頭を1拍後ろへ",
+          "beats.hint": "A・B が一番近い拍、または小節の頭に吸い付きます。小節の頭はコードが変わる位置とベース・キックの強さから推定し、波形に長い線で表示します。ずれていたら ◀ ▶ で動かしてください。",
+          "beats.hintNone": "拍のはっきりした曲を開くと、ここで拍と小節を扱えます。",
+          "loop.bars": "{n} 小節",
+          "loop.bar": "1 小節",
           "beats.analyzing": "拍を解析中…",
           "beats.tempo": "♩ ≈ {bpm}",
           "beats.none": "拍を検出できませんでした",
@@ -653,9 +721,12 @@
           "menu.help": "使い方",
           "menu.privacy": "プライバシー",
           "menu.about": "このアプリについて",
+          "menu.guide": "ガイド・記事",
+          "guide.url": "/looptrainer/ja/guide/",
+          "help.more": "詳しい使い方ガイドを読む →",
           "intro.title": "キーとテンポを自由に変えて、好きな区間をループ再生できる耳コピ練習プレイヤー",
-          "intro.body": "<p>Loop Trainer は、耳コピやフレーズ練習のための無料の練習用プレイヤーです。手持ちの音源ファイルを開き、波形の上をドラッグして練習したい部分を選ぶと、その区間を何度でも繰り返し再生（A-B リピート）します。曲の拍を自動で検出するので、ループの始まりと終わりがぴったり拍に乗ります。速度を 70% や 50% まで落としても音程（ピッチ）は変わらないので、速いギターソロの一音一音を聞き取りながら、原曲のキーのまま一緒に弾けます。</p>\n      <h2>1周ごとに少しずつ速くする</h2>\n      <p>「1周ごとに速くする」をオンにすると、最初はゆっくり、ループが一周するたびに少しずつ速くなります（例：70% → 72% → 74% … → 100%）。手を止めて設定を変えなくても、ゆっくり確実に弾くところから原曲のテンポまで続けて練習できます。ループの頭にカウントインのクリックを入れて、構えてから弾き始めることもできます。</p>\n      <h2>曲全体の速度・キー変更とループの保存</h2>\n      <p>ループを使わずに、曲全体の速度やキーを変えて聞いたり、一緒に弾いたりするだけでも使えます。キーは速度と同時に、半音単位で上下 6 つまで変えられます。半音下げチューニングの曲に合わせたり、歌いやすいキーに移したりするときに使えます。ループ範囲・速度・キーは曲ごとにブラウザに保存され、「イントロ」「ソロ前半」のように名前を付けたループを 1 曲にいくつでも残せます。次に同じファイルを開けば、前回の続きから練習できます。</p>\n      <h2>ファイルは端末の外に出ません</h2>\n      <p>音源の読み込みと処理はブラウザの中だけで行い、どこにもアップロードしません。MP3・AAC（m4a）・WAV など、ブラウザが再生できる形式に対応し、パソコン・タブレット・スマホで使えます。Apple Music・Spotify・YouTube など配信サービスの曲は開けません。登録は不要です。</p>",
-          "help.body": "<li><b>曲を開く</b> – 「ファイルを開く」を押すか、波形の場所に音源ファイルをドロップします。MP3・AAC（m4a）・WAV はどのブラウザでも開けます。配信サービスの曲は開けません。</li>\n        <li><b>ループ範囲を選ぶ</b> – 波形の上をドラッグします。旗を動かすときは、A か B をタップして（青くなります）移動先をタップするか、長押しして掴んだままドラッグします。再生中に「A」「B」を押すと今の位置に設定されます。◀ ▶ で前後の拍に動かせます。</li>\n        <li><b>波形の拡大・縮小</b> – 2本指でピンチすると波形が横に伸び縮みし、2本指を左右に動かすとスクロールします。パソコンでは Ctrl＋ホイール（トラックパッドのピンチ）と Shift＋ホイールで同じことができます。「ループを拡大」でループを画面いっぱいに表示し、もう一度押すと曲全体に戻ります。</li>\n        <li><b>拍に合わせる</b> – 曲のテンポと拍の位置を自動で検出し（♩ ≈ 120 は約 120 BPM）、A・B が一番近い拍に吸い付きます。テンポが倍や半分に見えるときは ½ か ×2 で直せます。「拍に合わせる」をオフにすると自由な位置に置けます（◀ ▶ は 0.05 秒ずつ）。</li>\n        <li><b>速度を落とす</b> – ボタンやスライダーで 50%〜150% に設定します。音程は変わりません。</li>\n        <li><b>キーを変える</b> – 半音単位で上下に動かします（±6 まで）。テンポは変わりません。</li>\n        <li><b>1周ごとに速くする</b> – オンにして、開始の速度・1周ごとの上げ幅・上限を決めます。ループの先頭から再生すると、開始の速度に戻ります。</li>\n        <li><b>カウントイン</b> – ループの前にクリックが鳴ります。曲の BPM（100% のとき）を入力するか、タップで合わせます。クリックは今の速度に合わせて鳴ります。</li>\n        <li><b>ループの保存</b> – 「＋ このループを保存」で今のループを一覧に追加します。名前を付けておき、時間のボタンを押すと呼び出せます。設定は曲ごとに保存され、同じファイルを開くと元に戻ります。</li>",
+          "intro.body": "<p>Loop Trainer は、耳コピやフレーズ練習のための無料の練習用プレイヤーです。手持ちの音源ファイルを開き、波形の上をドラッグして練習したい部分を選ぶと、その区間を何度でも繰り返し再生（A-B リピート）します。曲の拍を自動で検出するので、ループの始まりと終わりがぴったり拍に乗ります。速度を 70% や 50% まで落としても音程（ピッチ）は変わらないので、速いギターソロの一音一音を聞き取りながら、原曲のキーのまま一緒に弾けます。</p>\n      <h2>1周ごとに少しずつ速くする</h2>\n      <p>「1周ごとに速くする」をオンにすると、最初はゆっくり、ループが一周するたびに少しずつ速くなります（例：70% → 72% → 74% … → 100%）。手を止めて設定を変えなくても、ゆっくり確実に弾くところから原曲のテンポまで続けて練習できます。ループの頭にカウントインのクリックを入れて、構えてから弾き始めることもできます。</p>\n      <h2>曲全体の速度・キー変更とループの保存</h2>\n      <p>ループを使わずに、曲全体の速度やキーを変えて聞いたり、一緒に弾いたりするだけでも使えます。キーは速度と同時に、半音単位で上下 6 つまで変えられます。半音下げチューニングの曲に合わせたり、歌いやすいキーに移したりするときに使えます。ループ範囲・速度・キーは曲ごとにブラウザに保存され、「イントロ」「ソロ前半」のように名前を付けたループを 1 曲にいくつでも残せます。次に同じファイルを開けば、前回の続きから練習できます。</p>\n      <h2>ファイルは端末の外に出ません</h2>\n      <p>音源の読み込みと処理はブラウザの中だけで行い、どこにもアップロードしません。MP3・AAC（m4a）・WAV など、ブラウザが再生できる形式に対応し、パソコン・タブレット・スマホで使えます。Apple Music・Spotify・YouTube など配信サービスの曲は開けません。登録は不要です。</p>\n      <h2>ガイド・記事</h2>\n      <ul>\n        <li><a href=\"/looptrainer/ja/guide/\">Loop Trainer の使い方</a></li>\n        <li><a href=\"/looptrainer/ja/learn-by-ear/\">ループとスロー再生でする耳コピのやり方</a></li>\n        <li><a href=\"/looptrainer/ja/speed-up-practice/\">少しずつ速くする練習法</a></li>\n        <li><a href=\"/looptrainer/ja/change-key/\">キー変更の使い方：半音下げチューニング・カポ・歌いやすいキー</a></li>\n        <li><a href=\"/looptrainer/ja/faq/\">よくある質問</a></li>\n      </ul>",
+          "help.body": "<li><b>曲を開く</b> – 「ファイルを開く」を押すか、波形の場所に音源ファイルをドロップします。MP3・AAC（m4a）・WAV はどのブラウザでも開けます。配信サービスの曲は開けません。</li>\n        <li><b>ループ範囲を選ぶ</b> – 波形の上をドラッグします。旗を動かすときは、A か B をタップして（青くなります）移動先をタップするか、長押しして掴んだままドラッグします。再生中に「A」「B」を押すと今の位置に設定されます。◀ ▶ で前後の拍に動かせます。</li>\n        <li><b>波形の拡大・縮小</b> – 2本指でピンチすると波形が横に伸び縮みし、2本指を左右に動かすとスクロールします。パソコンでは Ctrl＋ホイール（トラックパッドのピンチ）と Shift＋ホイールで同じことができます。「ループを拡大」でループを画面いっぱいに表示し、もう一度押すと曲全体に戻ります。</li>\n        <li><b>拍と小節</b> – 曲のテンポと拍の位置を自動で検出し（♩ ≈ 120 は約 120 BPM）、A・B が一番近い拍に吸い付きます。「小節の頭に合わせる」をオンにすると、各小節の 1 拍目に吸い付きます（◀ ▶ は 1 小節ずつ）。小節の頭は推定なので、ずれていたら「小節の頭」の ◀ ▶ で動かし、3 拍子や 6/8 の曲では 1 小節の拍数を変えてください。テンポが倍や半分に見えるときは ½ か ×2 で直せます。「拍に合わせる」をオフにすると自由な位置に置けます（◀ ▶ は 0.05 秒ずつ）。</li>\n        <li><b>速度を落とす</b> – ボタンやスライダーで 50%〜150% に設定します。音程は変わりません。</li>\n        <li><b>キーを変える</b> – 半音単位で上下に動かします（±6 まで）。テンポは変わりません。</li>\n        <li><b>1周ごとに速くする</b> – オンにして、開始の速度・1周ごとの上げ幅・上限を決めます。ループの先頭から再生すると、開始の速度に戻ります。</li>\n        <li><b>カウントイン</b> – ループの前にクリックが鳴ります。曲の BPM（100% のとき）を入力するか、タップで合わせます。クリックは今の速度に合わせて鳴ります。</li>\n        <li><b>ループの保存</b> – 「＋ このループを保存」で今のループを一覧に追加します。名前を付けておき、時間のボタンを押すと呼び出せます。設定は曲ごとに保存され、同じファイルを開くと元に戻ります。</li>",
           "privacy.body": "<li><b>音源は端末の外に出ません</b> – 音源ファイルの読み込みと再生はブラウザの中だけで行い、サーバーにアップロードすることはありません。アカウント登録・Cookie・広告はありません。</li>\n        <li><b>ブラウザに保存するデータ</b> – 次に開いたときにも使えるよう、開いた曲ごとにファイル名とサイズ、ループ範囲・速度・キー・カウントインのテンポをブラウザ内に保存します。音源そのものは保存しません。オフラインで使えるよう、アプリ本体も保存します。ブラウザの設定でこのサイトのデータを削除すると消えます。</li>\n        <li><b>音声処理のライブラリ</b> – 最初にファイルを開いたとき、jsDelivr（CDN）から SoundTouchJS というライブラリを読み込みます。通常の Web の通信と同じく、IP アドレスやブラウザの情報が jsDelivr に送られます。音源に関する情報は送られません。</li>\n        <li><b>サーバーのログと閲覧数</b> – 本サイトは Cloudflare で配信しています。運用とセキュリティのため、一般的なアクセスログ（IP アドレス・日時・アクセスしたページなど）が記録されます。Cloudflare Web Analytics で、Cookie を使わずにページの閲覧数（ページの URL・参照元・ブラウザの情報・表示速度）を集計しています。</li>\n        <li><b>お問い合わせ</b> – ご質問・ご意見は <a href=\"https://github.com/ktkwmr/LoopTrainer/issues\" target=\"_blank\" rel=\"noopener\">GitHub の Issues</a> へ。</li>\n        <li><b>詳しくは</b> – <a href=\"/looptrainer/ja/privacy/\">プライバシーポリシー</a>と<a href=\"/looptrainer/ja/about/\">運営者情報</a>をご覧ください。</li>",
           "about.license": "© 2026 ktkwmr · <a href=\"https://github.com/ktkwmr/LoopTrainer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT ライセンス</a> · <a href=\"/looptrainer/ja/about/\">運営者情報</a> · 音声処理：<a href=\"https://github.com/cutterbl/SoundTouchJS\" target=\"_blank\" rel=\"noopener\">SoundTouchJS</a>（LGPL-2.1。jsDelivr から改変せずに読み込み）",
           "close": "閉じる",
@@ -724,7 +795,9 @@
         o = o && typeof o === "object" ? o : {};
         const a = o.auto || {}, c = o.count || {};
         return {
-          vol: num(o.vol, .9, 0, 1), clickVol: num(o.clickVol, .7, 0, 1), snap: bool(o.snap, true),
+          vol: num(o.vol, .9, 0, 1), clickVol: num(o.clickVol, .7, 0, 1), snap: bool(o.snap, true), snapBar: bool(o.snapBar, false),
+          // opened: a file has been opened once (the install hint waits for that); installHidden: closed, or shown once on iOS
+          opened: bool(o.opened, false), installHidden: bool(o.installHidden, false),
           auto: { on: bool(a.on, false), start: Math.round(num(a.start, 70, SPEED_MIN, SPEED_MAX)), step: Math.round(num(a.step, 2, 1, 10)), max: Math.round(num(a.max, 100, SPEED_MIN, SPEED_MAX)) },
           count: { on: bool(c.on, false), beats: Math.round(num(c.beats, 4, 1, 8)) },
         };
@@ -745,6 +818,8 @@
           bpm: Math.round(num(o.bpm, 120, 30, 300)), sections: sections, pos: num(o.pos, 0, 0, d),
           // bpmSet: the BPM was entered or tapped (otherwise the detected tempo is used); beatScale: ½ / ×2 pressed (−2…2)
           bpmSet: bool(o.bpmSet, false), beatScale: Math.round(num(o.beatScale, 0, -2, 2)),
+          // Beats per bar, and how many beats the user moved the detected bar start
+          barBeats: Math.round(num(o.barBeats, 4, 2, 7)), barShift: Math.round(num(o.barShift, 0, 0, 6)),
           updated: num(o.updated, 0, 0, 1e15), name: typeof o.name === "string" ? o.name.slice(0, 200) : "",
         };
       }
@@ -1039,8 +1114,10 @@
         if (known && (song.loop || song.speed !== 100 || song.semi)) msgs.push(t("msg.restored", { a: fmt(song.a), b: fmt(song.b), speed: song.speed }));
         if (bytes > LONG_BYTES) msgs.push(t("msg.long", { min: Math.round(buffer.duration / 60), mb: Math.round(bytes / 1048576) }));
         notice(msgs.join(" "));
+        prefs.opened = true;
         saveNow();
         renderAll();
+        renderInstall();
         analyze(buffer, token);
       }
       $("openBtn").onclick = () => $("fileInput").click();
@@ -1064,6 +1141,7 @@
       function notice(msg) { $("notice").textContent = msg || ""; }
 
       // ---------- Beats ----------
+      // BEGIN analysis (tests/analysis.test.mjs runs everything between BEGIN and END analysis in Node)
       // The detected beats sit about 14 ms early (measured with test signals of known tempo); this moves them onto the beat
       const BEAT_BIAS = 0.014;
       // Snapped loop points sit 10 ms before the beat, so the attack of the note is not cut off
@@ -1071,8 +1149,10 @@
       // Tempo and beat positions from the decoded audio, computed in the browser after a file is opened:
       // onset strength (spectral flux of a 11 kHz mono copy) → tempo by autocorrelation, weighted toward 120 BPM
       // → beats by dynamic programming (D. Ellis, "Beat Tracking by Dynamic Programming", 2007)
-      // → each beat moved to the nearest onset peak. `pause()` is awaited now and then so the page stays responsive;
-      // it returns false to stop (another file was opened).
+      // → each beat moved to the nearest onset peak. For finding where bars start, it also returns per beat how much the
+      // harmony changes there (chroma of this beat vs the previous one) and how strong the low end (kick, bass) is.
+      // `pause()` is awaited now and then so the page stays responsive; it returns false to stop (another file was opened).
+      // (The test scripts read this function from index.html: keep it self-contained.)
       async function detectBeats(L, R, rate, pause) {
         const DS = Math.max(1, Math.round(rate / 11025)), fs = rate / DS, N = 512, HOP = 64, fps = fs / HOP;
         const len = Math.floor(L.length / DS), x = new Float32Array(len);
@@ -1088,6 +1168,10 @@
         for (let i = 0; i < N; i++) { win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / N); let r = 0; for (let b = 1, v = i; b < N; b <<= 1, v >>= 1) r = (r << 1) | (v & 1); rev[i] = r; }
         for (let i = 0; i < N / 2; i++) { cos[i] = Math.cos(2 * Math.PI * i / N); sin[i] = -Math.sin(2 * Math.PI * i / N); }
         const re = new Float32Array(N), im = new Float32Array(N), prev = new Float32Array(N / 2), env = new Float32Array(frames);
+        // Pitch class of each bin from about 65 Hz to 2.1 kHz (−1 outside), and the bins up to about 200 Hz for the low end
+        const pcOf = new Int8Array(N / 2).fill(-1), lowTop = Math.round(200 * N / fs);
+        for (let k = 1; k < N / 2; k++) { const f = k * fs / N; if (f >= 65 && f <= 2100) pcOf[k] = ((Math.round(12 * Math.log2(f / 440)) % 12) + 12) % 12; }
+        const chroma = new Float32Array(frames * 12), lowEnv = new Float32Array(frames);
         for (let f = 0; f < frames; f++) {
           const o = f * HOP;
           for (let i = 0; i < N; i++) { re[rev[i]] = x[o + i] * win[i]; im[i] = 0; }
@@ -1101,13 +1185,15 @@
               }
             }
           }
-          let flux = 0;
+          let flux = 0, low = 0;
           for (let k = 1; k < N / 2; k++) {
-            const m = Math.log(1 + 100 * Math.sqrt(re[k] * re[k] + im[k] * im[k]));
-            if (m > prev[k]) flux += m - prev[k];
+            const mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]), m = Math.log(1 + 100 * mag);
+            if (m > prev[k]) { flux += m - prev[k]; if (k <= lowTop) low += m - prev[k]; }
             prev[k] = m;
+            if (pcOf[k] >= 0) chroma[f * 12 + pcOf[k]] += mag;
           }
           env[f] = f ? flux : 0;
+          lowEnv[f] = f ? low : 0;
           if (f % 3000 === 2999 && !(await pause())) return null;
         }
         // Almost no change at all (a steady tone, silence): no beat
@@ -1201,8 +1287,34 @@
           // The flux of frame f compares the windows starting at f-1 and f: the onset is near the start of the window's second half
           beats[n] = (fm * HOP + N * 0.5) / fs + BEAT_BIAS;
         }
-        return { tempo: 60 * fps / period, beats: beats, strength: Float32Array.from(idx, (i) => local[i]) };
+        // Per beat: the low end at the beat, and how different the harmony of this beat is from the previous one
+        const lowAt = new Float32Array(idx.length), change = new Float32Array(idx.length);
+        let prevSeg = null;
+        for (let n = 0; n < idx.length; n++) {
+          for (let i = Math.max(0, idx[n] - r); i <= Math.min(frames - 1, idx[n] + r); i++) lowAt[n] = Math.max(lowAt[n], lowEnv[i]);
+          const seg = new Float32Array(12), endF = n + 1 < idx.length ? idx[n + 1] : Math.min(frames, idx[n] + Math.round(period));
+          for (let i = idx[n]; i < endF; i++) for (let c = 0; c < 12; c++) seg[c] += chroma[i * 12 + c];
+          let norm = 0;
+          for (let c = 0; c < 12; c++) norm += seg[c] * seg[c];
+          norm = Math.sqrt(norm) || 1;
+          for (let c = 0; c < 12; c++) seg[c] /= norm;
+          if (prevSeg) { let dot = 0; for (let c = 0; c < 12; c++) dot += seg[c] * prevSeg[c]; change[n] = 1 - dot; }
+          prevSeg = seg;
+        }
+        return { tempo: 60 * fps / period, beats: beats, strength: Float32Array.from(idx, (i) => local[i]), low: lowAt, change: change };
       }
+      // Which beat (0 … beats per bar − 1) starts the bars: where the harmony changes most, helped by a strong low end.
+      // Kick on 1 and 3 alone cannot tell 1 from 3, so the harmony counts more. The user can still shift it by a beat.
+      function barPhaseOf(bi, m) {
+        const sum = new Float32Array(m), cnt = new Float32Array(m);
+        const mean = (a) => a.reduce((x, y) => x + y, 0) / (a.length || 1) || 1;
+        const mc = mean(bi.change), ml = mean(bi.low);
+        for (let i = 0; i < bi.beats.length; i++) { sum[i % m] += bi.change[i] / mc + 0.5 * bi.low[i] / ml; cnt[i % m]++; }
+        let best = 0;
+        for (let p = 1; p < m; p++) if (sum[p] / (cnt[p] || 1) > sum[best] / (cnt[best] || 1)) best = p;
+        return best;
+      }
+      // END analysis
 
       let beatInfo = null, analyzing = false;
       async function analyze(buf, token) {
@@ -1223,21 +1335,29 @@
       }
       // ½: keep every other beat (the set with the stronger onsets); ×2: add a beat halfway between each pair
       function scaleBeats(f) {
-        const b = beatInfo.beats, st = beatInfo.strength;
+        const bi = beatInfo, b = bi.beats, st = bi.strength;
         if (f < 1) {
-          if (b.length < 8 || beatInfo.tempo / 2 < 30) return false;
+          if (b.length < 8 || bi.tempo / 2 < 30) return false;
           let e = 0, o = 0;
           for (let i = 0; i < st.length; i++) (i % 2 ? (o += st[i]) : (e += st[i]));
-          const par = o > e ? 1 : 0;
-          beatInfo = { tempo: beatInfo.tempo / 2, beats: b.filter((x, i) => i % 2 === par), strength: st.filter((x, i) => i % 2 === par) };
+          const par = o > e ? 1 : 0, keep = (x, i) => i % 2 === par;
+          // The harmony change of a kept beat is the larger of its own and the dropped beat's before it
+          const change = bi.change.map((c, i) => Math.max(c, i > 0 ? bi.change[i - 1] : 0)).filter(keep);
+          beatInfo = { tempo: bi.tempo / 2, beats: b.filter(keep), strength: st.filter(keep), low: bi.low.filter(keep), change: change };
         } else {
-          if (beatInfo.tempo * 2 > 300) return false;
-          const nb = [], ns = [];
-          for (let i = 0; i < b.length; i++) { nb.push(b[i]); ns.push(st[i]); if (i + 1 < b.length) { nb.push((b[i] + b[i + 1]) / 2); ns.push(0); } }
-          beatInfo = { tempo: beatInfo.tempo * 2, beats: Float64Array.from(nb), strength: Float32Array.from(ns) };
+          if (bi.tempo * 2 > 300) return false;
+          const nb = [], ns = [], nl = [], nc = [];
+          for (let i = 0; i < b.length; i++) {
+            nb.push(b[i]); ns.push(st[i]); nl.push(bi.low[i]); nc.push(bi.change[i]);
+            if (i + 1 < b.length) { nb.push((b[i] + b[i + 1]) / 2); ns.push(0); nl.push(0); nc.push(0); }
+          }
+          beatInfo = { tempo: bi.tempo * 2, beats: Float64Array.from(nb), strength: Float32Array.from(ns), low: Float32Array.from(nl), change: Float32Array.from(nc) };
         }
         return true;
       }
+      // The first bar's beat index, after the user's shift
+      const barStart = () => { const m = song.barBeats; return (((barPhaseOf(beatInfo, m) + song.barShift) % m) + m) % m; };
+      const isBarStart = (i, m, p) => ((i - p) % m + m) % m === 0;
       function changeTempo(f) {
         if (!beatInfo || !scaleBeats(f)) return;
         song.beatScale = clamp(song.beatScale + (f > 1 ? 1 : -1), -2, 2);
@@ -1252,25 +1372,39 @@
         while (lo < hi) { const m = (lo + hi) >> 1; if (b[m] < sec) lo = m + 1; else hi = m; }
         return lo;
       }
-      // The loop point for the beat nearest to `sec` (no snapping where there is no beat nearby, such as a quiet intro)
+      // Snapping to bars: only the beats that start a bar count
+      const barMode = () => prefs.snapBar && snapping();
+      // The loop point for the beat (or bar start) nearest to `sec` (no snapping where there is none nearby, such as a quiet intro)
       function snap(sec) {
         if (!snapping()) return sec;
-        const b = beatInfo.beats, i = beatIndex(sec + LEAD);
+        const b = beatInfo.beats, bars = barMode(), m = song.barBeats, p = bars ? barStart() : 0;
+        const ok = (j) => j >= 0 && j < b.length && (!bars || isBarStart(j, m, p));
+        const i = beatIndex(sec + LEAD), span = bars ? m : 1;
         let best = -1;
-        [i - 1, i].forEach((j) => { if (j >= 0 && j < b.length && (best < 0 || Math.abs(b[j] - LEAD - sec) < Math.abs(b[best] - LEAD - sec))) best = j; });
-        if (best < 0 || Math.abs(b[best] - LEAD - sec) > 45 / beatInfo.tempo) return sec;
+        for (let j = i - span; j <= i + span - 1; j++) if (ok(j) && (best < 0 || Math.abs(b[j] - LEAD - sec) < Math.abs(b[best] - LEAD - sec))) best = j;
+        if (best < 0 || Math.abs(b[best] - LEAD - sec) > span * 45 / beatInfo.tempo) return sec;
         return Math.max(0, b[best] - LEAD);
       }
-      // The loop point one beat before / after `sec`, or null when there is none
+      // The loop point one beat (or bar) before / after `sec`, or null when there is none
       function stepBeat(sec, dir) {
-        const b = beatInfo.beats, ref = sec + LEAD;
-        if (dir > 0) { const i = beatIndex(ref + 0.005); return i < b.length ? b[i] - LEAD : null; }
-        const i = beatIndex(ref - 0.005) - 1;
-        return i >= 0 ? Math.max(0, b[i] - LEAD) : null;
+        const b = beatInfo.beats, ref = sec + LEAD, bars = barMode(), m = song.barBeats, p = bars ? barStart() : 0;
+        const ok = (j) => !bars || isBarStart(j, m, p);
+        if (dir > 0) { for (let i = beatIndex(ref + 0.005); i < b.length; i++) if (ok(i)) return b[i] - LEAD; return null; }
+        for (let i = beatIndex(ref - 0.005) - 1; i >= 0; i--) if (ok(i)) return Math.max(0, b[i] - LEAD);
+        return null;
       }
       function beatsIn(a, b) {
         if (!beatInfo) return 0;
         return beatIndex(b + LEAD - 0.02) - beatIndex(a + LEAD - 0.02);
+      }
+      function shiftBar(d) {
+        if (!beatInfo) return;
+        song.barShift = (((song.barShift + d) % song.barBeats) + song.barBeats) % song.barBeats;
+        save(); uiDirty = true; redraw();
+      }
+      function setBarBeats(m) {
+        song.barBeats = clamp(m, 2, 7); song.barShift = 0;
+        save(); uiDirty = true; redraw();
       }
 
       // ---------- Waveform ----------
@@ -1353,11 +1487,13 @@
         if (beatInfo) {
           const b = beatInfo.beats, gap = (60 / beatInfo.tempo) / (v1 - v0) * w;
           if (gap >= 4 * dpr) {
+            // Bar starts get a taller tick and a stronger line
+            const m = song.barBeats, p = barStart(), barGap = gap * m;
             g.fillStyle = col("--beat");
             for (let i = beatIndex(v0); i < b.length && b[i] <= v1; i++) {
-              const bx2 = Math.round(X(b[i] - LEAD));
-              g.fillRect(bx2, h - 7 * dpr - barH, Math.max(1, dpr), 7 * dpr);
-              if (gap >= 24 * dpr) { g.globalAlpha = 0.35; g.fillRect(bx2, 0, Math.max(1, dpr), h - 7 * dpr - barH); g.globalAlpha = 1; }
+              const bx2 = Math.round(X(b[i] - LEAD)), head = isBarStart(i, m, p), tick = (head ? 14 : 7) * dpr;
+              g.fillRect(bx2, h - tick - barH, Math.max(1, dpr), tick);
+              if (gap >= 24 * dpr || (head && barGap >= 16 * dpr)) { g.globalAlpha = head ? 0.7 : 0.35; g.fillRect(bx2, 0, Math.max(1, dpr), h - tick - barH); g.globalAlpha = 1; }
             }
           }
         }
@@ -1635,14 +1771,21 @@
         const hasRange = has && s.b - s.a >= MIN_LOOP;
         $("loopBig").textContent = hasRange ? fmt(s.a) + "–" + fmt(s.b) : "–";
         $("loopTile").classList.toggle("off", !s.loop);
-        const nb = beatInfo ? beatsIn(s.a, s.b) : 0;
-        $("loopSub").textContent = !has ? "" : (s.loop ? t("loop.len", { s: (s.b - s.a).toFixed(2) }) + (nb ? " · " + (nb === 1 ? t("loop.beat") : t("loop.beats", { n: nb })) : "") + (playing ? " · " + t("loop.pass", { n: loopPass }) : "") : t("loop.off"));
+        const nb = beatInfo ? beatsIn(s.a, s.b) : 0, nbar = nb && barMode() && nb % s.barBeats === 0 ? nb / s.barBeats : 0;
+        const beatText = nbar ? (nbar === 1 ? t("loop.bar") : t("loop.bars", { n: nbar })) : nb ? (nb === 1 ? t("loop.beat") : t("loop.beats", { n: nb })) : "";
+        $("loopSub").textContent = !has ? "" : (s.loop ? t("loop.len", { s: (s.b - s.a).toFixed(2) }) + (beatText ? " · " + beatText : "") + (playing ? " · " + t("loop.pass", { n: loopPass }) : "") : t("loop.off"));
         // Tempo and snapping
         $("tempo").textContent = !has ? "" : analyzing ? t("beats.analyzing") : beatInfo ? t("beats.tempo", { bpm: Math.round(beatInfo.tempo) }) : t("beats.none");
-        $("halfBtn").hidden = $("dblBtn").hidden = $("snapBtn").hidden = !beatInfo;
         $("halfBtn").disabled = !beatInfo || beatInfo.tempo / 2 < 30 || song.beatScale <= -2;
         $("dblBtn").disabled = !beatInfo || beatInfo.tempo * 2 > 300 || song.beatScale >= 2;
+        $("tempoNum").textContent = beatInfo ? Math.round(beatInfo.tempo) : "–";
         $("snapBtn").setAttribute("aria-pressed", prefs.snap);
+        $("barBtn").setAttribute("aria-pressed", prefs.snap && prefs.snapBar);
+        $("barNum").textContent = s.barBeats;
+        ["snapBtn", "barBtn", "barLeft", "barRight"].forEach((id) => { $(id).disabled = !beatInfo; });
+        $("barBtn").disabled = !beatInfo || !prefs.snap;
+        $("barDown").disabled = !beatInfo || s.barBeats <= 2; $("barUp").disabled = !beatInfo || s.barBeats >= 7;
+        $("beatHint").textContent = !has ? "" : analyzing ? t("beats.analyzing") : beatInfo ? t("beats.hint") : t("beats.hintNone");
         $("loopBtn").setAttribute("aria-pressed", has && s.loop);
         $("loopBtn").disabled = !has; $("toStartBtn").disabled = !has;
         $("aVal").textContent = has ? fmt(s.a) : "–"; $("bVal").textContent = has ? fmt(s.b) : "–";
@@ -1738,6 +1881,11 @@
       $("zoomBtn").onclick = toggleZoom;
       $("snapBtn").onclick = () => { prefs.snap = !prefs.snap; saveNow(); renderControls(); };
       $("halfBtn").onclick = () => changeTempo(0.5);
+      $("barBtn").onclick = () => { prefs.snapBar = !prefs.snapBar; saveNow(); uiDirty = true; renderControls(); redraw(); };
+      $("barDown").onclick = () => setBarBeats(song.barBeats - 1);
+      $("barUp").onclick = () => setBarBeats(song.barBeats + 1);
+      $("barLeft").onclick = () => shiftBar(-1);
+      $("barRight").onclick = () => shiftBar(1);
       $("dblBtn").onclick = () => changeTempo(2);
       document.querySelectorAll("[data-speed-step]").forEach((b) => { b.onclick = () => setSpeed(song.speed + +b.dataset.speedStep); });
       $("speedSlider").oninput = (e) => setSpeed(+e.target.value);
@@ -1913,11 +2061,37 @@
         });
       });
 
+      // ---------- Install hint (WEBAPP_BASELINE.md §3-7) ----------
+      // Only after a file has been opened once, never when already running as an installed app, and never again once closed.
+      // Chrome / Edge (Android and computers): an Install button when the browser offers it. iPhone / iPad: "Share → Add to
+      // Home Screen", shown in one visit only.
+      let installEvt = null, iosHintNow = false;
+      const standalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+      function renderInstall() {
+        let show = !standalone() && prefs.opened && (!prefs.installHidden || iosHintNow) && (installEvt || isIOS());
+        if (show && !installEvt && !iosHintNow) { iosHintNow = true; prefs.installHidden = true; saveNow(); }
+        if (!installEvt && !iosHintNow) show = false;
+        $("installBar").hidden = !show;
+        if (!show) return;
+        $("installText").textContent = t(installEvt ? "install.text" : "install.ios");
+        $("installBtn").hidden = !installEvt;
+      }
+      window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); installEvt = e; renderInstall(); });
+      window.addEventListener("appinstalled", function () { installEvt = null; prefs.installHidden = true; saveNow(); renderInstall(); });
+      $("installBtn").onclick = function () {
+        if (!installEvt) return;
+        const ev = installEvt;
+        ev.prompt();
+        Promise.resolve(ev.userChoice).catch(() => {}).then(function () { installEvt = null; renderInstall(); });
+      };
+      $("installClose").onclick = function () { installEvt = null; iosHintNow = false; prefs.installHidden = true; saveNow(); renderInstall(); };
+
       // Redraw when the colour scheme changes (the waveform reads the colours)
       matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { uiDirty = true; if (!playing) frame(); });
 
       applyI18n();
       renderAll();
+      renderInstall();
     })();
   </script>
 <script>

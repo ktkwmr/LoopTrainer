@@ -25,7 +25,7 @@ import { fileURLToPath } from "node:url";
 import { renderPage, ORIGIN, APP_PATH, PUBLISHED, pagePath } from "./pages/layout.mjs";
 
 // Footer order
-const PAGES = [];
+const PAGES = ["guide", "learn-by-ear", "speed-up-practice", "change-key", "faq"];
 // Site information (operator and privacy policy)
 const INFO_PAGES = ["about", "privacy"];
 
