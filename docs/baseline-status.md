@@ -42,7 +42,7 @@
 | 9-1 | 設定メニュー | ⚠️ | 記事がまだないので「ガイド・記事」は置いていない |
 | 9-2 | 使い方ダイアログ | ✅ | 詳しいガイドへのリンクは記事を作ったら追加 |
 | 9-3 | 状態の保存・復元 | ✅ | 曲ごと（ファイル名＋サイズ）。保存できない環境でも動く |
-| 9-4 | スマホ対応 | ✅ | 390px で確認。実機は未確認 |
+| 9-4 | スマホ対応 | ✅ | 390px と iPhone 実機で確認済み |
 | 9-5 | スマホでは `accept` を外す | ✅ | |
 | 9-7 | 出力・保存 | 対象外 | |
 | 9-8 | アクセシビリティ | ✅ | |
@@ -54,7 +54,8 @@
 | 11-4 | 本番で beacon を確認 | 👤 待ち | |
 | 12-1・12-2 | Actions（生成・ライセンス） | ✅ | |
 | 13-1〜13-3 | 本番デプロイ・本番での動作・iPhone 実機 | ✅ | ユーザーが確認済み（2026-10-25） |
-| 13-4 | GitHub の About | 🤝 待ち | Description: `Change the key and tempo freely, and loop any section of a song. キーとテンポを自由に変えて、好きな区間をループ再生できる耳コピ練習プレイヤー` / Website: `https://ktkwmr.com/looptrainer/` / Topics: `music` `practice` `slow-down` `ab-repeat` `pitch-shift` `time-stretch` `beat-detection` `ear-training` `guitar` `web-audio` `pwa` |
-| 13-5 | SNS のカード表示 | 👤 待ち | X や LINE に URL を貼って画像付きのカードが出るか |
-| 14-1〜14-5 | 公開後（Search Console など） | 👤 待ち | sitemap: `https://ktkwmr.com/looptrainer/sitemap.xml` |
+| 13-4 | GitHub の About | ✅ | Description・Website・Topics を入力済み（2026-10-25） |
+| 13-5 | SNS のカード表示 | ✅ | |
+| 14-1・14-2 | Search Console（sitemap 送信・インデックス登録のリクエスト） | ✅ | `https://ktkwmr.com/looptrainer/sitemap.xml`、`/looptrainer/`・`/looptrainer/ja/` |
+| 14-3〜14-5 | Bing・インデックスの確認・外部からの紹介 | 👤 任意 | |
 | 15 | 収益化 | 対象外 | |
