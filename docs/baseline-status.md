@@ -50,8 +50,8 @@
 | 9-10 | ボタンを押したときの反応 | ✅ | |
 | 9-11 | ダイアログのフォーカス | ✅ | |
 | 10-1〜10-6 | 記事（使い方ガイド・耳コピのやり方・少しずつ速くする練習法・キー変更の使い方・FAQ） | ✅ | 表は `scripts/pages/practice.mjs` で計算、画面写真は `scripts/render-guide-images.mjs`。390px で横はみ出し・エラー・CSP 違反 0 件 |
-| 10-7 | 記事の人間確認 | 👤 待ち | `docs/article-review.md` の A〜I |
-| 2-16（記事） | トップページのガイド一覧 | ❌ | 記事の公開後に `ktkwmr/ktkwmr.com` の `home.mjs` に `guides` を足す PR |
+| 10-7 | 記事の人間確認 | ✅ | プレビューで確認してから #4 をマージ（確認点は `docs/article-review.md` の A〜I） |
+| 2-16（記事） | トップページのガイド一覧 | ✅ | ktkwmr.com #5（`home.mjs` の `guides` に 5 本）。記事を足したら同じく PR |
 | 11-1〜11-3 | Cloudflare Web Analytics | ✅ | 同じ token |
 | 11-4 | 本番で beacon を確認 | 👤 待ち | |
 | 12-1・12-2 | Actions（生成・ライセンス） | ✅ | |
