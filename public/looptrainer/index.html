@@ -278,7 +278,7 @@
     <section class="panel out" aria-label="Player" data-i18n-attr="aria-label:player">
       <div class="panel-head">
         <span class="file-name empty" id="fileName" data-i18n="noFile">No file open</span>
-        <button type="button" class="chip" id="openBtn">
+        <button type="button" class="chip" id="openBtn" hidden>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
           <span data-i18n="open">Open file</span>
         </button>
@@ -1749,7 +1749,9 @@
         const has = !!buffer, s = song || sanitizeSong({});
         $("fileName").textContent = has ? fileLabel : t("noFile");
         $("fileName").classList.toggle("empty", !has);
+        // Before a file is open, the big button in the waveform does this; afterwards this one opens another song
         $("drop").hidden = has;
+        $("openBtn").hidden = !has;
         // Speed
         $("speedBig").textContent = s.speed + "%";
         $("speedVal").textContent = s.speed + "%";
