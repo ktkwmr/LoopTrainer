@@ -6,7 +6,7 @@
 //
 // public/ is served by a small server here with the headers from public/_headers (so the CSP is checked).
 // The CDN is not used: SoundTouchJS is served from node_modules, and the Service Worker is blocked because requests
-// from it would bypass page.route (WEBAPP_BASELINE.md §12-9).
+// from it would bypass page.route (WEBAPP_BASELINE.md §12-11).
 import { createServer } from "node:http";
 import { readFile, writeFile, mkdtemp } from "node:fs/promises";
 import { join, extname } from "node:path";
