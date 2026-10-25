@@ -42,7 +42,7 @@ export default {
 
 <h2 id="quick">Start in three steps</h2>
 <ol>
-  <li><b>Open a song.</b> Tap “Open file” and choose an audio file, or drop it on the waveform. MP3, AAC (m4a), and WAV work in every browser.</li>
+  <li><b>Open a song.</b> Tap “Open an audio file” and choose a file, or drop it on the waveform. MP3, AAC (m4a), and WAV work in every browser.</li>
   <li><b>Choose the part you want to learn.</b> Drag across the waveform. The ends snap to the nearest beat.</li>
   <li><b>Set the speed and press Play.</b> Tap 70% to hear it slower at the same pitch. It repeats until you stop it.</li>
 </ol>
@@ -54,7 +54,7 @@ export default {
   <figcaption>The numbers match the list below. Tap the image to enlarge it.</figcaption>
 </figure>
 <ol>
-  <li><b>Open file</b> – Choose an audio file. The file is read in your browser and never uploaded.</li>
+  <li><b>Open file</b> – Open another song. The file is read in your browser and never uploaded.</li>
   <li><b>Waveform</b> – The whole song, with the loop shaded between the A and B flags. Tap anywhere to jump there; drag to choose a new loop. The small ticks at the bottom are the beats, and the taller ones are the bar starts.</li>
   <li><b>Time and tempo</b> – Where you are in the song, and the tempo the app found (♩ ≈ 120 means about 120 beats per minute). When you change the speed, it shows the tempo you hear and the original: ♩ ≈ 84 (original 120) at 70%.</li>
   <li><b>Zoom to loop</b> – Fits the loop to the screen for fine changes. Press it again to see the whole song.</li>
@@ -166,7 +166,7 @@ export default {
 
 <h2 id="quick">3 ステップで始める</h2>
 <ol>
-  <li><b>曲を開く。</b>「ファイルを開く」で音源ファイルを選ぶか、波形の場所にドロップします。MP3・AAC（m4a）・WAV はどのブラウザでも開けます。</li>
+  <li><b>曲を開く。</b>「音源ファイルを開く」でファイルを選ぶか、波形の場所にドロップします。MP3・AAC（m4a）・WAV はどのブラウザでも開けます。</li>
   <li><b>練習したい部分を選ぶ。</b>波形の上をドラッグします。両端は一番近い拍に吸い付きます。</li>
   <li><b>速度を決めて再生。</b>「70%」を押すと、音程はそのままでゆっくりになります。止めるまで繰り返します。</li>
 </ol>
@@ -178,7 +178,7 @@ export default {
   <figcaption>番号は下の一覧と対応しています。画像を押すと拡大します。</figcaption>
 </figure>
 <ol>
-  <li><b>ファイルを開く</b> – 音源ファイルを選びます。ファイルはブラウザの中で読み込まれ、アップロードされません。</li>
+  <li><b>ファイルを開く</b> – 別の曲を開きます。ファイルはブラウザの中で読み込まれ、アップロードされません。</li>
   <li><b>波形</b> – 曲全体の波形です。A と B の旗の間がループで、色が付きます。タップするとその位置に移動し、ドラッグすると新しいループを選べます。下端の短い目盛りが拍、長い目盛りが小節の頭です。</li>
   <li><b>時間とテンポ</b> – 曲のどこを再生しているかと、検出したテンポです（♩ ≈ 120 は 1 分間に約 120 拍）。速度を変えると、聞こえるテンポと原曲のテンポを表示します（70% なら ♩ ≈ 84（原曲 120））。</li>
   <li><b>ループを拡大</b> – ループを画面いっぱいに表示して、細かく調整できます。もう一度押すと曲全体に戻ります。</li>

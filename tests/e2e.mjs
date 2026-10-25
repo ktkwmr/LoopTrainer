@@ -227,8 +227,16 @@ const text = (page, sel) => page.textContent(sel);
     assert.equal(await page.getAttribute("html", "lang"), "ja");
     assert.match(await text(page, "#introTitle"), /キーとテンポ/);
   });
+  await check("only the big Open button before a file is open", async () => {
+    assert.ok(await page.isVisible("#openBig"));
+    assert.ok(!(await page.isVisible("#openBtn")));
+  });
   await page.setInputFiles("#fileInput", SONG);
   await page.waitForFunction(() => /≈/.test(document.getElementById("tempo").textContent), null, { timeout: 60000 });
+  await check("the Open button in the header after a file is open", async () => {
+    assert.ok(await page.isVisible("#openBtn"));
+    assert.ok(!(await page.isVisible("#openBig")));
+  });
   const cdp = await ctx.newCDPSession(page);
   const box = await page.locator("#wave").boundingBox();
   const X = (sec) => box.x + (sec / 30) * box.width, y = box.y + box.height / 2;
