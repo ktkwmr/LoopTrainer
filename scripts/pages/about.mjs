@@ -18,7 +18,7 @@ export default {
       <tr><th scope="row">Site name</th><td>Loop Trainer</td></tr>
       <tr><th scope="row">URL</th><td><a href="/looptrainer/">https://ktkwmr.com/looptrainer/</a></td></tr>
       <tr><th scope="row">Operator</th><td>ktkwmr (individual developer)</td></tr>
-      <tr><th scope="row">What we offer</th><td>A free web app for practising songs by ear: it loops a section of an audio file and changes the speed or the key without changing the other</td></tr>
+      <tr><th scope="row">What we offer</th><td>A free web app for practising songs by ear: it changes the key and the tempo of an audio file freely and loops any section</td></tr>
       <tr><th scope="row">Contact</th><td><a href="${ISSUES}" rel="noopener">GitHub Issues</a></td></tr>
     </tbody>
   </table>
@@ -59,7 +59,7 @@ export default {
       <tr><th scope="row">サイト名</th><td>Loop Trainer</td></tr>
       <tr><th scope="row">URL</th><td><a href="/looptrainer/ja/">https://ktkwmr.com/looptrainer/ja/</a></td></tr>
       <tr><th scope="row">運営者</th><td>ktkwmr（個人開発者）</td></tr>
-      <tr><th scope="row">内容</th><td>音源ファイルの区間をループ再生し、音程を変えずに速度を、テンポを変えずにキーを変えられる、耳コピ・フレーズ練習用の無料 Web アプリ</td></tr>
+      <tr><th scope="row">内容</th><td>音源ファイルのキーとテンポを自由に変えて、好きな区間をループ再生できる、耳コピ・フレーズ練習用の無料 Web アプリ</td></tr>
       <tr><th scope="row">お問い合わせ</th><td><a href="${ISSUES}" rel="noopener">GitHub の Issues</a></td></tr>
     </tbody>
   </table>

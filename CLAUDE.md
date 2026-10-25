@@ -1,6 +1,6 @@
 # Loop Trainer
 
-耳コピ・フレーズ練習用の区間ループ＆減速プレイヤー（音程を変えずに速度変更、テンポを変えずにキー変更）。公開 URL: https://ktkwmr.com/looptrainer/ （日本語: /looptrainer/ja/）
+耳コピ・フレーズ練習用のプレイヤー。キーとテンポを自由に変えて、好きな区間をループ再生する（音程を変えずに速度変更、テンポを変えずにキー変更）。公開 URL: https://ktkwmr.com/looptrainer/ （日本語: /looptrainer/ja/）
 構成・開発・デプロイの詳細は README.md を参照。
 
 ## 共通ベースライン

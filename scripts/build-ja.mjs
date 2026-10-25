@@ -32,11 +32,11 @@ const BASE_URL = "https://ktkwmr.com/looptrainer/";
 const JA_URL = BASE_URL + "ja/";
 
 // Japanese text for search results and social media shares
-const TITLE = "耳コピ用スロー再生・区間ループ｜音程そのまま速度変更が無料 – Loop Trainer";
-const DESCRIPTION = "耳コピ・フレーズ練習用の無料プレイヤー。音源ファイルの好きな区間をループ再生（A-Bリピート）し、音程を変えずに50%までスロー再生、キー変更もできます。1周ごとに少しずつ速くする機能・カウントイン付き。ファイルはアップロードされず、登録不要。";
-const OG_DESCRIPTION = "区間ループ・音程そのままの速度変更・キー変更、1周ごとに少しずつ速くする機能。ギタリストやバンドの耳コピ練習に。無料・登録不要で、ファイルは端末の外に出ません。";
+const TITLE = "キー・テンポを自由に変えて区間ループ｜音程そのままスロー再生できる耳コピ用プレイヤー – Loop Trainer";
+const DESCRIPTION = "耳コピ・フレーズ練習用の無料プレイヤー。手持ちの音源のキーとテンポを自由に変えて、好きな区間をループ再生（A-Bリピート）。音程を変えずに50%までスロー再生でき、ループは拍に吸着。1周ごとに少しずつ速くする機能・カウントイン付き。ファイルはアップロードされず、登録不要。";
+const OG_DESCRIPTION = "キーとテンポを自由に変えて、好きな区間をループ再生。スロー再生でも音程はそのまま。ギタリストやバンドの耳コピ練習に。無料・登録不要で、ファイルは端末の外に出ません。";
 const OG_IMAGE_ALT = "Loop Trainer：波形の上で A-B ループを選び、70% の速度で再生している画面";
-const LD_DESCRIPTION = "音源ファイルの区間をループ再生し、音程を変えずに速度を、テンポを変えずにキーを変えられる練習用プレイヤー。";
+const LD_DESCRIPTION = "音源ファイルのキーとテンポを自由に変えて、好きな区間をループ再生できる練習用プレイヤー（速度を変えても音程、キーを変えてもテンポはそのまま）。";
 
 const escapeAttr = (s) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 const escapeText = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");

@@ -1,7 +1,7 @@
 {
   "name": "Loop Trainer",
   "short_name": "Loop Trainer",
-  "description": "Loop a section of a song and slow it down without changing the pitch. 音程を変えずにスロー再生・区間ループできる耳コピ練習プレイヤー",
+  "description": "Change the key and tempo freely, and loop any section of a song. キーとテンポを自由に変えて、好きな区間をループ再生できる耳コピ練習プレイヤー",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

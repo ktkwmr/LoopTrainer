@@ -6,7 +6,7 @@
 |---|---|---|---|
 | 1-1〜1-7 | アカウントと開発環境 | ✅ | ほかのアプリで実施済み |
 | 1-4 | Claude の GitHub App のアクセス | ✅ | このセッションで push できている |
-| 1-8 | Cloudflare の GitHub App のアクセス | 👤 待ち | 「Only select repositories」なら `ktkwmr/LoopTrainer` を追加 |
+| 1-8 | Cloudflare の GitHub App のアクセス | ✅ | |
 | 2-1 | wrangler.jsonc（`previews: {}` 含む） | ✅ | |
 | 2-2 | `_redirects` | 対象外 | ドメイン直下は `ktkwmr/ktkwmr.com` |
 | 2-3 | 404.html | ✅ | アプリのアイコンを使い、アプリへ戻る |
@@ -17,16 +17,16 @@
 | 2-8 | LICENSE（MIT） | ✅ | SoundTouchJS（LGPL）は CDN から別ファイルで読み込み |
 | 2-9 | CLAUDE.md | ✅ | |
 | 2-10 | バージョン番号を出さない | ✅ | |
-| 2-11 | Cloudflare に接続（Workers Builds） | 👤 待ち | Project name は `looptrainer` |
-| 2-13 | 自動デプロイの確認 | 🤝 待ち | 接続後に main へ push して「Workers Builds: looptrainer」のチェックを確認 |
+| 2-11 | Cloudflare に接続（Workers Builds） | ✅ | Project name `looptrainer`、本番ブランチ `main` |
+| 2-13 | 自動デプロイの確認 | ✅ | LoopTrainer #1 で「Workers Builds: looptrainer」が success |
 | 2-14 | 2 つ目以降のアプリ（routes・`workers_dev: false`・`preview_urls: true`、sitemap は `/looptrainer/`） | ✅ | |
-| 2-16 | トップページへの追加 | ❌ | 公開後に `ktkwmr/ktkwmr.com` へ PR（`home.mjs` の `APPS`・`ICON`、`robots.txt` の `Sitemap:`） |
+| 2-16 | トップページへの追加 | ✅ | ktkwmr.com #2（`APPS`・`ICON`・`PREVIEW`、`robots.txt` の `Sitemap:`）。説明を変えたら同じく PR |
 | 3-1〜3-5 | PWA（manifest・アイコン・meta・sw.js・登録） | ✅ | sw.js はバージョン固定の CDN ライブラリだけキャッシュ優先で保存（オフライン用） |
 | 3-6 | `file://` 不可を README に | ✅ | |
 | 3-7 | インストールの案内 | ❌ | 任意 |
 | 3-8 | アイコンを render-icons.mjs で生成 | ✅ | |
 | 4-1〜4-3 | I18N・言語の決め方・ja/index.html 生成 | ✅ | |
-| 4-4 | 日本語の検索用タイトル・説明 | 🤝 確認待ち | `scripts/build-ja.mjs` 冒頭。title「耳コピ用スロー再生・区間ループ｜音程そのまま速度変更が無料 – Loop Trainer」 |
+| 4-4 | 日本語の検索用タイトル・説明 | ✅ | `scripts/build-ja.mjs` 冒頭。title「キー・テンポを自由に変えて区間ループ｜音程そのままスロー再生できる耳コピ用プレイヤー – Loop Trainer」 |
 | 5-1〜5-6 | title・canonical・hreflang・OGP・og-image・JSON-LD・sitemap | ✅ | |
 | 5-7・5-8 | h1 とアプリの下の説明 | ✅ | `.intro`（`intro.title` / `intro.body`） |
 | 5-10 | sitemap はアプリごと | ✅ | `/looptrainer/sitemap.xml` |
@@ -53,7 +53,8 @@
 | 11-1〜11-3 | Cloudflare Web Analytics | ✅ | 同じ token |
 | 11-4 | 本番で beacon を確認 | 👤 待ち | |
 | 12-1・12-2 | Actions（生成・ライセンス） | ✅ | |
-| 13-1〜13-5 | 公開時の確認 | 👤 待ち | 特に iPhone 実機（音が出るか、サイレントスイッチ、長い曲） |
-| 13-4 | GitHub の About | 🤝 待ち | Description: `Loop any section of a song and slow it down without changing the pitch. 耳コピ用の区間ループ・スロー再生プレイヤー` / Website: `https://ktkwmr.com/looptrainer/` / Topics: `music` `practice` `slow-down` `ab-repeat` `pitch-shift` `time-stretch` `ear-training` `guitar` `web-audio` `pwa` |
+| 13-1〜13-3 | 本番デプロイ・本番での動作・iPhone 実機 | ✅ | ユーザーが確認済み（2026-10-25） |
+| 13-4 | GitHub の About | 🤝 待ち | Description: `Change the key and tempo freely, and loop any section of a song. キーとテンポを自由に変えて、好きな区間をループ再生できる耳コピ練習プレイヤー` / Website: `https://ktkwmr.com/looptrainer/` / Topics: `music` `practice` `slow-down` `ab-repeat` `pitch-shift` `time-stretch` `beat-detection` `ear-training` `guitar` `web-audio` `pwa` |
+| 13-5 | SNS のカード表示 | 👤 待ち | X や LINE に URL を貼って画像付きのカードが出るか |
 | 14-1〜14-5 | 公開後（Search Console など） | 👤 待ち | sitemap: `https://ktkwmr.com/looptrainer/sitemap.xml` |
 | 15 | 収益化 | 対象外 | |

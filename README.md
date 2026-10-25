@@ -1,8 +1,8 @@
 # Loop Trainer
 
-A practice player for learning songs by ear. Open an audio file you have, loop any section (A-B repeat), slow it down to 50% without changing the pitch, change the key without changing the tempo, and let it speed up a little on every loop.
+A practice player for learning songs by ear. Open an audio file you have, change its key and tempo freely, and loop any section (A-B repeat). Slowing down (to 50%) keeps the pitch, changing the key keeps the tempo, loops snap to the beat, and it can speed up a little on every loop.
 
-耳コピ・フレーズ練習用のプレイヤーです。手持ちの音源ファイルを開いて好きな区間をループ再生（A-B リピート）し、音程を変えずに 50% までスロー再生、テンポを変えずにキー変更ができます。1 周ごとに少しずつ速くする機能もあります。
+耳コピ・フレーズ練習用のプレイヤーです。手持ちの音源ファイルのキーとテンポを自由に変えて、好きな区間をループ再生（A-B リピート）できます。50% までスロー再生しても音程はそのまま、キーを変えてもテンポはそのまま。ループは拍に吸着し、1 周ごとに少しずつ速くする機能もあります。
 
 **▶ https://ktkwmr.com/looptrainer/** (日本語: https://ktkwmr.com/looptrainer/ja/)
 
