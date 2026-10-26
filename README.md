@@ -29,8 +29,8 @@ A practice player for learning songs by ear. Open an audio file you have, change
 - **Saved for each song**: loops, speed, key, count-in BPM, and several named loops per song (“Intro”, “Solo, first half”), restored when the same file (name + size) is opened again
   曲ごとにループ範囲・速度・キー・BPM と、名前付きのループを複数保存。同じファイル（名前とサイズ）を開くと復元
 - **Keyboard**: Space play / pause, ↑↓ speed, ←→ move A (Shift: B), A / B set here, L loop, Enter back to A, − / + key, Z zoom, O open
-- **Dark mode** (follows the system), large buttons, screen kept on while playing
-  ダークモード（端末の設定に連動）、大きめのボタン、再生中は画面を消さない
+- Large buttons, screen kept on while playing
+  大きめのボタン、再生中は画面を消さない
 - **Installable PWA** that also works offline after the first file has been opened. After a file has been opened, an Install button (Chrome / Edge) or a one-time “Add to Home Screen” hint (iPhone / iPad) is shown
   ホーム画面に追加でき、一度ファイルを開けばオフラインでも動作。ファイルを開いたあとに「インストール」ボタン（Chrome・Edge）か「ホーム画面に追加」の案内（iPhone・iPad、1 回だけ）を表示
 - **Guides**: how to use, learning by ear, speeding up step by step, changing the key, and FAQ (English and Japanese), linked from ⚙ → Guides & articles
