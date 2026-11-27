@@ -49,6 +49,7 @@
 | 9-9 | 自動テスト | ✅ | `tests/analysis.test.mjs`（拍・小節の解析）と `tests/e2e.mjs`（Playwright）。`.github/workflows/test.yml` で PR と main への push で実行 |
 | 9-10 | ボタンを押したときの反応 | ✅ | |
 | 9-11 | ダイアログのフォーカス | ✅ | |
+| 9-18 | 関連アプリへのリンク | ✅ | メイン機能の下の `<nav class="related">` に 2 つ（定義は webapp-baseline の `related-apps.json`、文言は `I18N` の `rel.*`） |
 | 10-1〜10-6 | 記事（使い方ガイド・耳コピのやり方・少しずつ速くする練習法・キー変更の使い方・FAQ） | ✅ | 表は `scripts/pages/practice.mjs` で計算、画面写真は `scripts/render-guide-images.mjs`。390px で横はみ出し・エラー・CSP 違反 0 件 |
 | 10-7 | 記事の人間確認 | ✅ | プレビューで確認してから #4 をマージ（確認点は `docs/article-review.md` の A〜I） |
 | 2-16（記事） | トップページのガイド一覧 | ✅ | ktkwmr.com #5（`home.mjs` の `guides` に 5 本）。記事を足したら同じく PR |
