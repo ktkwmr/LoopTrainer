@@ -32,6 +32,11 @@ for (const line of headersFile.split("\n")) {
 const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".json": "application/json", ".md": "text/markdown; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".xml": "application/xml" };
 const server = createServer(async (req, res) => {
   let path = decodeURIComponent(new URL(req.url, "http://x").pathname);
+  // Cloudflare Zaraz (analytics) is there only on the real site: a stand-in that keeps the events (docs/analytics.md)
+  if (path === "/cdn-cgi/zaraz/i.js") {
+    res.writeHead(200, { "Content-Type": "text/javascript", ...HEADERS });
+    return res.end("window.__events = []; window.zaraz = { track(n, p) { window.__events.push([n, p]); }, showConsentModal() {} };");
+  }
   if (path.endsWith("/")) path += "index.html";
   try {
     const body = await readFile(join(ROOT, path));
@@ -179,6 +184,13 @@ const text = (page, sel) => page.textContent(sel);
     await page.waitForFunction(() => !document.getElementById("playBtn").disabled);
     assert.deepEqual(await page.$$eval(".sec-name", (els) => els.map((e) => e.value)), ["Chorus"]);
     assert.match(await text(page, "#notice"), /left off/);
+  });
+  await check("usage events (Zaraz stand-in): open, beats, no file name", async () => {
+    await page.waitForFunction(() => window.__events.some(([n]) => n === "lt_beats"), null, { timeout: 15000 }).catch(() => {});
+    const ev = await page.evaluate(() => window.__events);
+    assert.ok(ev.some(([n, p]) => n === "lt_open" && p.result === "ok" && p.kind && p.ui_lang), "lt_open");
+    assert.ok(ev.some(([n, p]) => n === "lt_beats" && p.result === "found"), "lt_beats");
+    assert.ok(!JSON.stringify(ev).includes(".wav"), "no file name");
   });
   await check("Ctrl + wheel zooms in, Z goes back to the whole song", async () => {
     await top();

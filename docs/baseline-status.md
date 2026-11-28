@@ -55,6 +55,7 @@
 | 2-16（記事） | トップページのガイド一覧 | ✅ | ktkwmr.com #5（`home.mjs` の `guides` に 5 本）。記事を足したら同じく PR |
 | 11-1〜11-3 | Cloudflare Web Analytics | ✅ | 同じ token |
 | 11-4 | 本番で beacon を確認 | 👤 待ち | |
+| 17 | Zaraz + GA4（同意したときだけ） | ⚠️ | 2026-11-28 に実装（`docs/analytics.md`）。本番での確認・Configuration Rule の削除（17-13）・GA4 のカスタム定義の登録は 👤 待ち |
 | 12-1・12-2 | Actions（生成・ライセンス） | ✅ | |
 | 13-1〜13-3 | 本番デプロイ・本番での動作・iPhone 実機 | ✅ | ユーザーが確認済み（2026-10-25） |
 | 13-4 | GitHub の About | ✅ | Description・Website・Topics を入力済み（2026-10-25） |

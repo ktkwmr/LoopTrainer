@@ -244,6 +244,9 @@
       .site-head, .site-foot, .cta { display: none; }
     }
   </style>
+  <!-- Usage analytics: Cloudflare Zaraz → Google Analytics 4, only after consent (see usage-events.js) -->
+  <script src="/cdn-cgi/zaraz/i.js" referrerpolicy="origin"></script>
+  <script src="/looptrainer/usage-events.js"></script>
 </head>
 <body>
   <header class="site-head">
@@ -308,6 +311,7 @@
         <span>Loop Trainer · © 2026 ktkwmr</span>
         <a href="/looptrainer/about/">About this site</a>
         <a href="/looptrainer/privacy/">Privacy policy</a>
+        <a href="#" class="cookie-settings">Cookie settings</a>
         <a href="https://github.com/ktkwmr/LoopTrainer" rel="noopener">Source code on GitHub</a>
         <a href="https://github.com/ktkwmr/LoopTrainer/issues" rel="noopener">Feedback</a>
         <a href="https://ktkwmr.com/">More apps by ktkwmr</a>

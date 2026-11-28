@@ -54,15 +54,17 @@ Not supported: music from streaming services (Apple Music / Spotify DRM, YouTube
 
 ## Privacy / プライバシー
 
-- Audio files are decoded and played only in your browser and are never uploaded. The app has no accounts, cookies, or ads.
+- Audio files are decoded and played only in your browser and are never uploaded. The app has no accounts or ads.
 - For each song you open, the file name and size, loops, speed, key, count-in BPM, and the last position are saved in your browser's storage (`looptrainer-state` in `localStorage`); the audio itself is not saved. For offline use, the app and the SoundTouchJS library are saved there too. Clear this site's data to remove them. If storage is not available (for example in private browsing), the app works without saving.
 - When the first file is opened, SoundTouchJS is loaded from jsDelivr, which receives your IP address and browser information like any web request.
 - The site is hosted on Cloudflare, which keeps standard access logs (IP address, time, requested page) for operation and security. Page views are counted with Cloudflare Web Analytics, which uses no cookies.
+- Only if you choose “Accept all” in the cookie banner, Google Analytics (through Cloudflare Zaraz, sent from Cloudflare's servers with a shortened IP address) records how the app is used: pages viewed and for how long, buttons tapped and settings changed, the kind of audio file opened, and the speed, key, and playing time. File names and the audio itself are never sent. Change your choice from “Cookie settings” at the bottom of the page. See [docs/analytics.md](docs/analytics.md).
 
-- 音源ファイルはブラウザの中だけで読み込み・再生し、アップロードしません。アカウント登録・Cookie・広告はありません。
+- 音源ファイルはブラウザの中だけで読み込み・再生し、アップロードしません。アカウント登録・広告はありません。
 - 開いた曲ごとに、ファイル名とサイズ・ループ・速度・キー・カウントインの BPM・最後の再生位置をブラウザ内（`localStorage` の `looptrainer-state`）に保存します。音源そのものは保存しません。オフラインで使うため、アプリ本体と SoundTouchJS も保存します。サイトデータを削除すると消えます。保存できない環境（プライベートモードなど）でも、保存なしで動きます。
 - 最初にファイルを開いたとき、jsDelivr から SoundTouchJS を読み込みます。通常の Web の通信と同じく、IP アドレスやブラウザの情報が jsDelivr に送られます。
 - サイトは Cloudflare で配信しており、運用・セキュリティのために標準的なアクセスログが記録されます。閲覧数は Cookie を使わない Cloudflare Web Analytics で集計しています。
+- Cookie のバナーで「すべて同意」を選んだ場合に限り、Google アナリティクス（Cloudflare Zaraz 経由。Cloudflare のサーバーから IP アドレスの末尾を削って送信）でアプリの使われ方（見たページと時間、押したボタンと変えた設定、開いた音源の種類、速さ・キー・再生した時間）を記録します。ファイル名と音源そのものは送りません。選択はページ下の「Cookie の設定」から変えられます。
 
 The same notice is shown in the app under ⚙ → **Privacy**. The full privacy policy is at `/looptrainer/privacy/` (Japanese: `/looptrainer/ja/privacy/`), and the operator information is at `/looptrainer/about/`.
 アプリ内の ⚙ → **プライバシー** でも同じ内容を表示しています。プライバシーポリシーは `/looptrainer/ja/privacy/`、運営者情報は `/looptrainer/ja/about/` にあります。

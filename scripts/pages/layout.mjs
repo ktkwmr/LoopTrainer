@@ -27,6 +27,7 @@ const UI = {
     ctaBody: "Change the key and the tempo freely and loop any section of a song. The pitch stays the same when you slow down. Free, no sign-up, and your files never leave your device.",
     footer: "Loop Trainer · © 2026 ktkwmr",
     source: "Source code on GitHub",
+    cookies: "Cookie settings",
     feedback: "Feedback",
     home: "More apps by ktkwmr",
     homeUrl: "https://ktkwmr.com/",
@@ -40,6 +41,7 @@ const UI = {
     ctaBody: "手持ちの音源のキーとテンポを自由に変えて、好きな区間をループ再生。スロー再生でも音程は変わりません。無料・登録不要で、ファイルは端末の外に出ません。",
     footer: "Loop Trainer · © 2026 ktkwmr",
     source: "GitHub のソースコード",
+    cookies: "Cookie の設定",
     feedback: "ご意見・ご質問",
     home: "ktkwmr のほかのアプリ",
     homeUrl: "https://ktkwmr.com/ja/",
@@ -211,6 +213,9 @@ ${JSON.stringify(jsonLd, null, 2).replace(/</g, "\\u003c").replace(/^/gm, "  ")}
   </script>
   <style>${CSS}
   </style>
+  <!-- Usage analytics: Cloudflare Zaraz → Google Analytics 4, only after consent (see usage-events.js) -->
+  <script src="/cdn-cgi/zaraz/i.js" referrerpolicy="origin"></script>
+  <script src="/looptrainer/usage-events.js"></script>
 </head>
 <body>
   <header class="site-head">
@@ -244,6 +249,7 @@ ${nav}
 ` : ""}      <p class="meta">
         <span>${ui.footer}</span>
 ${infoPages.map((p) => `        <a href="${pagePath(lang, p.slug)}"${p.slug === page.slug ? ' aria-current="page"' : ""}>${escapeHtml(p[lang].nav)}</a>`).join("\n")}
+        <a href="#" class="cookie-settings">${ui.cookies}</a>
         <a href="https://github.com/ktkwmr/LoopTrainer" rel="noopener">${ui.source}</a>
         <a href="https://github.com/ktkwmr/LoopTrainer/issues" rel="noopener">${ui.feedback}</a>
         <a href="${ui.homeUrl}">${ui.home}</a>

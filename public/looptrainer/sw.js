@@ -2,7 +2,7 @@
 // Older caches of this app (e.g. "looptrainer-<build>") are removed on activate.
 const PREFIX = "looptrainer-";
 const CACHE = PREFIX + "cache";
-const CORE = ["./", "index.html", "ja/", "manifest.json", "THIRD_PARTY_LICENSES.md"];
+const CORE = ["./", "index.html", "ja/", "manifest.json", "THIRD_PARTY_LICENSES.md", "usage-events.js"];
 // The audio library comes from a CDN with a pinned version, so the URL's content never changes:
 // it is cached on first use and served from the cache, which makes the app work offline.
 const CDN = ["https://cdn.jsdelivr.net/npm/soundtouchjs@0.3.0/dist/soundtouch.js"];
@@ -53,6 +53,9 @@ self.addEventListener("fetch", (event) => {
     return;
   }
   if (new URL(req.url).origin !== self.location.origin) return;
+  // Cloudflare Zaraz (/cdn-cgi/zaraz/…, analytics): always from the network, never cached. Its script is made
+  // for each request, and it is not needed offline
+  if (new URL(req.url).pathname.startsWith("/cdn-cgi/")) return;
   // Network first (always the latest when online), cache as offline fallback.
   event.respondWith(
     fetch(new Request(req.url, { cache: "no-cache" }))
