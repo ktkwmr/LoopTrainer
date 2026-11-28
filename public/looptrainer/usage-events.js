@@ -80,7 +80,7 @@
     const type = (el.type || "").toLowerCase();
     if (type === "checkbox") return el.checked ? "on" : "off";
     if (type === "file") {
-      const kinds = Array.from(el.files || []).map((f) => (/\.([a-z0-9]{1,5})$/i.exec(f.name) || [, "other"])[1].toLowerCase());
+      const kinds = Array.from(el.files || []).map((f) => (/\.([a-z0-9]{1,8})$/i.exec(f.name) || [, "other"])[1].toLowerCase());
       return Array.from(new Set(kinds)).sort().join("+") || "none";
     }
     if (el.dataset.trackValue === "off" || (el.closest && el.closest("[data-track-value=off]"))) return "";
